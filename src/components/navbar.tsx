@@ -2,15 +2,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { signIn, useSession, signOut } from 'next-auth/react'
-
-// function SignIn() {
-//     return (
-//         <div>
-//             <button onClick={() => signIn('google')}>Sign in with Google</button>
-//             <button onClick={() => signIn('credentials')}>Sign in with email and password</button>
-//         </div>
-//     )
-// }
+import Image from 'next/image'
+import { GrLogin } from "react-icons/gr";
 
 function Navbar() {
 
@@ -20,7 +13,12 @@ function Navbar() {
         <div>
             <nav className='flex justify-between text-white bg-black border border-slate-500 px-6 items-center'>
                 <Link href={"/"}>
-                    <h1>Next Google</h1>
+                    <Image 
+                    src={"/mackyna.png"}
+                    alt="logo mackyna"
+                    width={100}
+                    height={50}
+                    />
                 </Link>
 
                 <div className='flex gap-2'>
@@ -37,12 +35,14 @@ function Navbar() {
 
                         </div>
                     ) : (
-                        <button
-                            className='bg-blue-500 py-2 px-4'
-                            onClick={() => signIn("google")}
+                        <Link
+                            className='flex items-center gap-1 bg-green-800 rounded py-2 px-4'
+                            href={"/login"}
                         >
+                            
                             Iniciar sesión
-                        </button>
+                            <GrLogin />
+                        </Link>
                     )}
                 </div>
 
