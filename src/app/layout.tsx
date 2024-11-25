@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from from-green-700 to-black h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-r from-black via-green-700 to-black h-full`}// bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from from-green-700 to-black h-full`}
       >
         <Providers>
           <Navbar />

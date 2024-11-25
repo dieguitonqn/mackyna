@@ -38,10 +38,10 @@ export default function LoginForm() {
             <Image 
             src={"/mackyna.png"}
             alt="Logo mackyna"
-            width={150}
-            height={150}
+            width={163}
+            height={111}
             />
-                <form onSubmit={handleSubmit} className="flex flex-col justify-start p-2 mt-5">
+                <form onSubmit={handleSubmit} className="flex flex-col justify-start p-2 mt-10">
                     <label htmlFor="email">Email:</label>
                     <input
                         id="email"
@@ -69,10 +69,10 @@ export default function LoginForm() {
                 </form>
                 <p className="text-center">ó</p>
                 <button
-                    onClick={() => signIn("google")}
-                    className="p-2 rounded-lg w-auto border bg-white border-slate-200 m-auto mt-5 ">
+                    onClick={() => signIn("google",{ callbackUrl: '/' })}
+                    className="p-2 rounded-lg w-1/4 items-center justify-center border bg-white border-slate-200 m-auto mt-5 ">
 
-                    <FcGoogle />
+                    <FcGoogle className="m-auto"/>
 
                 </button>
                 <span className="flex justify-center mt-2">¿Aún no tenés cuenta? <Link href={"/signUp"} className=" mx-2 underline text-emerald-700" >Resgistrate AQUI</Link></span>

@@ -13,7 +13,7 @@ const connect =async ()=>{
         return;
     }
     try {
-        mongoose.connect(MONGODB_URI!, {
+        await mongoose.connect(MONGODB_URI!, {
             dbName:'Mackyna',
             bufferCommands:true
         });
