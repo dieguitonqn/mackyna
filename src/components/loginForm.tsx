@@ -19,12 +19,14 @@ export default function LoginForm() {
         console.log(email, password);
         // Log both email and password
         // Replace this with your actual sign-in logic using `signIn`
-        signIn('credentials', {
-            redirect: false,
-            email,
-            password,
-            callbackUrl: '/' // Adjust callback URL as needed
-        });
+        signIn('credentials',
+            {
+                redirect: true,
+                email,
+                password,
+                callbackUrl: '/' // Adjust callback URL as needed
+            }
+        );
     };
 
 
@@ -35,12 +37,12 @@ export default function LoginForm() {
 
 
             <div className="flex flex-col justify-start p-4 w-full md:w-1/2 xl:w-1/3  border-2 border-slate-950 bg-slate-300 rounded-lg items-center">
-            <Image 
-            src={"/mackyna.png"}
-            alt="Logo mackyna"
-            width={163}
-            height={111}
-            />
+                <Image
+                    src={"/mackyna.png"}
+                    alt="Logo mackyna"
+                    width={163}
+                    height={111}
+                />
                 <form onSubmit={handleSubmit} className="flex flex-col justify-start p-2 mt-10">
                     <label htmlFor="email">Email:</label>
                     <input
@@ -69,13 +71,13 @@ export default function LoginForm() {
                 </form>
                 <p className="text-center">ó</p>
                 <button
-                    onClick={() => signIn("google",{ callbackUrl: '/' })}
+                    onClick={() => signIn("google", { callbackUrl: '/' })}
                     className="p-2 rounded-lg w-1/4 items-center justify-center border bg-white border-slate-200 m-auto mt-5 ">
 
-                    <FcGoogle className="m-auto"/>
+                    <FcGoogle className="m-auto h-9 w-9" />
 
                 </button>
-                <span className="flex justify-center mt-2">¿Aún no tenés cuenta? <Link href={"/signUp"} className=" mx-2 underline text-emerald-700" >Resgistrate AQUI</Link></span>
+                <span className="flex justify-center mt-2">¿Aún no tenés cuenta? <Link href={"/signUp"} className=" mx-2 underline text-emerald-700 hover:font-semibold" >Resgistrate AQUI</Link></span>
             </div>
         </div>
     )

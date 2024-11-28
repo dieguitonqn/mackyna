@@ -5,6 +5,10 @@ import { signIn, useSession, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import { GrLogin } from "react-icons/gr";
 import { usePathname } from 'next/navigation'
+import { TfiDashboard } from "react-icons/tfi";
+import { IoIosLogOut } from "react-icons/io";
+
+import { FaUsers, FaChalkboardTeacher } from "react-icons/fa";
 
 function Navbar() {
     const pathname = usePathname()
@@ -52,30 +56,55 @@ function Navbar() {
                             height={50}
                         />
                     </Link>
+                    <p>Hola {session.user.name}!</p>
                     <div className='flex flex-row gap-2 items-center'>
+                        {(isAdmin || isUser) &&
+                            <Link
+                                href={"/portalAlumnos"}
+                                className='flex items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg '
+                            >
+                                <FaChalkboardTeacher />
+                                Portal Alumnos
+                            </Link>
+                        }
+                        {(isAdmin || isTeach) &&
+                            <Link
+                                href={"/portalProfes"}
+                                className='flex items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg '
+                            >
+                                <FaChalkboardTeacher />
+                                Portal Profes
+                            </Link>
+                        }
                         {isAdmin &&
                             <Link
                                 href={"/dashboard"}
-                                className=' px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg '
-                                >
-                            Dashboard
-                            </Link>}
-                        {isAdmin &&
-                            <Link 
-                            href={"/users"}
-                            className=' px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg '
+                                className=' flex items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg '
                             >
+                                <TfiDashboard />
+                                Admin Dashboard
+                            </Link>}
+
+                        {/* {isAdmin &&
+                            <Link
+                                href={"/users"}
+                                className='flex items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg '
+                            >
+                                <FaUsers />
                                 Users
-                                </Link>
-                        }
+                            </Link>
+                        } */}
+
                         <p>|</p>
-                        <p>Hola {session.user.name}!</p>
+
                         {/* <p>Tu rol es: {session.user.rol}</p> */}
                         <button
                             onClick={() => signOut({ callbackUrl: '/' })}
-                            className='bg-red-500 px-4 py-2 rounded-md hover:font-semibold'
+                            className='flex items-center gap-1 bg-red-500 px-4 py-2 rounded-md hover:font-semibold'
                         >
+
                             Log out
+                            <IoIosLogOut className='h-7 w-7' />
                         </button>
 
                     </div>
