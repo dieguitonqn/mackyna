@@ -12,7 +12,7 @@ interface card {
 
 function CardInit({ imagen, titulo, desc, link }: card) {
   return (
-    <div className="flex flex-col bg-white border border-slate-500 h-96 w-80">
+    <div className="flex flex-col bg-white border border-slate-500  w-80">
       <Link href={link}>
         <div className="flex w-full border border-slate-400 items-center justify-center p-5">
           <Image
@@ -22,9 +22,9 @@ function CardInit({ imagen, titulo, desc, link }: card) {
             height={200}
           />
         </div>
-        <div className=" flex flex-col w-full border border-slate-400 p-5 gap-2">
+        <div className=" flex flex-col w-full h-36 border border-slate-400 p-5 gap-2">
           <p className="text-2xl font-semibold">{titulo}</p>
-          <p>{desc}</p>
+          <p className="h-full">{desc}</p>
           {/* Descripción */}
         </div>
       </Link >

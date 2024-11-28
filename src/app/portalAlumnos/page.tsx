@@ -8,7 +8,7 @@ function Page() {
     const { data: session } = useSession();
     if (session) {
         return (
-            <div className='flex flex-col justify-center items-center h-screen mt-24'>
+            <div className='flex flex-col justify-center items-center h-screen '>
                 <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-20'>
                         Portal de Alumnos
                     </div>
