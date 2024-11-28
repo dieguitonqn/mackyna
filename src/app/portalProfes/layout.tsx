@@ -33,6 +33,13 @@ export default function DashboardLayout({
                             </Link>
                         </li>
                         <li>
+                            <Link href="/dashboard/ejercicios">
+                                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                                    Ejercicios
+                                </div>
+                            </Link>
+                        </li>
+                        <li>
                             <Link href="/dashboard/turnos">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                                     Turnos

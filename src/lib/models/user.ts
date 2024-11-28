@@ -1,7 +1,8 @@
-import { Schema, model, models } from "mongoose"
+import { ObjectId, Schema, model, models } from "mongoose"
 
 
 interface IUser {
+    _id:ObjectId;
     nombre: string;
     apellido:string;
     email: string;
@@ -11,11 +12,11 @@ interface IUser {
 
 const UserSchema = new Schema(
     {
-        nombre: {type: "string", required: true},
-        apellido: {type: "string", required: true},
-        email:{type: "string", required: true, unique: true},
-        pwd:{type: "string", required: true},
-        rol:{type:"string", enum: ['user', 'admin', 'teacher', ''], default:"user"}
+        nombre: {type: String, required: true},
+        apellido: {type: String, required: true},
+        email:{type: String, required: true, unique: true},
+        pwd:{type: String, required: true},
+        rol:{type:String, enum: ['user', 'admin', 'teacher', ''], default:"user"}
     },
     {
         timestamps:true
