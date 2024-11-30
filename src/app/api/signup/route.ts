@@ -12,8 +12,10 @@ export const GET = async () => {
         const users = await User.find();
 
         return new NextResponse(JSON.stringify(users), { status: 200 });
-    } catch (error: any) {
-        return new NextResponse("error:" + error.message, { status: 500 })
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return new NextResponse("error: " + error.message, { status: 500 });
+        }
 
     }
 }
@@ -36,7 +38,6 @@ export const POST = async (req: Request) => {
 
         // Hashear la contraseña con Argon2
         const hashedPassword = await argon2.hash(body.pwd);
-        console.log(hashedPassword);
         // Crear un nuevo usuario
         const newUser = new User({
             ...body,
@@ -47,8 +48,12 @@ export const POST = async (req: Request) => {
         await newUser.save();
 
         return new NextResponse(JSON.stringify({ message: "recibido ok" }), { status: 200 })
-    } catch (error: any) {
-        return new NextResponse("error:" + error.message)
+    } catch (error: unknown) {
+
+        if(error instanceof Error){
+            return new NextResponse("error:" + error.message)
+        }
+        return new NextResponse("Error: "+ error, {status:500})
 
     }
 }

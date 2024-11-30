@@ -1,17 +1,16 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
-import { signIn, useSession, signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import { GrLogin } from "react-icons/gr";
-import { usePathname } from 'next/navigation'
+// import { usePathname } from 'next/navigation'
 import { TfiDashboard } from "react-icons/tfi";
 import { IoIosLogOut } from "react-icons/io";
 
-import { FaUsers, FaChalkboardTeacher } from "react-icons/fa";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 function Navbar() {
-    const pathname = usePathname()
     const { data: session } = useSession()
     const isAdmin = session?.user.rol === "admin";
     const isTeach = session?.user.rol === "teacher";

@@ -5,7 +5,6 @@ import FacebookProvider from "next-auth/providers/facebook";
 import User from "@/lib/models/user";
 
 import CredentialsProvider from "next-auth/providers/credentials";
-import mongoose from "mongoose";
 import connect from "@/lib/db";
 import argon2 from "argon2"
 
@@ -82,7 +81,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     // Verificar si el usuario está registrado antes de permitirle iniciar sesión
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
       try {
         await connect();
 
@@ -99,7 +98,7 @@ const handler = NextAuth({
         return false; // Denegar acceso en caso de error
       }
     },
-    async session({ session, token, user }) {
+    async session({ session }) {
       // Suponemos que el token contiene propiedades 'accessToken' y 'id'
       await connect()
 

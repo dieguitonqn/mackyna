@@ -18,9 +18,12 @@ const connect =async ()=>{
             bufferCommands:true
         });
         console.log("Connected");
-    } catch (error:any) {
-        console.log("error"+error);
-        throw new Error ("Error: ", error)
+    } catch (error:unknown) {
+        // console.log("error"+error);
+        if(error instanceof Error){
+            throw new Error ("Error: ", error)    
+        }
+        
         
     }
 }
