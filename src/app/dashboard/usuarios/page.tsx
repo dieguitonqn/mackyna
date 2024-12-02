@@ -22,8 +22,8 @@ const Usuarios: React.FC = () => {
         }
         const data: User[] = await response.json();
         setUsers(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError("Error: "+err);
       } finally {
         setLoading(false);
       }
