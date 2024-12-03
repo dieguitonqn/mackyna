@@ -9,9 +9,9 @@ export default function DashboardLayout({
     return (
         <div className="flex min-h-screen bg-gray-100">
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-800 text-white flex flex-col">
+            <aside className="w-32 bg-gray-800 text-white flex flex-col">
                 {/* Logo e información */}
-                <div className="p-6 text-center">
+                <div className="p-6 text-center justify-start">
                     <Image
                         src="/icono_profes.jpeg" // Cambia esta ruta a la de tu logo
                         alt="Logo"
@@ -19,7 +19,7 @@ export default function DashboardLayout({
                         height={200}
                         className="mx-auto rounded-full"
                     />
-                    <h1 className="mt-4 text-lg font-bold">Mackyna Entrenamiento</h1>
+                    <h1 className="mt-4 text-sm font-bold">Mackyna de entrenar</h1>
                 </div>
 
                 {/* Links */}
