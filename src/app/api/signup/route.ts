@@ -3,6 +3,8 @@ import connect from "@/lib/db";
 import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
 import  argon2 from "argon2";
+import { validateTurnstileToken } from "next-turnstile";
+import { v4 } from "uuid";
 
 
 
@@ -10,6 +12,7 @@ import  argon2 from "argon2";
 export const POST = async (req: Request) => {
     try {
         const body = await req.json();
+        console.log(body);
         await connect();
         const existingUser = await User.findOne(
 
@@ -21,17 +24,26 @@ export const POST = async (req: Request) => {
         if (existingUser) {
             return new NextResponse(JSON.stringify({ message: "Usuario ya existe" }), { status: 409 }); // Conflicto
         }
-
+        const validationResponse = await validateTurnstileToken({
+            token:body.token,
+            secretKey: process.env.TURNSTILE_SECRET_KEY!,
+            // Optional: Add an idempotency key to prevent token reuse
+            idempotencyKey: v4(),
+            // sandbox: process.env.NODE_ENV === "development",
+          });
+          if (!validationResponse.success) {
+            return NextResponse.json({ message: "Invalid token" }, { status: 400 });
+          }
         // Hashear la contraseña con Argon2
-        const hashedPassword = await argon2.hash(body.pwd);
-        // Crear un nuevo usuario
-        const newUser = new User({
-            ...body,
-            pwd: hashedPassword, // Guardar la contraseña hasheada
-        });
+        // const hashedPassword = await argon2.hash(body.pwd);
+        // // Crear un nuevo usuario
+        // const newUser = new User({
+        //     ...body,
+        //     pwd: hashedPassword, // Guardar la contraseña hasheada
+        // });
 
-        // Guardar el usuario en la base de datos
-        await newUser.save();
+        // // Guardar el usuario en la base de datos
+        // await newUser.save();
 
         return new NextResponse(JSON.stringify({ message: "recibido ok" }), { status: 200 })
     } catch (error: unknown) {
