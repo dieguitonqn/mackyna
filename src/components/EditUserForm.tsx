@@ -1,4 +1,4 @@
-import FetchUsers from '@/lib/fetchUsers';
+// import FetchUsers from '@/lib/fetchUsers';
 import React, { useState, useEffect } from 'react';
 
 type EditUserFormProps = {
@@ -34,7 +34,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
                 const data = await response.json();
                 setUserData(data);
             } catch (err: unknown) {
-                setError('Error al cargar los datos del usuario');
+                setError('Error al cargar los datos del usuario'+err);
             }
         };
 
@@ -69,7 +69,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
           onClose(); // Cierra el formulario
           
         } catch (err: unknown) {
-          setError('Error al actualizar el usuario');
+          setError('Error al actualizar el usuario'+err);
         } finally {
           setLoading(false);
         }

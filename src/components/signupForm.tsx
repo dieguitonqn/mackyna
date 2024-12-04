@@ -21,18 +21,18 @@ export const SignUpForm = () => {
         pwd: "",
         token: "",
     });
-    const [turnstileStatus, setTurnstileStatus] = useState<
-        "success" | "error" | "expired" | "required"
-    >("required");
-    const [error, setError] = useState<string | null>(null);
+    // const [turnstileStatus, setTurnstileStatus] = useState<
+    //     "success" | "error" | "expired" | "required"
+    // >("required");
+    // const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setError(null);
+        // setError(null);
         setIsLoading(true);
         try {
-            console.log(formData);
+            // console.log(formData);
             const response = await fetch('/api/signup', {
                 method: 'POST',
                 headers: {
@@ -96,21 +96,21 @@ export const SignUpForm = () => {
                     retry="auto"
                     refreshExpired="auto"
                     theme="light"
-                    onError={() => {
-                        setTurnstileStatus("error");
-                        setError("Security check failed. Please try again.");
-                    }}
-                    onExpire={() => {
-                        setTurnstileStatus("expired");
-                        setError("Security check expired. Please verify again.");
-                    }}
-                    onLoad={() => {
-                        setTurnstileStatus("required");
-                        setError(null);
-                    }}
+                    // onError={() => {
+                    //     setTurnstileStatus("error");
+                    //     setError("Security check failed. Please try again.");
+                    // }}
+                    // onExpire={() => {
+                    //     setTurnstileStatus("expired");
+                    //     setError("Security check expired. Please verify again.");
+                    // }}
+                    // onLoad={() => {
+                    //     setTurnstileStatus("required");
+                    //     setError(null);
+                    // }}
                     onVerify={(token) => {
-                        setTurnstileStatus("success");
-                        setError(null);
+                        // setTurnstileStatus("success");
+                        // setError(null);
                         setFormData((prev) => ({ ...prev, token }));
                     }}
                     

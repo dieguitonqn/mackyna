@@ -1,8 +1,8 @@
 'use client';
 
 import EditUserForm from '@/components/EditUserForm';
-import { requestToBodyStream } from 'next/dist/server/body-streams';
-import router from 'next/router';
+// import { requestToBodyStream } from 'next/dist/server/body-streams';
+// import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 type User = {
@@ -69,7 +69,6 @@ const Usuarios: React.FC = () => {
     // router.push(`/editar-usuario?email=${encodeURIComponent(email)}`);
     setSelectedEmail(email); // Guarda el email en el estado
   };
-  requestToBodyStream
 
   return (
     <div className="container mx-auto p-6">
