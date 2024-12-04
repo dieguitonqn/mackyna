@@ -77,7 +77,7 @@ export default function LoginForm() {
                     <FcGoogle className="m-auto h-9 w-9" />
 
                 </button>
-                <span className="flex justify-center mt-2">¿Aún no tenés cuenta? <Link href={"/signUp"} className=" mx-2 underline text-emerald-700 hover:font-semibold" >Resgistrate AQUI</Link></span>
+                <span className="flex justify-center mt-2">¿Aún no tenés cuenta? <a href={"/signUp"} className=" mx-2 underline text-emerald-700 hover:font-semibold" >Resgistrate AQUI</a></span>
             </div>
         </div>
     )
