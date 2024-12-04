@@ -35,15 +35,15 @@ export const POST = async (req: Request) => {
             return NextResponse.json({ message: "Invalid token" }, { status: 400 });
           }
         // Hashear la contraseña con Argon2
-        // const hashedPassword = await argon2.hash(body.pwd);
-        // // Crear un nuevo usuario
-        // const newUser = new User({
-        //     ...body,
-        //     pwd: hashedPassword, // Guardar la contraseña hasheada
-        // });
+        const hashedPassword = await argon2.hash(body.pwd);
+        // Crear un nuevo usuario
+        const newUser = new User({
+            ...body,
+            pwd: hashedPassword, // Guardar la contraseña hasheada
+        });
 
-        // // Guardar el usuario en la base de datos
-        // await newUser.save();
+        // Guardar el usuario en la base de datos
+        await newUser.save();
 
         return new NextResponse(JSON.stringify({ message: "recibido ok" }), { status: 200 })
     } catch (error: unknown) {
