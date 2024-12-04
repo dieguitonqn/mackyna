@@ -1,10 +1,14 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import Script from "next/script";
 // import { Turnstile } from "next-turnstile";
-
+declare global {
+    interface Window {
+        javascriptCallback?: (token: string) => void;
+    }
+}
 interface FormData {
     nombre: string;
     apellido: string;
@@ -28,6 +32,23 @@ export const SignUpForm = () => {
     // >("required");
     // const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+
+    // Función para capturar el token desde Turnstile
+    const handleTurnstileCallback = (token: string) => {
+        setFormData((prev) => ({ ...prev, token }));
+        // console.log("Token recibido:", token);
+    };
+
+    useEffect(() => {
+        // Registrar la función en el objeto global
+        (window as Window).javascriptCallback = handleTurnstileCallback;
+
+        return () => {
+            // Limpiar la referencia para evitar conflictos
+            delete (window as Window).javascriptCallback;
+        };
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -99,39 +120,15 @@ export const SignUpForm = () => {
                     className="border-slate-500 border rounded-sm p-1"
                     onChange={(e) => setFormData((prev) => ({ ...prev, pwd: e.target.value }))}
                 />
+                
+                    <div
+                        className="cf-turnstile mt-6 "
+                        data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                        data-callback="javascriptCallback"
+                        data-theme="light"
 
-                {/* <div className="mt-6"> */}
-                <div
-                    className="cf-turnstile"
-                    data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                    data-callback="javascriptCallback"
-
-                ></div>
-                {/* <Turnstile
-                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-                    retry="auto"
-                    refreshExpired="auto"
-                    theme="light"
-                    // onError={() => {
-                    //     setTurnstileStatus("error");
-                    //     setError("Security check failed. Please try again.");
-                    // }}
-                    // onExpire={() => {
-                    //     setTurnstileStatus("expired");
-                    //     setError("Security check expired. Please verify again.");
-                    // }}
-                    // onLoad={() => {
-                    //     setTurnstileStatus("required");
-                    //     setError(null);
-                    // }}
-                    onVerify={(token) => {
-                        // setTurnstileStatus("success");
-                        // setError(null);
-                        setFormData((prev) => ({ ...prev, token }));
-                    }}
-                    
-                /> */}
-                {/* </div> */}
+                    ></div>
+                
                 <button className="bg-green-700 px-4 py-2 text-white font-semibold mt-5" disabled={isLoading}>
                     {isLoading ? "Registrando..." : "Registrarse"}
                 </button>

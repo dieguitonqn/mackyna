@@ -12,7 +12,7 @@ import { v4 } from "uuid";
 export const POST = async (req: Request) => {
     try {
         const body = await req.json();
-        // console.log(body);
+        console.log(body);
         await connect();
         const existingUser = await User.findOne(
 
