@@ -61,9 +61,10 @@ export const SignUpForm = () => {
     return (
         <>
             <Script
+                id="Turnstile"
                 src="https://challenges.cloudflare.com/turnstile/v0/api.js"
                 async
-                
+
                 defer>
             </Script>
             <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-1">
@@ -104,7 +105,7 @@ export const SignUpForm = () => {
                     className="cf-turnstile"
                     data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                     data-callback="javascriptCallback"
-                    
+
                 ></div>
                 {/* <Turnstile
                     siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
