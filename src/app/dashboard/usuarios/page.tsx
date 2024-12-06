@@ -24,6 +24,7 @@ const Usuarios: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletedUser, setDeletedUser] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,7 +44,7 @@ const Usuarios: React.FC = () => {
     };
 
     fetchUsers();
-  }, [selectedEmail]);
+  }, [selectedEmail, deletedUser]);
 
   useEffect(() => {
     const filtered = users.filter((user) =>
@@ -66,6 +67,29 @@ const Usuarios: React.FC = () => {
   const handleEdit = (email: string) => {
     setSelectedEmail(email); // Guarda el email en el estado
   };
+
+  const handleDelete = async (id: string) => {
+    try {
+        const isConfirmed = window.confirm("¿Estás seguro de que deseas borrar este usuario?");
+        if (!isConfirmed) {
+            return; // Si el usuario cancela, no se procede
+        }
+        const responseDel = await fetch(`/api/usuarios?id=${id}`,
+            {
+                method: 'DELETE'
+            }
+        );
+        if (!responseDel.ok) {
+            throw new Error('Error al borrar el usuario');
+        }
+        setDeletedUser(true);
+        alert('Usuario borrado con éxito');
+        setDeletedUser(false)
+    } catch (err: unknown) {
+        throw new Error('Error al borrar el usuario' + err);
+    }
+
+}
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -120,7 +144,8 @@ const Usuarios: React.FC = () => {
                     >
                       Editar
                     </button>
-                    <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm">
+                    <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
+                    onClick={() => handleDelete(user._id)}>
                       Borrar
                     </button>
                   </td>

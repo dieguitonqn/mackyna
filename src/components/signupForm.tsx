@@ -88,7 +88,7 @@ export const SignUpForm = () => {
 
                 defer>
             </Script>
-            <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-1">
+            <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-1 ">
                 <label htmlFor="nombre">Nombre</label>
                 <input
                     type="text"

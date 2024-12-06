@@ -4,6 +4,7 @@
 // import { useRouter } from 'next/navigation';
 // import { useEffect } from 'react';
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
 
@@ -26,9 +27,9 @@ export default function Page() {
           Entrenamientos personalizados y las mejores instalaciones para ti.
         </p>
         <div className="mt-6 flex gap-4">
-          <button className="px-6 py-3 text-lg font-semibold bg-green-600 hover:bg-green-500 rounded-lg">
+          <Link href={"/signUp"} className="px-6 py-3 text-lg font-semibold bg-green-600 hover:bg-green-500 rounded-lg">
             ¡Inscríbete ahora!
-          </button>
+          </Link>
           <button className="px-6 py-3 text-lg font-semibold bg-white text-black rounded-lg hover:bg-gray-200">
             Conoce más
           </button>
