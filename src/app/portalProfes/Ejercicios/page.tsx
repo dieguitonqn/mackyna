@@ -2,6 +2,7 @@
 
 import NewEjercicioForm from '@/components/AddEjercicio';
 import EditEjercicioForm from '@/components/EditEjercicioForm';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { MdOutlineAddChart } from "react-icons/md";
 
@@ -138,6 +139,7 @@ const Ejercicios: React.FC = () => {
                                         e.target.value
                                     )
                                 }
+                                required
                             />
 
 
@@ -157,6 +159,7 @@ const Ejercicios: React.FC = () => {
                                         e.target.value
                                     )
                                 }
+                                required
                             />
 
                         </th>
@@ -175,6 +178,7 @@ const Ejercicios: React.FC = () => {
                                         e.target.value
                                     )
                                 }
+                                required
                             />
 
                         </th>
@@ -232,7 +236,16 @@ const Ejercicios: React.FC = () => {
                             <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td>
                             <td className="px-2 py-2 border">{ejercicio.specificMusc}</td>
                             <td className="px-2 py-2 border">{ejercicio.description}</td>
-                            <td className="px-2 py-2 border">{ejercicio.video}</td>
+                            <td className="px-2 py-2 border">
+                                {ejercicio.video ? (
+                                    <a href={ejercicio.video} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                        Ver Video
+                                    </a>
+                                ) : (
+                                    ""
+                                )}
+                            </td>
+
                             <td className="px-2 py-2 flex flex-col gap-1 items-center">
                                 <button
                                     className="w-full px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
