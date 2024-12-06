@@ -12,7 +12,7 @@ import { HamburguesaAdmin, HamburguesaTeach, HamburguesaUsers } from './hamburgu
 function Navbar() {
   const { data: session } = useSession();
   const isAdmin = session?.user.rol === 'admin';
-  const isTeach = session?.user.rol === 'teacher';
+  const isTeach = session?.user.rol === 'teach';
   const isUser = session?.user.rol === 'user';
 
   if (!session) {
