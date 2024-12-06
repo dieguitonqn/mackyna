@@ -2,7 +2,7 @@
 
 import NewEjercicioForm from '@/components/AddEjercicio';
 import EditEjercicioForm from '@/components/EditEjercicioForm';
-import Link from 'next/link';
+
 import React, { useEffect, useState } from 'react'
 import { MdOutlineAddChart } from "react-icons/md";
 
