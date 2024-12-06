@@ -7,7 +7,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-gray-100 overflow-x-scroll">
             {/* Sidebar */}
             <aside className="w-32 bg-gray-800 text-white flex flex-col">
                 {/* Logo e información */}
@@ -33,7 +33,7 @@ export default function DashboardLayout({
                             </Link>
                         </li>
                         <li>
-                            <Link href="/dashboard/ejercicios">
+                            <Link href="/portalProfes/Ejercicios">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                                     Ejercicios
                                 </div>
@@ -64,10 +64,8 @@ export default function DashboardLayout({
 
             {/* Main Content */}
             <main className="flex-grow p-8">
-                {/* <h1 className="text-2xl font-bold text-gray-800">Bienvenido al Dashboard</h1>
-                <p className="mt-4 text-gray-600">
-                    Usa el menú a la izquierda para navegar entre las secciones.
-                </p> */}
+                <h1 className="text-2xl font-bold text-gray-800">Portal de Profesores</h1>
+                
                 {children}
             </main>
         </div>

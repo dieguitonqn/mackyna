@@ -1,8 +1,6 @@
 'use client';
 
 import EditUserForm from '@/components/EditUserForm';
-// import { requestToBodyStream } from 'next/dist/server/body-streams';
-// import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 type User = {
@@ -48,7 +46,7 @@ const Usuarios: React.FC = () => {
   }, [selectedEmail]);
 
   useEffect(() => {
-    const filtered = users.filter(user =>
+    const filtered = users.filter((user) =>
       user.nombre.toLowerCase().includes(filters.nombre.toLowerCase()) &&
       user.apellido.toLowerCase().includes(filters.apellido.toLowerCase()) &&
       user.email.toLowerCase().includes(filters.email.toLowerCase()) &&
@@ -58,7 +56,7 @@ const Usuarios: React.FC = () => {
   }, [filters, users]);
 
   const handleFilterChange = (field: keyof User, value: string) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleClose = () => {
@@ -66,12 +64,11 @@ const Usuarios: React.FC = () => {
   };
 
   const handleEdit = (email: string) => {
-    // router.push(`/editar-usuario?email=${encodeURIComponent(email)}`);
     setSelectedEmail(email); // Guarda el email en el estado
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Lista de Usuarios</h1>
 
       {loading && <p className="text-center">Cargando usuarios...</p>}
@@ -79,71 +76,60 @@ const Usuarios: React.FC = () => {
 
       {!loading && !error && (
         <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border border-gray-200">
+          <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-4 py-2 text-left text-gray-600">
-                  Nombre
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded"
-                    placeholder="Filtrar por nombre"
-                    value={filters.nombre}
-                    onChange={(e) => handleFilterChange('nombre', e.target.value)}
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-gray-600">
-                  Apellido
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded"
-                    placeholder="Filtrar por apellido"
-                    value={filters.apellido}
-                    onChange={(e) => handleFilterChange('apellido', e.target.value)}
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-gray-600">
-                  Email
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded"
-                    placeholder="Filtrar por email"
-                    value={filters.email}
-                    onChange={(e) => handleFilterChange('email', e.target.value)}
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-gray-600">
-                  Rol
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded"
-                    placeholder="Filtrar por rol"
-                    value={filters.rol}
-                    onChange={(e) => handleFilterChange('rol', e.target.value)}
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-center text-gray-600">
-                  Acciones
-
-                </th>
+                {['Nombre', 'Apellido', 'Email', 'Rol', 'Acciones'].map((heading, idx) => (
+                  <th
+                    key={idx}
+                    className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                  >
+                    {heading}
+                    {idx < 4 && (
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        placeholder={`Filtrar por ${heading.toLowerCase()}`}
+                        value={filters[heading.toLowerCase() as keyof User]}
+                        onChange={(e) =>
+                          handleFilterChange(
+                            heading.toLowerCase() as keyof User,
+                            e.target.value
+                          )
+                        }
+                      />
+                    )}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {filteredUsers.map((user, index) => (
-                <tr key={index} className="hover:bg-gray-200">
-                  <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
-                  <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
-                  <td className="border border-gray-300 px-4 py-2">{user.email}</td>
-                  <td className="border border-gray-300 px-4 py-2">{user.rol}</td>
-                  <td className="border border-gray-300 px-4 py-2 justify-center items-center flex" onClick={() => handleEdit(user.email)}><button className='px-2 py-1 mx-2 bg-green-600 rounded-sm' onClick={() => handleEdit(user.email)}>Editar</button>|<button className='px-2 py-1 mx-2 bg-green-600 rounded-sm'>Borrar</button></td>
+                <tr
+                  key={index}
+                  className="hover:bg-gray-200 border-b last:border-b-0"
+                >
+                  <td className="px-2 py-2">{user.nombre}</td>
+                  <td className="px-2 py-2">{user.apellido}</td>
+                  <td className="px-2 py-2">{user.email}</td>
+                  <td className="px-2 py-2">{user.rol}</td>
+                  <td className="px-2 py-2 flex flex-col gap-1 items-center">
+                    <button
+                      className="w-full px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
+                      onClick={() => handleEdit(user.email)}
+                    >
+                      Editar
+                    </button>
+                    <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm">
+                      Borrar
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
           {selectedEmail && (
-            <>
-              <EditUserForm email={selectedEmail} onClose={handleClose}/>
-            </>
+            <EditUserForm email={selectedEmail} onClose={handleClose} />
           )}
         </div>
       )}

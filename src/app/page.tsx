@@ -14,7 +14,7 @@ export default function Page() {
       {/* Hero Section */}
       <section className="relative flex flex-col items-center justify-center text-center h-screen bg-gradient-to-b from-black via-gray-900 to-green-900">
         <Image 
-        src="/mackyna.png" 
+        src="/mackyna_verde.png" 
         alt="Gimnasio Logo" 
         width={300}
         height={300}

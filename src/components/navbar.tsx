@@ -21,7 +21,7 @@ function Navbar() {
         <nav className="flex justify-between text-white bg-black border border-slate-500 px-6 items-center">
           <Link href="/">
             <Image
-              src="/mackyna.png"
+              src="/mackyna_verde.png"
               alt="logo mackyna"
               width={100}
               height={50}
@@ -46,7 +46,7 @@ function Navbar() {
       <nav className="flex justify-between gap-2 text-white bg-black border border-slate-500 px-6 items-center">
         <Link href="/">
           <Image
-            src="/mackyna.png"
+            src="/mackyna_verde.png"
             alt="logo mackyna"
             width={100}
             height={50}

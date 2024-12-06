@@ -25,9 +25,9 @@ const toggleMenu = () => {
             {isOpen && (
                 <div className="flex mt-4">
                     <ul className="flex flex-col space-y-2 text-left text-xs">
-                        <li><Link href="/portalProfes" className="text-white hover:font-semibold p-2 transition-all duration-300 ease-in-out rounded-sm">|Portal Profesores</Link></li>
-                        <li><Link href="/portalAlumnos" className="text-white hover:font-semibold p-2 transition-all duration-300 ease-in-out rounded-sm">|Portal Alumnos</Link></li>
-                        <li><Link href="/dashboard" className="text-white hover:font-semibold p-2 transition-all duration-300 ease-in-out rounded-sm">|Admin Dashboard</Link></li>
+                        <li className="shadow-green-500 shadow-sm rounded-sm justify-center flex "><Link href="/portalProfes" className="text-white hover:font-semibold p-2 transition-all duration-300 ease-in-out rounded-sm ">Portal Profesores</Link></li>
+                        <li className="shadow-green-500 shadow-sm rounded-sm justify-center flex "><Link href="/portalAlumnos" className="text-white hover:font-semibold p-2 transition-all duration-300 ease-in-out rounded-sm ">Portal Alumnos</Link></li>
+                        <li className="shadow-green-500 shadow-sm rounded-sm justify-center flex "><Link href="/dashboard" className="text-white hover:font-semibold p-2 transition-all duration-300 ease-in-out rounded-sm ">Admin Dashboard</Link></li>
                         <button
                             onClick={() => signOut({ callbackUrl: '/' })}
                             className='flex items-center justify-center gap-1 bg-red-500 px-1 py-1 rounded-md hover:font-semibold'
