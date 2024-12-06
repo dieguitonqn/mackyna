@@ -121,6 +121,7 @@ const EditEjercicioForm: React.FC<EditEjercicioFormProps> = ({ _id, onClose }) =
               
             />
           </div>
+        
           <div className="mb-4">
             <label htmlFor="description" className="block text-gray-700">
               Descripción
@@ -137,6 +138,21 @@ const EditEjercicioForm: React.FC<EditEjercicioFormProps> = ({ _id, onClose }) =
             >
             </textarea>
 
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="video" className="block text-gray-700">
+              Video
+            </label>
+            <input
+              type="text"
+              id="video"
+              name="video"
+              value={ejercicioData.video}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              
+            />
           </div>
           <div className="flex justify-between">
             <button
