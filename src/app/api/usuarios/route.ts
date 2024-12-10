@@ -3,21 +3,52 @@ import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+// export const GET = async () => {
+//     try {
+
+//         await connect();
+//         const users = await User.find();
+
+//         return new NextResponse(JSON.stringify(users), { status: 200 });
+//     } catch (error: unknown) {
+//         if (error instanceof Error) {
+//             return new NextResponse("error: " + error.message, { status: 500 });
+//         }
+
+//     }
+// }
+export const GET = async (req: Request) => {
+    const { searchParams } = new URL(req.url);
+    const _id = searchParams.get("id");
     try {
-
         await connect();
-        const users = await User.find();
 
+        // Si se proporciona un `id`, buscar el ejercicio específico
+        if (_id) {
+
+
+            if (!ObjectId.isValid(_id)) {
+                return new NextResponse("El ID no es válido", { status: 400 });
+            }
+
+            const user = await User.findById(new ObjectId(_id));
+
+            if (!user) {
+                return new NextResponse("Usuario no encontrado", { status: 404 });
+            }
+
+            return new NextResponse(JSON.stringify(user), { status: 200 });
+        }
+
+        //     // Si no hay `id`, devolver todos los users
+        const users = await User.find();
         return new NextResponse(JSON.stringify(users), { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {
-            return new NextResponse("error: " + error.message, { status: 500 });
+            return new NextResponse("Error: " + error.message, { status: 500 });
         }
-
     }
-}
-
+};
 
 
 export const POST = async (req: Request) => {

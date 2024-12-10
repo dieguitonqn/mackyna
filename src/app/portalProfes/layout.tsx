@@ -26,7 +26,7 @@ export default function DashboardLayout({
                 <nav className="mt-6 flex-grow">
                     <ul className="space-y-2">
                         <li>
-                            <Link href="/dashboard/usuarios">
+                            <Link href="/portalProfes/Alumnos">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                                     Alumnos
                                 </div>
@@ -53,12 +53,19 @@ export default function DashboardLayout({
                                 </div>
                             </Link>
                         </li>
+                        <li>
+                            <Link href="/portalProfes/newPlani">
+                                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                                    Nueva Planilla
+                                </div>
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
 
                 {/* Footer */}
                 <div className="p-4 text-sm text-center border-t border-gray-700">
-                    &copy; 2024 Mi Gimnasio
+                    &copy; 2024 Mackyna
                 </div>
             </aside>
 

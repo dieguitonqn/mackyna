@@ -14,13 +14,15 @@ const ExerciseSchema = new Schema(
   
 const PlaniSchema = new Schema(
     {
-        userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        nombre: { type: String, required: true },
+        month:{type:String, required:true},
+        year:{type:String, required:true},
+        userId: {type:String, required: true },
+        email: { type: String, required: true },
 
-        bloque1: { type: [ExerciseSchema], required: true },
-        bloque2: { type: [ExerciseSchema], required: true },
-        bloque3: { type: [ExerciseSchema], required: true },
-        bloque4: { type: [ExerciseSchema], required: true },
+        Bloque1: { type: [ExerciseSchema] },
+        Bloque2: { type: [ExerciseSchema] },
+        Bloque3: { type: [ExerciseSchema] },
+        Bloque4: { type: [ExerciseSchema] },
 
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
