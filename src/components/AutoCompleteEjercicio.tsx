@@ -60,9 +60,11 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
               key={ejercicio._id} // Convierte el ObjectId si es un objeto
 
               onClick={() => handleSelect(ejercicio)}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              className="px-4 py-2 cursor-pointer hover:bg-gray-100 border-b "
             >
-              {ejercicio.nombre + "," + " Desc: " + ejercicio.description}
+              <p className="font-semibold">{ejercicio.nombre }</p>
+              
+              <p className="italic font-extralight">{" Desc: " + ejercicio.description}</p>
             </li>
           ))}
         </ul>
