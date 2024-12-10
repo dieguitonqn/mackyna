@@ -24,7 +24,7 @@ const Usuarios: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [deletedUser, setDeletedUser] = useState<boolean | null>(null);
+  // const [deletedUser, setDeletedUser] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -44,7 +44,7 @@ const Usuarios: React.FC = () => {
     };
 
     fetchUsers();
-  }, [selectedEmail, deletedUser]);
+  }, [selectedEmail]);
 
   useEffect(() => {
     const filtered = users.filter((user) =>
@@ -64,9 +64,9 @@ const Usuarios: React.FC = () => {
     setSelectedEmail(null); // Cierra el formulario
   };
 
-  const handlePlanis = (email: string) => {
-    setSelectedEmail(email); // Guarda el email en el estado
-  };
+  // const handlePlanis = (email: string) => {
+  //   setSelectedEmail(email); // Guarda el email en el estado
+  // };
 
 
   return (

@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import React, { useState } from "react";
 
 interface User {
-  id: ObjectId | string;
+  _id: ObjectId | string;
   nombre: string;
   apellido: string;
   email: string;
@@ -55,12 +55,12 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
         <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-white rounded-lg shadow-lg z-10 mt-1">
           {filteredUsers.map((user) => (
             <li
-            key={typeof user.id === "object" ? user.id.toString() : user.id} // Convierte el ObjectId si es un objeto
+            key={typeof user._id === "object" ? user._id.toString() : user._id} // Convierte el ObjectId si es un objeto
               
               onClick={() => handleSelect(user)}
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"
             >
-              {user.nombre+", "+user.apellido+". ID: "+ user.id}
+              {user.nombre+", "+user.apellido+". ID: "+ user._id}
             </li>
           ))}
         </ul>

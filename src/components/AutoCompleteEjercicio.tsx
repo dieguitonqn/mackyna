@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
+// import { ObjectId } from "mongodb";
 import React, { useState } from "react";
 
 type Ejercicio = {
-  id: string;
+  _id: string;
   nombre: string;
   grupoMusc: string;
   specificMusc: string;
@@ -57,7 +57,7 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
         <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-white rounded-lg shadow-lg z-10 mt-1">
           {filtered.map((ejercicio) => (
             <li
-              key={ejercicio.id} // Convierte el ObjectId si es un objeto
+              key={ejercicio._id} // Convierte el ObjectId si es un objeto
 
               onClick={() => handleSelect(ejercicio)}
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"

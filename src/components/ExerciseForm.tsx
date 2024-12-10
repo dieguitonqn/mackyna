@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Exercise } from '@/types/plani';
-import AutoCompleteInput from './AutoCompleteEjercicio';
 import AutoCompleteInputEj from './AutoCompleteEjercicio';
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 }
 
 type Ejercicio = {
-    id: string;
+    _id: string;
     nombre: string;
     grupoMusc: string;
     specificMusc: string;
@@ -18,20 +17,20 @@ type Ejercicio = {
 };
 const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
-    const [selectedEjercicio, setSelectedEjercicio] = useState<Ejercicio>(); // Usuario seleccionado
+    // const [selectedEjercicio, setSelectedEjercicio] = useState<Ejercicio>(); // Usuario seleccionado
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const response = await fetch('/api/ejercicios');
                 const ejerciciosDB = await response.json();
-                const ejerciciosWithStringId = ejerciciosDB.map((ejercicio: any) => ({
+                const ejerciciosWithStringId = ejerciciosDB.map((ejercicio: Ejercicio) => ({
                     ...ejercicio,
                     id: ejercicio._id.toString(), // Convertir ObjectId a string
                 }));
 
                 setEjercicios(ejerciciosWithStringId);
-                console.log(ejerciciosWithStringId);
+                // console.log(ejerciciosWithStringId);
             } catch (err) {
                 console.error('Error al obtener usuarios:', err);
             }
@@ -70,11 +69,7 @@ const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
         setExercises(updatedExercises);
         onChange(bloque, updatedExercises);
     };
-    const formatBloque = (bloque: string): string => {
-        return bloque.replace(/(\D)(\d)/, (_, letras, numero) =>
-            `${letras.toUpperCase()} ${numero}`
-        );
-    };
+   
     return (
         <div className='flex flex-col justify-center text-center border border-slate-300 p-5 m-5 shadow-md rounded-md bg-white'>
             <h2 className='shadow-lg py-2 px-4 my-4 border border-slate-200 text-2xl'>

@@ -1,6 +1,6 @@
 import connect from "@/lib/db";
 import Plani from "@/lib/models/planillas";
-import { ObjectId } from "mongodb";
+// import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {

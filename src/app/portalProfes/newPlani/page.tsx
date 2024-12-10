@@ -6,9 +6,10 @@ import { Plani, Exercise } from '@/types/plani';
 import ExerciseForm from '@/components/ExerciseForm';
 import AutoCompleteInput from '@/components/AutocompleteUsers';
 import { ObjectId } from 'mongodb';
+import User from '@/lib/models/user';
 
 interface User {
-  id: ObjectId | string;
+  _id: ObjectId | string;
   nombre: string;
   apellido: string;
   email: string;
@@ -25,7 +26,7 @@ const NewPlan: React.FC = () => {
       try {
         const response = await fetch('/api/usuarios');
         const usersDB = await response.json();
-        const usersWithStringId = usersDB.map((user: any) => ({
+        const usersWithStringId = usersDB.map((user: User) => ({
           ...user,
           id: user._id.toString(), // Convertir ObjectId a string
         }));
@@ -65,7 +66,7 @@ const NewPlan: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...plan, userId: selectedUser.id }),
+        body: JSON.stringify({ ...plan, userId: selectedUser._id }),
       });
 
       if (!response.ok) throw new Error('Error al crear la planilla');
@@ -82,7 +83,7 @@ const NewPlan: React.FC = () => {
 
   const handleSelectUser = (user: User) => {
     setSelectedUser(user);
-    setPlan((prevPlan) => ({ ...prevPlan, userId: user.id.toString(), email: user.email }));
+    setPlan((prevPlan) => ({ ...prevPlan, userId: user._id.toString(), email: user.email }));
     console.log('Usuario seleccionado:', user);
   };
 
