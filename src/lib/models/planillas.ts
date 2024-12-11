@@ -5,7 +5,7 @@ import { Schema,  model, models } from "mongoose"
 const ExerciseSchema = new Schema(
     {
       name: { type: String, required: true }, // Nombre del ejercicio
-      reps: { type: Number, required: true }, // Repeticiones
+      reps: { type: String, required: true }, // Repeticiones
       sets: { type: Number, required: true }, // Series
       videoLink: { type: String, required: false }, // Enlace al video demostrativo
     },

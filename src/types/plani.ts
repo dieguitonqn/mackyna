@@ -1,6 +1,6 @@
 export interface Exercise {
     name: string;
-    reps: number;
+    reps: string;
     sets: number;
     videoLink?: string;
   }

@@ -40,7 +40,7 @@ const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
     const [exercises, setExercises] = useState<Exercise[]>([]);
 
     const handleAddExercise = () => {
-        const newExercise: Exercise = { name: '', reps: 0, sets: 0, videoLink: '' };
+        const newExercise: Exercise = { name: '', reps: '', sets: 0, videoLink: '' };
         const updatedExercises = [...exercises, newExercise];
         setExercises(updatedExercises);
         onChange(bloque, updatedExercises);
@@ -97,9 +97,9 @@ const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
                     </label>
                     <input
                         id={`reps-${index}`}
-                        type="number"
+                        type="text"
                         value={exercise.reps}
-                        onChange={(e) => handleInputChange(index, 'reps', parseInt(e.target.value) || 0)}
+                        onChange={(e) => handleInputChange(index, 'reps', e.target.value)}
                         className='mb-4 shadow-sm    p-1 border border-slate-200' required />
 
                     <label htmlFor={`sets-${index}`} style={{ display: 'block', marginBottom: '0.2rem' }}>

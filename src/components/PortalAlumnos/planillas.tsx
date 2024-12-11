@@ -94,7 +94,7 @@ const searchParams = useSearchParams();
       )}
 
       {selectedPlani && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-scroll">
           <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-lg">
             <div className='flex justify-end'>
             <button 

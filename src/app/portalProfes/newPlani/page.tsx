@@ -91,20 +91,55 @@ const NewPlan: React.FC = () => {
     <div className="flex flex-col justify-center items-center w-full">
       <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
       <form onSubmit={handleSubmit} className="w-full ">
-        <div className="flex flex-wrap justify-center gap-2 mb-5 max-w-3xl m-auto">
+        <div className="flex flex-wrap justify-center items-center gap-2 mb-5 max-w-3xl m-auto">
           {users && (
             <AutoCompleteInput users={users} onSelect={handleSelectUser} />
           )}
-          <input
-            type="text"
-            placeholder="Mes"
+          <select
             value={plan.month}
             onChange={(e) =>
               setPlan((prevPlan) => ({ ...prevPlan, month: e.target.value }))
             }
             className="border p-2 rounded-md"
-          />
-          <input
+            required
+          >
+            <option value="" disabled>
+              Selecciona un mes
+            </option>
+            <option value="Enero">Enero</option>
+            <option value="Febrero">Febrero</option>
+            <option value="Marzo">Marzo</option>
+            <option value="Abril">Abril</option>
+            <option value="Mayo">Mayo</option>
+            <option value="Junio">Junio</option>
+            <option value="Julio">Julio</option>
+            <option value="Agosto">Agosto</option>
+            <option value="Septiembre">Septiembre</option>
+            <option value="Octubre">Octubre</option>
+            <option value="Noviembre">Noviembre</option>
+            <option value="Diciembre">Diciembre</option>
+          </select>
+          <select
+  value={plan.year}
+  onChange={(e) =>
+    setPlan((prevPlan) => ({ ...prevPlan, year: e.target.value }))
+  }
+  className="border p-2 rounded-md"
+  required
+>
+  <option value="" disabled>
+    Selecciona el año
+  </option>
+  <option value="2024">2024</option>
+  <option value="2025">2025</option>
+  <option value="2026">2026</option>
+  <option value="2027">2027</option>
+  <option value="2028">2028</option>
+  <option value="2029">2029</option>
+  <option value="2030">2030</option>
+</select>
+
+          {/* <input
             type="text"
             placeholder="Año"
             value={plan.year}
@@ -112,7 +147,7 @@ const NewPlan: React.FC = () => {
               setPlan((prevPlan) => ({ ...prevPlan, year: e.target.value }))
             }
             className="border p-2 rounded-md"
-          />
+          /> */}
           <div className='flex flex-col'>
             <label htmlFor='startDate'>
               Fecha de comienzo
