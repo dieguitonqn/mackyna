@@ -120,35 +120,32 @@ const NewPlan: React.FC = () => {
             <option value="Diciembre">Diciembre</option>
           </select>
           <select
-  value={plan.year}
-  onChange={(e) =>
-    setPlan((prevPlan) => ({ ...prevPlan, year: e.target.value }))
-  }
-  className="border p-2 rounded-md"
-  required
->
-  <option value="" disabled>
-    Selecciona el año
-  </option>
-  <option value="2024">2024</option>
-  <option value="2025">2025</option>
-  <option value="2026">2026</option>
-  <option value="2027">2027</option>
-  <option value="2028">2028</option>
-  <option value="2029">2029</option>
-  <option value="2030">2030</option>
-</select>
-
-          {/* <input
-            type="text"
-            placeholder="Año"
             value={plan.year}
             onChange={(e) =>
               setPlan((prevPlan) => ({ ...prevPlan, year: e.target.value }))
             }
             className="border p-2 rounded-md"
-          /> */}
-          <div className='flex flex-col'>
+            required
+          >
+            <option value="" disabled>
+              Selecciona el año
+            </option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+          </select>
+
+        
+          <br />
+          
+
+        </div>
+        <div className='flex justify-center items-center gap-5'>
+        <div className='flex flex-col'>
             <label htmlFor='startDate'>
               Fecha de comienzo
             </label>
@@ -180,7 +177,6 @@ const NewPlan: React.FC = () => {
               className="border p-2 rounded-md"
             />
           </div>
-
         </div>
 
         <div className="flex flex-wrap justify-center items-start gap-4">
