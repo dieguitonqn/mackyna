@@ -9,6 +9,9 @@ import connect from "@/lib/db";
 import argon2 from "argon2"
 
 
+// export const authOptions:NextAuthOptions = {
+  
+// }
 
 
 const handler = NextAuth({
@@ -108,6 +111,7 @@ const handler = NextAuth({
       // Si encontramos al usuario en la base de datos, agregamos su rol a la sesión
       if (userWithRole) {
         session.user.rol = userWithRole.rol;
+        session.user.id=userWithRole._id;
       }
       console.log(session.user.rol);
       return session;

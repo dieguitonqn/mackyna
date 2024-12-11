@@ -45,10 +45,10 @@ const NewPlan: React.FC = () => {
     year: '',
     userId: '',
     email: '',
-    bloque1: [],
-    bloque2: [],
-    bloque3: [],
-    bloque4: [],
+    Bloque1: [],
+    Bloque2: [],
+    Bloque3: [],
+    Bloque4: [],
     startDate: '',
     endDate: '',
   });
@@ -61,12 +61,12 @@ const NewPlan: React.FC = () => {
     }
     console.log(plan)
     try {
-      const response = await fetch('/api/plan', {
+      const response = await fetch('/api/planillas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...plan, userId: selectedUser._id }),
+        body: JSON.stringify({ ...plan }),
       });
 
       if (!response.ok) throw new Error('Error al crear la planilla');
@@ -91,7 +91,7 @@ const NewPlan: React.FC = () => {
     <div className="flex flex-col justify-center items-center w-full">
       <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
       <form onSubmit={handleSubmit} className="w-full ">
-        <div className="flex justify-center gap-2 mb-5 max-w-3xl m-auto">
+        <div className="flex flex-wrap justify-center gap-2 mb-5 max-w-3xl m-auto">
           {users && (
             <AutoCompleteInput users={users} onSelect={handleSelectUser} />
           )}
@@ -113,13 +113,46 @@ const NewPlan: React.FC = () => {
             }
             className="border p-2 rounded-md"
           />
+          <div className='flex flex-col'>
+            <label htmlFor='startDate'>
+              Fecha de comienzo
+            </label>
+
+            <input
+              id="startDate"
+              type="date"
+              placeholder="Fecha de finalización"
+              value={plan.startDate}
+              onChange={(e) =>
+                setPlan((prevPlan) => ({ ...prevPlan, startDate: e.target.value }))
+              }
+              className="border p-2 rounded-md"
+            />
+          </div>
+          <div className='flex flex-col'>
+            <label htmlFor='endDate'>
+              Fecha de Finalización
+            </label>
+
+            <input
+              id="endDate"
+              type="date"
+              placeholder="Fecha de finalización"
+              value={plan.endDate}
+              onChange={(e) =>
+                setPlan((prevPlan) => ({ ...prevPlan, endDate: e.target.value }))
+              }
+              className="border p-2 rounded-md"
+            />
+          </div>
+
         </div>
 
         <div className="flex flex-wrap justify-center items-start gap-4">
-          <ExerciseForm bloque="bloque1" onChange={handleExerciseChange} />
-          <ExerciseForm bloque="bloque2" onChange={handleExerciseChange} />
-          <ExerciseForm bloque="bloque3" onChange={handleExerciseChange} />
-          <ExerciseForm bloque="bloque4" onChange={handleExerciseChange} />
+          <ExerciseForm bloque="Bloque1" onChange={handleExerciseChange} />
+          <ExerciseForm bloque="Bloque2" onChange={handleExerciseChange} />
+          <ExerciseForm bloque="Bloque3" onChange={handleExerciseChange} />
+          <ExerciseForm bloque="Bloque4" onChange={handleExerciseChange} />
         </div>
 
         <div className="flex justify-center mt-5">

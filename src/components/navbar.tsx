@@ -52,7 +52,7 @@ function Navbar() {
             height={50}
           />
         </Link>
-        <p>Hola {session.user.name}!</p>
+        <p>Hola {session.user.name}! </p>
         <div className="flex flex-row gap-2 items-center">
           {/* Menús visibles solo en pantallas medianas o más grandes */}
           {(isAdmin || isUser) && (

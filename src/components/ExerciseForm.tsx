@@ -121,7 +121,7 @@ const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
                         placeholder="Enlace al video"
                         value={exercise.videoLink || ''}
                         onChange={(e) => handleInputChange(index, 'videoLink', e.target.value)}
-                        className='mb-4 shadow-sm    p-1 border border-slate-200' required />
+                        className='mb-4 shadow-sm    p-1 border border-slate-200'  />
                     <div className='flex flex-col justify-center'>
                         <button
                             type="button"
