@@ -91,7 +91,11 @@ const NewPlan: React.FC = () => {
 
 
 
-
+  const handleSelectUser = (user: User) => {
+    setSelectedUser(user);
+    setPlan((prevPlan) => ({ ...prevPlan, userId: user._id.toString(), email: user.email }));
+    console.log('Usuario seleccionado:', user);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,7 +127,7 @@ const NewPlan: React.FC = () => {
       <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
       <form onSubmit={handleSubmit} className="w-full">
         <div className="flex flex-wrap justify-center items-center gap-2 mb-5 max-w-3xl m-auto">
-          {users && <AutoCompleteInput users={users} onSelect={setSelectedUser} />}
+          {users && <AutoCompleteInput users={users} onSelect={handleSelectUser} />}
           <select
             value={plan.month}
             onChange={(e) =>
