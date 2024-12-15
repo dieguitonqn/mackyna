@@ -66,7 +66,7 @@ const NewPlan: React.FC = () => {
       return; // Early exit if day is empty
     }
   
-    console.log(trainingDay);
+    // console.log(trainingDay);
     setPlan((prevPlan) => {
       const existingIndex = prevPlan.trainingDays.findIndex((d) => d.day === day);
   
@@ -80,7 +80,7 @@ const NewPlan: React.FC = () => {
         updatedTrainingDays = [...prevPlan.trainingDays, trainingDay];
       }
   
-      console.log(updatedTrainingDays);
+      // console.log(updatedTrainingDays);
       return {
         ...prevPlan,
         trainingDays: updatedTrainingDays,
@@ -94,7 +94,7 @@ const NewPlan: React.FC = () => {
   const handleSelectUser = (user: User) => {
     setSelectedUser(user);
     setPlan((prevPlan) => ({ ...prevPlan, userId: user._id.toString(), email: user.email }));
-    console.log('Usuario seleccionado:', user);
+    // console.log('Usuario seleccionado:', user);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,8 +103,8 @@ const NewPlan: React.FC = () => {
       alert('Por favor, selecciona un usuario.');
       return;
     }
-    console.log("El plan es: ")
-    console.log(plan);
+    // console.log("El plan es: ")
+    // console.log(plan);
     try {
       const response = await fetch('/api/planillas', {
         method: 'POST',
@@ -172,7 +172,40 @@ const NewPlan: React.FC = () => {
             <option value="2030">2030</option>
           </select>
         </div>
+        <div className='flex justify-center items-center gap-5'>
+          <div className='flex flex-col'>
+            <label htmlFor='startDate'>
+              Fecha de comienzo
+            </label>
 
+            <input
+              id="startDate"
+              type="date"
+              placeholder="Fecha de finalización"
+              value={plan.startDate}
+              onChange={(e) =>
+                setPlan((prevPlan) => ({ ...prevPlan, startDate: e.target.value }))
+              }
+              className="border p-2 rounded-md"
+            />
+          </div>
+          <div className='flex flex-col'>
+            <label htmlFor='endDate'>
+              Fecha de Finalización
+            </label>
+
+            <input
+              id="endDate"
+              type="date"
+              placeholder="Fecha de finalización"
+              value={plan.endDate}
+              onChange={(e) =>
+                setPlan((prevPlan) => ({ ...prevPlan, endDate: e.target.value }))
+              }
+              className="border p-2 rounded-md"
+            />
+          </div>
+        </div>
         <div className="flex justify-center items-center gap-5 my-10">
           <label htmlFor="dias">Días de entrenamiento</label>
           <input

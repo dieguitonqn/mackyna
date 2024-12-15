@@ -41,7 +41,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     const [exercises, setExercises] = useState<Exercise[]>([]);
 
     const handleAddExercise = () => {
-        const newExercise: Exercise = { name: '', reps: '', sets: 0, videoLink: '' };
+        const newExercise: Exercise = { name: '', reps: '', sets: 1, videoLink: '' };
         const updatedExercises = [...exercises, newExercise];
         setExercises(updatedExercises);
         onChange(day, bloque, updatedExercises);
@@ -110,8 +110,9 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                         id={`sets-${index}`}
                         type="number"
                         value={exercise.sets}
-                        onChange={(e) => handleInputChange(index, 'sets', parseInt(e.target.value) || 0)}
-                        className='mb-4 shadow-sm    p-1 border border-slate-200' required />
+                        onChange={(e) => handleInputChange(index, 'sets', parseInt(e.target.value))}
+                        className='mb-4 shadow-sm    p-1 border border-slate-200' required 
+                        min={1}/>
 
                     <label htmlFor={`videoLink-${index}`} style={{ display: 'block', marginBottom: '0.2rem' }}>
                         Enlace al video

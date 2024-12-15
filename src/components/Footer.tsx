@@ -8,7 +8,12 @@ function Footer() {
           <p className="flex flex-row text-sm text-gray-500">
             &copy; {new Date().getFullYear()} Hecho por Diarmodev  
           </p>
-          <Image src={"/diarmodev_logo2.jpg"} alt='diarmodev logo' width={25} height={25} />
+          <Image 
+          src={"/diarmodev_logo2.jpg"} 
+          alt='diarmodev logo' 
+          width={25} 
+          height={25} 
+          style={{ width: '25px', height: 'auto' }}/>
           <p className="flex flex-row text-sm text-gray-500"> - Todos los derechos reservados.</p>
         </div>
       </footer>

@@ -50,7 +50,7 @@ export const POST= async (req:Request)=>{
 try{
     await connect();
     const planilla = await req.json();
-    console.log(planilla);
+    // console.log(planilla);
     const newPlanilla = await Plani.create(planilla);
 
     if(!newPlanilla){

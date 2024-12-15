@@ -12,7 +12,7 @@ interface Props {
 
 const TrainingDayForm: React.FC<Props>=({ day, onChange }) =>{
     // const [trainingDays, setTrainingDays] = useState<TrainingDay[]>([])
-    console.log("dia: "+ day)
+    // console.log("dia: "+ day)
     const [trainingDay, setTrainingDay] = useState<TrainingDay>(
         {
             day:day,
@@ -26,7 +26,7 @@ const TrainingDayForm: React.FC<Props>=({ day, onChange }) =>{
     const handleExerciseChange = (day: string, bloque: string, exercises: Exercise[]) => {
 
         setTrainingDay((prevTrainingDay) => ({ ...prevTrainingDay, [bloque]: exercises, day: day }));
-         console.log( trainingDay)
+        //  console.log( trainingDay)
         
         onChange(day, trainingDay)
         
