@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 // import { createPlan } from '@/services/api';
-import { Plani, Exercise } from '@/types/plani';
+import { Plani, Exercise, TrainingDay } from '@/types/plani';
 import ExerciseForm from '@/components/ExerciseForm';
 import AutoCompleteInput from '@/components/AutocompleteUsers';
 import { ObjectId } from 'mongodb';
-import User from '@/lib/models/user';
+import TrainingDayForm from '@/components/trainingDayForm';
 
 interface User {
   _id: ObjectId | string;
@@ -18,8 +18,18 @@ interface User {
 }
 
 const NewPlan: React.FC = () => {
-  const [users, setUsers] = useState<User[] | null>(null); // Estado de usuarios
-  const [selectedUser, setSelectedUser] = useState<User | null>(null); // Usuario seleccionado
+  const [users, setUsers] = useState<User[] | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [days, setDays] = useState<number>(1); // Cantidad de días seleccionados
+  const [plan, setPlan] = useState<Plani>({
+    month: '',
+    year: '',
+    userId: '',
+    email: '',
+    trainingDays: [],
+    startDate: '',
+    endDate: '',
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,11 +38,10 @@ const NewPlan: React.FC = () => {
         const usersDB = await response.json();
         const usersWithStringId = usersDB.map((user: User) => ({
           ...user,
-          id: user._id.toString(), // Convertir ObjectId a string
+          id: user._id.toString(),
         }));
 
         setUsers(usersWithStringId);
-        // console.log(usersWithStringId);
       } catch (err) {
         console.error('Error al obtener usuarios:', err);
       }
@@ -40,18 +49,49 @@ const NewPlan: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const [plan, setPlan] = useState<Plani>({
-    month: '',
-    year: '',
-    userId: '',
-    email: '',
-    Bloque1: [],
-    Bloque2: [],
-    Bloque3: [],
-    Bloque4: [],
-    startDate: '',
-    endDate: '',
-  });
+  const handleDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const newDays = Math.min(5, Math.max(1, parseInt(e.target.value) || 1)); // Límite entre 1 y 5
+    const newDays = parseInt(e.target.value);
+    setDays(newDays);
+  };
+
+  const handleExerciseChange = (bloque: string, exercises: Exercise[]) => {
+    setPlan((prevPlan) => ({ ...prevPlan, [bloque]: exercises }));
+  };
+
+  const handleTrainingDayChange = (day: string, trainingDay: TrainingDay) => {
+    if (day === '') {
+      // Handle the empty day scenario (optional)
+      console.warn('Received empty day value for training change. Ignoring update.');
+      return; // Early exit if day is empty
+    }
+  
+    console.log(trainingDay);
+    setPlan((prevPlan) => {
+      const existingIndex = prevPlan.trainingDays.findIndex((d) => d.day === day);
+  
+      let updatedTrainingDays;
+      if (existingIndex !== -1) {
+        // Update existing day
+        updatedTrainingDays = [...prevPlan.trainingDays];
+        updatedTrainingDays[existingIndex] = trainingDay;
+      } else {
+        // Add new day
+        updatedTrainingDays = [...prevPlan.trainingDays, trainingDay];
+      }
+  
+      console.log(updatedTrainingDays);
+      return {
+        ...prevPlan,
+        trainingDays: updatedTrainingDays,
+        
+      };
+    });
+  };
+
+
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +99,8 @@ const NewPlan: React.FC = () => {
       alert('Por favor, selecciona un usuario.');
       return;
     }
-    console.log(plan)
+    console.log("El plan es: ")
+    console.log(plan);
     try {
       const response = await fetch('/api/planillas', {
         method: 'POST',
@@ -77,24 +118,12 @@ const NewPlan: React.FC = () => {
     }
   };
 
-  const handleExerciseChange = (bloque: string, exercises: Exercise[]) => {
-    setPlan((prevPlan) => ({ ...prevPlan, [bloque]: exercises }));
-  };
-
-  const handleSelectUser = (user: User) => {
-    setSelectedUser(user);
-    setPlan((prevPlan) => ({ ...prevPlan, userId: user._id.toString(), email: user.email }));
-    console.log('Usuario seleccionado:', user);
-  };
-
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
-      <form onSubmit={handleSubmit} className="w-full ">
+      <form onSubmit={handleSubmit} className="w-full">
         <div className="flex flex-wrap justify-center items-center gap-2 mb-5 max-w-3xl m-auto">
-          {users && (
-            <AutoCompleteInput users={users} onSelect={handleSelectUser} />
-          )}
+          {users && <AutoCompleteInput users={users} onSelect={setSelectedUser} />}
           <select
             value={plan.month}
             onChange={(e) =>
@@ -138,52 +167,41 @@ const NewPlan: React.FC = () => {
             <option value="2029">2029</option>
             <option value="2030">2030</option>
           </select>
-
-        
-          <br />
-          
-
         </div>
-        <div className='flex justify-center items-center gap-5'>
-        <div className='flex flex-col'>
-            <label htmlFor='startDate'>
-              Fecha de comienzo
-            </label>
 
-            <input
-              id="startDate"
-              type="date"
-              placeholder="Fecha de finalización"
-              value={plan.startDate}
-              onChange={(e) =>
-                setPlan((prevPlan) => ({ ...prevPlan, startDate: e.target.value }))
-              }
-              className="border p-2 rounded-md"
-            />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='endDate'>
-              Fecha de Finalización
-            </label>
-
-            <input
-              id="endDate"
-              type="date"
-              placeholder="Fecha de finalización"
-              value={plan.endDate}
-              onChange={(e) =>
-                setPlan((prevPlan) => ({ ...prevPlan, endDate: e.target.value }))
-              }
-              className="border p-2 rounded-md"
-            />
-          </div>
+        <div className="flex justify-center items-center gap-5 my-10">
+          <label htmlFor="dias">Días de entrenamiento</label>
+          <input
+            id="dias"
+            type="number"
+            value={days}
+            onChange={handleDaysChange}
+            className="border p-2 rounded-md"
+            min={1}
+            max={5}
+          />
         </div>
 
         <div className="flex flex-wrap justify-center items-start gap-4">
-          <ExerciseForm bloque="Bloque1" onChange={handleExerciseChange} />
-          <ExerciseForm bloque="Bloque2" onChange={handleExerciseChange} />
-          <ExerciseForm bloque="Bloque3" onChange={handleExerciseChange} />
-          <ExerciseForm bloque="Bloque4" onChange={handleExerciseChange} />
+          <div className="flex flex-wrap justify-center items-start gap-4">
+
+            {Array(days)
+              .fill(null)
+              .map((_, index) => (
+
+                <div key={index} className="w-full">
+                  <h2 className="text-xl mb-2 flex justify-center">
+                    {`Día ${index + 1}`}
+                  </h2>
+
+                  <TrainingDayForm
+                    day={`Día ${index + 1}`} // Pass formatted day for clarity
+                    onChange={handleTrainingDayChange}
+                  />
+                </div>
+              ))}
+          </div>
+
         </div>
 
         <div className="flex justify-center mt-5">

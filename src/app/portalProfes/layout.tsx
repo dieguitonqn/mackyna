@@ -56,7 +56,7 @@ export default function DashboardLayout({
                         <li>
                             <Link href="/portalProfes/newPlani">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                                    Nueva Planilla
+                                    Nueva Rutina
                                 </div>
                             </Link>
                         </li>

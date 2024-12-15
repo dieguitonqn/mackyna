@@ -1,38 +1,74 @@
-import { Schema,  model, models } from "mongoose"
+import { Schema, model, models, Document } from "mongoose";
 
+interface Exercise {
+  name: string; // Nombre del ejercicio
+  reps: string; // Repeticiones
+  sets: number; // Series
+  videoLink?: string; // Enlace al video demostrativo
+}
 
+const ExerciseSchema = new Schema<Exercise>(
+  {
+    name: { type: String, required: true },
+    reps: { type: String, required: true },
+    sets: { type: Number, required: true },
+    videoLink: { type: String, required: false },
+  },
+  { _id: false }
+);
 
-const ExerciseSchema = new Schema(
-    {
-      name: { type: String, required: true }, // Nombre del ejercicio
-      reps: { type: String, required: true }, // Repeticiones
-      sets: { type: Number, required: true }, // Series
-      videoLink: { type: String, required: false }, // Enlace al video demostrativo
+interface TrainingDay {
+  day: string; // Nombre del día (e.g., "Lunes")
+  Bloque1?: Exercise[];
+  Bloque2?: Exercise[];
+  Bloque3?: Exercise[];
+  Bloque4?: Exercise[];
+}
+
+const TrainingDaySchema = new Schema<TrainingDay>(
+  {
+    day: { type: String, required: true },
+    Bloque1: { type: [ExerciseSchema], required: false },
+    Bloque2: { type: [ExerciseSchema], required: false },
+    Bloque3: { type: [ExerciseSchema], required: false },
+    Bloque4: { type: [ExerciseSchema], required: false },
+  },
+  { _id: false }
+);
+
+interface Plani extends Document {
+  month: string;
+  year: string;
+  userId: string;
+  email: string;
+  trainingDays: TrainingDay[];
+  startDate: Date;
+  endDate: Date;
+}
+
+const PlaniSchema = new Schema<Plani>(
+  {
+    month: { type: String, required: true },
+    year: { type: String, required: true },
+    userId: { type: String, required: true },
+    email: { type: String, required: true },
+    trainingDays: {
+      type: [TrainingDaySchema],
+      validate: [
+        {
+          validator: (v: TrainingDay[]) => v.length <= 5, // Máximo 5 días de entrenamiento
+          message: "No puedes agregar más de 5 días de entrenamiento."
+        },
+      ],
     },
-    { _id: false } // No genera un _id para cada ejercicio (opcional)
-  );
-  
-const PlaniSchema = new Schema(
-    {
-        month:{type:String, required:true},
-        year:{type:String, required:true},
-        userId: {type:String, required: true },
-        email: { type: String, required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-        Bloque1: { type: [ExerciseSchema] },
-        Bloque2: { type: [ExerciseSchema] },
-        Bloque3: { type: [ExerciseSchema] },
-        Bloque4: { type: [ExerciseSchema] },
-
-        startDate: { type: Date, required: true },
-        endDate: { type: Date, required: true },
-
-    },
-    {
-        timestamps: true
-    }
-)
-
-const Plani = models.Plani || model("Plani", PlaniSchema)
+const Plani = models.Plani || model<Plani>("Plani", PlaniSchema);
 
 export default Plani;

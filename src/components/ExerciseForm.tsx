@@ -3,8 +3,9 @@ import { Exercise } from '@/types/plani';
 import AutoCompleteInputEj from './AutoCompleteEjercicio';
 
 interface Props {
+    day:string,
     bloque: string;
-    onChange: (bloque: string, exercises: Exercise[]) => void;
+    onChange: (day:string, bloque: string, exercises: Exercise[]) => void;
 }
 
 type Ejercicio = {
@@ -15,7 +16,7 @@ type Ejercicio = {
     description: string;
     video: string;
 };
-const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
+const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
     // const [selectedEjercicio, setSelectedEjercicio] = useState<Ejercicio>(); // Usuario seleccionado
 
@@ -43,20 +44,20 @@ const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
         const newExercise: Exercise = { name: '', reps: '', sets: 0, videoLink: '' };
         const updatedExercises = [...exercises, newExercise];
         setExercises(updatedExercises);
-        onChange(bloque, updatedExercises);
+        onChange(day, bloque, updatedExercises);
     };
 
     const handleRemoveExercise = (index: number) => {
         const updatedExercises = exercises.filter((_, i) => i !== index);
         setExercises(updatedExercises);
-        onChange(bloque, updatedExercises);
+        onChange(day, bloque, updatedExercises);
     };
 
     const handleInputChange = (index: number, field: keyof Exercise, value: string | number) => {
         const updatedExercises = [...exercises];
         updatedExercises[index] = { ...updatedExercises[index], [field]: value };
         setExercises(updatedExercises);
-        onChange(bloque, updatedExercises);
+        onChange(day,bloque, updatedExercises);
     };
 
     const handleSelectEjercicio = (index: number, ejercicio: Ejercicio) => {
@@ -67,7 +68,7 @@ const ExerciseForm: React.FC<Props> = ({ bloque, onChange }) => {
             videoLink: ejercicio.video
         };
         setExercises(updatedExercises);
-        onChange(bloque, updatedExercises);
+        onChange(day ,bloque, updatedExercises);
     };
    
     return (
