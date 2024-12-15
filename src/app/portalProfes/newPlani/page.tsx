@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 // import { createPlan } from '@/services/api';
-import { Plani, Exercise, TrainingDay } from '@/types/plani';
-import ExerciseForm from '@/components/ExerciseForm';
+import { Plani, TrainingDay } from '@/types/plani';
+// import ExerciseForm from '@/components/ExerciseForm';
 import AutoCompleteInput from '@/components/AutocompleteUsers';
 import { ObjectId } from 'mongodb';
 import TrainingDayForm from '@/components/trainingDayForm';
@@ -55,9 +55,9 @@ const NewPlan: React.FC = () => {
     setDays(newDays);
   };
 
-  const handleExerciseChange = (bloque: string, exercises: Exercise[]) => {
-    setPlan((prevPlan) => ({ ...prevPlan, [bloque]: exercises }));
-  };
+  // const handleExerciseChange = (bloque: string, exercises: Exercise[]) => {
+  //   setPlan((prevPlan) => ({ ...prevPlan, [bloque]: exercises }));
+  // };
 
   const handleTrainingDayChange = (day: string, trainingDay: TrainingDay) => {
     if (day === '') {
