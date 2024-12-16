@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Exercise, Plani, TrainingDay } from '@/types/plani';
 import Image from 'next/image';
+import{ useRouter} from 'next/navigation';
 
 const Planillas: React.FC = () => {
 
@@ -12,11 +13,18 @@ const Planillas: React.FC = () => {
     const { data: session } = useSession();
     const [planillasUser, setPlanillasUser] = useState<Plani[] | null>(null);
     const [selectedPlani, setSelectedPlani] = useState<Plani | null>(null);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+    const [isTeach, setIsTeach] = useState<boolean>(false)
+    const router = useRouter()
 
     useEffect(() => {
         const fetchPlanis = async () => {
             const plani_id = searchParams.get('id');
             try {
+                if (session?.user.rol == "admin") {
+                    setIsAdmin(true)
+                } else if (session?.user.rol == "teach")
+                    setIsTeach(true)
                 if (plani_id) {
                     const response = await fetch(`/api/planillas?id=${plani_id}`);
                     if (!response.ok) {
@@ -55,6 +63,24 @@ const Planillas: React.FC = () => {
         setSelectedPlani(null);
     };
 
+    const handleDeletePlani=async (id?:string)=>{
+        const isConfirmed = window.confirm("¿Estás seguro de que deseas borrar esta rutina?");
+        if (!isConfirmed) {
+            return; // Si el usuario cancela, no se procede
+        }
+        const responseDel = await fetch(`/api/planillas?id=${id}`,
+            {
+                method: 'DELETE'
+            }
+        );
+        if (!responseDel.ok) {
+            throw new Error('Error al borrar el usuario');
+        }
+        alert("Planilla borrada con éxito");
+        router.push(`/portalAlumnos/Planilla?id=${id}`);
+        
+    }
+
     return (
         <div className="min-h-screen p-4">
             <div className='flex justify-center '>
@@ -64,6 +90,7 @@ const Planillas: React.FC = () => {
             {planillasUser ? (
                 <div className="flex flex-wrap border-black gap-10">
                     {planillasUser.map((plani) => (
+
                         <div
                             key={plani._id}
                             className="cursor-pointer border p-4 rounded-md flex flex-col items-center bg-gray-200 hover:bg-lime-100 shadow-black shadow-sm"
@@ -78,8 +105,23 @@ const Planillas: React.FC = () => {
                                 />
                             </div>
                             <p className="text-center">{plani.month} {plani.year}</p>
+                            {(isAdmin || isTeach) && (
+                                <div className='z-50'>
+                                    <button 
+                                    className='bg-red-500 px-2 py-1 hover:font-semibold rounded-md mt-2'
+                                    onClick={(e)=>{
+                                        e.stopPropagation();
+                                        handleDeletePlani(plani._id)}}>
+                                        Borrar
+                                    </button>
+                                </div>
+                            )}
                         </div>
+
+
+
                     ))}
+
                 </div>
             ) : (
                 <p>Cargando planillas...</p>
@@ -119,7 +161,7 @@ const Planillas: React.FC = () => {
                                         <div key={bloque} className="mt-2 shadow-sm shadow-black p-2">
                                             <h4 className="text-md font-semibold">{bloque}</h4>
                                             <ul className="list-disc pl-5">
-                                                {ejercicios.map((exercise:Exercise, idx:number) => (
+                                                {ejercicios.map((exercise: Exercise, idx: number) => (
                                                     <li key={idx}>
                                                         <p><strong>Nombre:</strong> {exercise.name}</p>
                                                         <p><strong>Repeticiones:</strong> {exercise.reps}</p>
