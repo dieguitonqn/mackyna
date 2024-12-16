@@ -163,7 +163,7 @@ const Planillas: React.FC = () => {
                                             <ul className="list-disc pl-5">
                                                 {ejercicios.map((exercise: Exercise, idx: number) => (
                                                     <li key={idx}>
-                                                        <p><strong>Nombre:</strong> {exercise.name}</p>
+                                                        <p><strong>Ejercicio:</strong> {exercise.name}</p>
                                                         <p><strong>Repeticiones:</strong> {exercise.reps}</p>
                                                         <p><strong>Series:</strong> {exercise.sets}</p>
                                                         {exercise.videoLink && (

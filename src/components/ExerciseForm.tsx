@@ -72,7 +72,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     };
    
     return (
-        <div className='flex flex-col justify-center text-center border border-slate-300 p-5 m-5 shadow-md rounded-md bg-white'>
+        <div className='flex flex-col  justify-center text-center border border-slate-300 p-5 m-5 shadow-md rounded-md bg-white'>
             <h2 className='shadow-lg py-2 px-4 my-4 border border-slate-200 text-2xl'>
                 {bloque.replace(/bloque(\d)/i, 'Bloque $1')}
             </h2>

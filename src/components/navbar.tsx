@@ -15,6 +15,7 @@ function Navbar() {
   const isTeach = session?.user.rol === 'teach';
   const isUser = session?.user.rol === 'user';
 
+
   if (!session) {
     return (
       <div>
@@ -52,7 +53,17 @@ function Navbar() {
             height={50}
           />
         </Link>
-        <p>Hola {session.user.name}! </p>
+        <p className='flex flex-row items-center gap-2'>Hola {session.user.name}!
+          {session.user.image &&
+            <img
+              src={session.user.image}
+              alt='user image'
+              className='w-10 h-10 rounded-full cursor-pointer'
+            />}
+        </p>
+
+
+
         <div className="flex flex-row gap-2 items-center">
           {/* Menús visibles solo en pantallas medianas o más grandes */}
           {(isAdmin || isUser) && (
@@ -98,7 +109,7 @@ function Navbar() {
             <IoIosLogOut className="h-7 w-7" />
           </button>
 
-   
+
         </div>
       </nav>
     </div>

@@ -21,8 +21,8 @@ function Page() {
                     link='/portalAlumnos/Turnos'/> */}
                     <CardInit 
                     imagen='/planillas.png'
-                    titulo='Planillas de entrenamiento'
-                    desc="Todas las planillas de entrenamiento"
+                    titulo='Rutinas de entrenamiento'
+                    desc="Todas las rutinas de entrenamiento"
                     link='/portalAlumnos/Planilla'
                     />
                     {/* <CardInit 
