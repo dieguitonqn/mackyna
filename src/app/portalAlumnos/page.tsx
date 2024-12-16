@@ -14,22 +14,22 @@ function Page() {
                     </div>
                 <div className='flex flex-wrap gap-16 justify-center items-center '>
                     
-                    <CardInit 
+                    {/* <CardInit 
                     imagen='/turnos.png'
                     titulo='Turnos'
                     desc='Días y horarios en que asistirá. También podrá agendar nuevos turnos o editar los que ya tenga.'
-                    link='/portalAlumnos/Turnos'/>
+                    link='/portalAlumnos/Turnos'/> */}
                     <CardInit 
                     imagen='/planillas.png'
                     titulo='Planillas de entrenamiento'
                     desc="Todas las planillas de entrenamiento"
                     link='/portalAlumnos/Planilla'
                     />
-                    <CardInit 
+                    {/* <CardInit 
                     imagen='/pagos.png'
                     titulo='Pagos'
                     desc="Realizar pagos de cuotas"
-                    link='/portalAlumnos/Pago'/>
+                    link='/portalAlumnos/Pago'/> */}
                 </div>
 
             </div>

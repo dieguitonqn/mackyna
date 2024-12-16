@@ -92,6 +92,6 @@ export const DELETE = async (req: Request): Promise<NextResponse>=>{
         return NextResponse.json({ messaje:"Rutina eliminada"}, { status: 200 })
     }
     catch (error: unknown) {
-        return NextResponse.json({ error: "Ejercicio no encontrado" }, { status: 404 });
+        return NextResponse.json({ error: "Ejercicio no encontrado" +error}, { status: 404 });
 }
 }
