@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaSave } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
+import { FaYoutube } from "react-icons/fa";
 
 
 const Planillas: React.FC = () => {
@@ -190,11 +191,11 @@ const Planillas: React.FC = () => {
                                 <h3 className="text-2xl font-bold text-center">{day.day}</h3>
                                 {Object.entries(day).map(([bloque, ejercicios]) => (
                                     bloque.startsWith('Bloque') && ejercicios.length > 0 && (
-                                        <div key={bloque} className="mt-2 shadow-sm shadow-black p-2">
+                                        <div key={bloque} className="mt-2 shadow-sm shadow-black p-2 gap-2 ">
                                             <h4 className="text-md font-semibold">{bloque}</h4>
-                                            <ul className="list-disc pl-5">
+                                            <ul className="list-disc pl-5  ">
                                                 {ejercicios.map((exercise: Exercise, exerciseIndex: number) => (
-                                                    <li key={exerciseIndex}>
+                                                    <li key={exerciseIndex} className='border-b-slate-400 border-b'>
                                                         <p><strong>Ejercicio:</strong> {exercise.name}</p>
                                                         <p><strong>Repeticiones:</strong> {exercise.reps}</p>
                                                         <p><strong>Series:</strong> {exercise.sets}</p>
@@ -220,9 +221,9 @@ const Planillas: React.FC = () => {
                                                             </button>
                                                         </div>
                                                         {exercise.videoLink && (
-                                                            <p>
-                                                                <strong>Video:</strong>{' '}
-                                                                <a href={exercise.videoLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">Ver</a>
+                                                            <p className='flex flex-row items-center gap-2'>
+                                                                <strong>Video:</strong>
+                                                                <a href={exercise.videoLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer"> <span className='text-red-600'><FaYoutube className='h-8 w-9'/></span></a>
                                                             </p>
                                                         )}
                                                     </li>
