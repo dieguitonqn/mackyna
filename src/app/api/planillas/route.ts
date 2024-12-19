@@ -95,3 +95,26 @@ export const DELETE = async (req: Request): Promise<NextResponse>=>{
         return NextResponse.json({ error: "Ejercicio no encontrado" +error}, { status: 404 });
 }
 }
+
+
+export const PUT = async (req:Request):Promise<NextResponse>=>{
+    try {
+        const {id,plani} = await req.json();
+        
+        // Validar formato del ObjectId
+        if (!ObjectId.isValid(id)) {
+            return NextResponse.json({ error: "El ID proporcionado no es válido" }, { status: 400 });
+        }
+
+        const editedPlani = await Plani.findByIdAndUpdate(new ObjectId(id), plani);
+        if(!editedPlani){
+            return NextResponse.json({message:"No se pudo editar la planilla"},{status: 501});
+        }
+
+        return NextResponse.json({message:"todo ok"},{status:200});
+        
+    } catch (error:unknown) {
+        return NextResponse.json({error:error},{status:501});
+    }
+
+}

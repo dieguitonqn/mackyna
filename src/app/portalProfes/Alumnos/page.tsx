@@ -115,14 +115,19 @@ const Usuarios: React.FC = () => {
                   <td className="px-2 py-2">{user.apellido}</td>
                   <td className="px-2 py-2">{user.email}</td>
                   
-                  <td className="px-2 py-2 flex flex-col gap-1 items-center">
+                  <td className="px-2 py-2 flex flex-row justify-center gap-1 items-center">
                     <a
                       className=" px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
                       href={`../portalAlumnos/Planilla?id=${user._id}`}
                     >
                       Planillas
                     </a>
-                    
+                    <a
+                      className=" px-2 py-1 bg-blue-600 text-white rounded-sm text-sm"
+                      href={`../portalAlumnos/Metricas?id=${user._id}`}
+                    >
+                      Metricas
+                    </a>
                   </td>
                 </tr>
               ))}

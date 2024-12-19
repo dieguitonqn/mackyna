@@ -2,6 +2,7 @@ export interface Exercise {
     name: string;
     reps: string;
     sets: number;
+    notas: string;
     videoLink?: string;
   }
   

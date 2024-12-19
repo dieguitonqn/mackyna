@@ -4,6 +4,7 @@ interface Exercise {
   name: string; // Nombre del ejercicio
   reps: string; // Repeticiones
   sets: number; // Series
+  notas:string;
   videoLink?: string; // Enlace al video demostrativo
 }
 
@@ -12,6 +13,7 @@ const ExerciseSchema = new Schema<Exercise>(
     name: { type: String, required: true },
     reps: { type: String, required: true },
     sets: { type: Number, required: true },
+    notas: {type: String, required:false},
     videoLink: { type: String, required: false },
   },
   { _id: false }

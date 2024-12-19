@@ -3,9 +3,9 @@ import { Exercise } from '@/types/plani';
 import AutoCompleteInputEj from './AutoCompleteEjercicio';
 
 interface Props {
-    day:string,
+    day: string,
     bloque: string;
-    onChange: (day:string, bloque: string, exercises: Exercise[]) => void;
+    onChange: (day: string, bloque: string, exercises: Exercise[]) => void;
 }
 
 type Ejercicio = {
@@ -41,7 +41,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     const [exercises, setExercises] = useState<Exercise[]>([]);
 
     const handleAddExercise = () => {
-        const newExercise: Exercise = { name: '', reps: '', sets: 1, videoLink: '' };
+        const newExercise: Exercise = { name: '', reps: '', sets: 1, notas:'',videoLink: '' };
         const updatedExercises = [...exercises, newExercise];
         setExercises(updatedExercises);
         onChange(day, bloque, updatedExercises);
@@ -57,7 +57,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
         const updatedExercises = [...exercises];
         updatedExercises[index] = { ...updatedExercises[index], [field]: value };
         setExercises(updatedExercises);
-        onChange(day,bloque, updatedExercises);
+        onChange(day, bloque, updatedExercises);
     };
 
     const handleSelectEjercicio = (index: number, ejercicio: Ejercicio) => {
@@ -68,9 +68,9 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
             videoLink: ejercicio.video
         };
         setExercises(updatedExercises);
-        onChange(day ,bloque, updatedExercises);
+        onChange(day, bloque, updatedExercises);
     };
-   
+
     return (
         <div className='flex flex-col  justify-center text-center border border-slate-300 p-5 m-5 shadow-md rounded-md bg-white'>
             <h2 className='shadow-lg py-2 px-4 my-4 border border-slate-200 text-2xl'>
@@ -111,8 +111,22 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                         type="number"
                         value={exercise.sets}
                         onChange={(e) => handleInputChange(index, 'sets', parseInt(e.target.value))}
-                        className='mb-4 shadow-sm    p-1 border border-slate-200' required 
-                        min={1}/>
+                        className='mb-4 shadow-sm    p-1 border border-slate-200' required
+                        min={1} />
+
+
+                    {/* <label htmlFor={`notas-${index}`} style={{ display: 'block', marginBottom: '0.2rem' }}>
+                        Notas
+                    </label>
+                    <input
+                        id={`notas-${index}`}
+                        type="text"
+                        placeholder="Peso,Indicaciones,etc"
+                        value={exercise.notas || ''}
+                        onChange={(e) => handleInputChange(index, 'notas', e.target.value)}
+                        className='mb-4 shadow-sm    p-1 border border-slate-200' /> */}
+
+
 
                     <label htmlFor={`videoLink-${index}`} style={{ display: 'block', marginBottom: '0.2rem' }}>
                         Enlace al video
@@ -123,7 +137,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                         placeholder="Enlace al video"
                         value={exercise.videoLink || ''}
                         onChange={(e) => handleInputChange(index, 'videoLink', e.target.value)}
-                        className='mb-4 shadow-sm    p-1 border border-slate-200'  />
+                        className='mb-4 shadow-sm    p-1 border border-slate-200' />
                     <div className='flex flex-col justify-center'>
                         <button
                             type="button"
