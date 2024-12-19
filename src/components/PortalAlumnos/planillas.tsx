@@ -191,7 +191,7 @@ const Planillas: React.FC = () => {
                                 <h3 className="text-2xl font-bold text-center">{day.day}</h3>
                                 {Object.entries(day).map(([bloque, ejercicios]) => (
                                     bloque.startsWith('Bloque') && ejercicios.length > 0 && (
-                                        <div key={bloque} className="mt-2 shadow-sm shadow-black p-2 gap-2 ">
+                                        <div key={bloque} className="mt-2 shadow-sm shadow-black p-2  ">
                                             <h4 className="text-md font-semibold">{bloque}</h4>
                                             <ul className="list-disc pl-5  ">
                                                 {ejercicios.map((exercise: Exercise, exerciseIndex: number) => (
