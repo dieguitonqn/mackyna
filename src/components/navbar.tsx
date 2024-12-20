@@ -8,6 +8,7 @@ import { TfiDashboard } from 'react-icons/tfi';
 import { IoIosLogOut } from 'react-icons/io';
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import { HamburguesaAdmin, HamburguesaTeach, HamburguesaUsers } from './hamburguesa';
+import { TbRulerMeasure } from "react-icons/tb";
 
 function Navbar() {
   const { data: session } = useSession();
@@ -74,6 +75,19 @@ function Navbar() {
               <FaChalkboardTeacher />
               Portal Alumnos
             </Link>
+
+
+          )}
+          {(isAdmin || isUser) && (
+            <Link
+              href="/portalAlumnos/Metricas"
+              className="hidden md:flex items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+            >
+              <TbRulerMeasure />
+              Mis Métricas
+            </Link>
+
+
           )}
           {(isAdmin || isTeach) && (
             <Link

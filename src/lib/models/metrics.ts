@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
-interface Medicion {
+interface Metric {
     userID: string;
     date: Date;
     weigth: number;
@@ -12,7 +12,7 @@ interface Medicion {
 
 }
 
-const Med = new Schema<Medicion>(
+const Med = new Schema<Metric>(
     {
         userID: { type: String, required: true },
 
@@ -32,6 +32,6 @@ const Med = new Schema<Medicion>(
 
 )
 
-const Medicion = models.Medicion || model<Medicion>("Medicion", Med);
+const Metric = models.Metric || model<Metric>("Metric", Med);
 
-export default Medicion
+export default Metric

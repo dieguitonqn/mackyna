@@ -25,6 +25,12 @@ function Page() {
                     desc="Todas las rutinas de entrenamiento"
                     link='/portalAlumnos/Planilla'
                     />
+                    <CardInit 
+                    imagen='/mediciones.png'
+                    titulo='Mediciones corporales'
+                    desc="Todas las mediciones realizadas en Mackyna"
+                    link='/portalAlumnos/Metricas'
+                    />
                     {/* <CardInit 
                     imagen='/pagos.png'
                     titulo='Pagos'
