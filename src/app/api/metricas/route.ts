@@ -12,7 +12,7 @@ export  const POST= async (req:Request)=>{
         }
         return new NextResponse("Todo ok",{status:202})
     } catch (error:unknown) {
-        return NextResponse.json({error: "error desconocido"},{status:500});
+        return NextResponse.json({error: "error desconocido"+error},{status:500});
     }
 
 }

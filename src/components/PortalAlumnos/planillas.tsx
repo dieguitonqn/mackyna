@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { FaSave } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { ImYoutube2 } from "react-icons/im";
-import { FaYoutube } from "react-icons/fa";
 
 const Planillas: React.FC = () => {
     const searchParams = useSearchParams();

@@ -1,7 +1,7 @@
 // import Chart from "@/components/PortalAlumnos/charts";
 // import connect from "@/lib/db";
 // import Medicion from "@/lib/models/metrics";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth0";
 import Chart from "@/components/PortalAlumnos/charts";
 import NewMetric from "@/components/PortalAlumnos/newMetric";
 import { IUser } from "@/types/user"
@@ -41,7 +41,7 @@ async function page({
     try {
         await connect();
         if (sessionUserID != '' && !urlUserId) {
-            const rawMetricsData = await Metric.find({ userID: sessionUserID }).lean();
+            const rawMetricsData = await Metric.find({ userID: sessionUserID }).lean<MedicionLocal[]>();
             if (!rawMetricsData || rawMetricsData.length === 0) {
                 return (
                     <div className="flex justify-center items-center text-4xl text-white h-screen">
@@ -54,7 +54,7 @@ async function page({
                     </div>
                 );
             } else {
-                const metricsData: MedicionLocal[] = rawMetricsData.map(({ _id, createdAt, updatedAt, date, ...rest }: any) => {
+                const metricsData: MedicionLocal[] = rawMetricsData.map(({date, ...rest }: MedicionLocal) => {
                     const parsedDate = new Date(date);
 
 
@@ -66,7 +66,7 @@ async function page({
                     // Formatear como "dd-MMM-yyyy", ej: "15-Jan-2024"
                     const formattedDate = `${day}-${month}-${year}`;
 
-                    return { ...rest, date: formattedDate }; // Reemplazo date con la fecha formateada
+                    return { ...rest, date: formattedDate, _id: undefined}; // Reemplazo date con la fecha formateada
                 });
 
                 console.log(metricsData);
@@ -89,7 +89,7 @@ async function page({
         } else if (urlUserId != '') {
             const userInfo: IUser | null = await User.findOne({ _id: new ObjectId(urlUserId) }).lean<IUser>();
             console.log(userInfo);
-            const rawMetricsData = await Metric.find({ userID: urlUserId }).lean();
+            const rawMetricsData = await Metric.find({ userID: urlUserId }).lean<MedicionLocal[]>();
             console.log(rawMetricsData)
             if (rawMetricsData === null || rawMetricsData.length === 0) {
                 console.log('bandera')
@@ -105,7 +105,7 @@ async function page({
                 );
             } else {
                 console.log('bandera2')
-                const metricsData: MedicionLocal[] = rawMetricsData.map(({ _id, createdAt, updatedAt, date, ...rest }: any) => {
+                const metricsData: MedicionLocal[] = rawMetricsData.map(({ date, ...rest }: MedicionLocal) => {
                     const parsedDate = new Date(date);
                     console.log(parsedDate);
 
@@ -117,7 +117,7 @@ async function page({
                     // Formatear como "dd-MMM-yyyy", ej: "15-Jan-2024"
                     const formattedDate = `${day}-${month}-${year}`;
 
-                    return { ...rest, date: formattedDate }; // Reemplazo date con la fecha formateada
+                    return { ...rest, date: formattedDate , _id:undefined}; // Reemplazo date con la fecha formateada
                 });
 
                 console.log(metricsData);
@@ -143,7 +143,7 @@ async function page({
         }
 
     } catch (error: unknown) {
-
+console.error(error)
     }
 
 }
