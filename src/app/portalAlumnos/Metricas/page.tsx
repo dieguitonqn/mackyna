@@ -2,8 +2,8 @@
 // import connect from "@/lib/db";
 // import Medicion from "@/lib/models/metrics";
 import { authOptions } from "@/lib/auth0";
-import Chart from "@/components/PortalAlumnos/charts";
-import NewMetric from "@/components/PortalAlumnos/newMetric";
+import Chart from "@/components/PortalAlumnos/Metricas/charts";
+import NewMetric from "@/components/PortalAlumnos/Metricas/newMetric";
 import { IUser } from "@/types/user"
 
 import connect from "@/lib/db";
@@ -12,6 +12,9 @@ import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation";
+import MetriscsTable from "@/components/PortalAlumnos/Metricas/metricsTable";
+import { Suspense } from "react";
+import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
 
 
 interface MedicionLocal {
@@ -32,12 +35,38 @@ async function page({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
 
+    function formatDate(date: string): string {
+        const parsedDate = new Date(date);
+        const day = parsedDate.getDate();
+        const month = parsedDate.toLocaleString('default', { month: 'short' });
+        const year = parsedDate.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
+    function processMetricsData(rawMetricsData: MedicionLocal[]): MedicionLocal[] {
+        return rawMetricsData.map(({ date, ...rest }) => ({
+            ...rest,
+            date: formatDate(date),
+            _id: undefined,
+        }));
+    }
+
     const session = await getServerSession(authOptions);
     if (!session) {
         redirect('/login');
     }
     const sessionUserID = session?.user.id.toString();
     const urlUserId = (await searchParams).id as string
+
+    if (!sessionUserID && !urlUserId) {
+        // No valid user ID found, potentially handle this case differently
+        return (
+            <div className="flex justify-center items-center text-4xl text-white h-screen">
+                <h1>No se encontró un ID de usuario válido</h1>
+            </div>
+        );
+    }
+
     try {
         await connect();
         if (sessionUserID != '' && !urlUserId) {
@@ -48,39 +77,38 @@ async function page({
                         <h1 className="">
                             No se encontraron métricas del usuario de la sesión
                         </h1>
-                        <div>
-                            <NewMetric userID={sessionUserID} userName={session.user.name} />
-                        </div>
+                        {(session.user.rol === "teach" || session.user.rol === 'admin') && (
+                            <div>
+                                <NewMetric userID={urlUserId} userName={session.user.name} />
+                            </div>
+                        )}
                     </div>
                 );
             } else {
-                const metricsData: MedicionLocal[] = rawMetricsData.map(({date, ...rest }: MedicionLocal) => {
-                    const parsedDate = new Date(date);
 
-
-                    // Extraer día, mes y año
-                    const day = parsedDate.getDate();
-                    const month = parsedDate.toLocaleString('default', { month: 'short' }); // "Jan", "Feb", etc.
-                    const year = parsedDate.getFullYear();
-
-                    // Formatear como "dd-MMM-yyyy", ej: "15-Jan-2024"
-                    const formattedDate = `${day}-${month}-${year}`;
-
-                    return { ...rest, date: formattedDate, _id: undefined}; // Reemplazo date con la fecha formateada
-                });
+                const metricsData = processMetricsData(rawMetricsData);
 
                 console.log(metricsData);
                 return (
                     <div className='h-screen  justify-center '>
                         <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
-                            Métricas de usuario
+                            Métricas de {session.user.name}
                         </div>
-                        <div>
-                            <NewMetric userID={sessionUserID} userName={session.user.name} />
-                        </div>
+
                         <div className="flex justify-center items-center">
+                            <MetricCard />
                             <Chart data={metricsData} />
                         </div>
+
+                        {(session.user.rol === "teach" || session.user.rol === 'admin') && (
+                            <div className="my-5">
+                                <NewMetric userID={urlUserId} userName={session.user.name} />
+                            </div>
+                        )}
+                        <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
+
+                            <MetriscsTable data={metricsData} />
+                        </Suspense>
 
                     </div>
 
@@ -95,9 +123,13 @@ async function page({
                 console.log('bandera')
                 return (
                     <div className=" container h-screen">
-                        <div className="flex justify-end mt-10">
-                            <NewMetric userID={urlUserId} userName={userInfo!.nombre} />
-                        </div>
+
+                        {(session.user.rol === "teach" || session.user.rol === 'admin') && (
+                            <div>
+                                <NewMetric userID={urlUserId} userName={userInfo!.nombre} />
+                            </div>
+                        )}
+
                         <h1 className="flex justify-center items-center text-white text-4xl">
                             No se encontraron métricas del usuario
                         </h1>
@@ -105,36 +137,29 @@ async function page({
                 );
             } else {
                 console.log('bandera2')
-                const metricsData: MedicionLocal[] = rawMetricsData.map(({ date, ...rest }: MedicionLocal) => {
-                    const parsedDate = new Date(date);
-                    console.log(parsedDate);
 
-                    // Extraer día, mes y año
-                    const day = parsedDate.getDate();
-                    const month = parsedDate.toLocaleString('default', { month: 'short' }); // "Jan", "Feb", etc.
-                    const year = parsedDate.getFullYear();
-
-                    // Formatear como "dd-MMM-yyyy", ej: "15-Jan-2024"
-                    const formattedDate = `${day}-${month}-${year}`;
-
-                    return { ...rest, date: formattedDate , _id:undefined}; // Reemplazo date con la fecha formateada
-                });
-
+                const metricsData = processMetricsData(rawMetricsData);
                 console.log(metricsData);
                 return (
-                    <div className='h-screen  justify-center '>
+                    <div className='h-screen  justify-center gap-10'>
                         <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
-                            Métricas de usuario
+                            Métricas de {userInfo!.nombre}
+                        </div>
+
+
+                        <div className="flex flow-col justify-center items-center my-10">
+                            <MetricCard />
+                            <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
+                                <Chart data={metricsData} />
+                            </Suspense>
                         </div>
                         {(session.user.rol === "teach" || session.user.rol === 'admin') && (
-                            <div>
+                            <div className="my-5">
                                 <NewMetric userID={urlUserId} userName={userInfo!.nombre} />
                             </div>
                         )}
 
-                        <div className="flex justify-center items-center">
-                            <Chart data={metricsData} />
-                        </div>
+                        <MetriscsTable data={metricsData} />
 
                     </div>
 
@@ -143,7 +168,7 @@ async function page({
         }
 
     } catch (error: unknown) {
-console.error(error)
+        console.error(error)
     }
 
 }
