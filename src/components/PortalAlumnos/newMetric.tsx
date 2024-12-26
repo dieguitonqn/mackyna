@@ -1,6 +1,6 @@
 
 'use client'
-import axios from 'axios';
+// import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { IoCloseCircleSharp } from 'react-icons/io5';
@@ -51,24 +51,25 @@ function NewMetric(
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.post('/api/metricas', {
-                ...formData,
-                // date: new Date(formData.date),
+            const response = await fetch('/api/metricas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    // date: new Date(formData.date),
+                }),
             });
+        
+            if (!response.ok) {
+                throw new Error('Error al agregar la métrica');
+            }
+        
             alert('Métrica agregada con éxito');
-            setFormData({
-                userID: '',
-                date: '',
-                weigth: '',
-                IMC: '',
-                body_fat: '',
-                body_musc: '',
-                visceral_fat: '',
-                body_age: '',
-            });
-            closeModal();
+            // ... resto del código para limpiar el formulario y cerrar el modal
         } catch (error) {
-            console.error('Error al agregar la métrica:', error);
+            console.error('Error al agregar la métrica: ', error);
             alert('Hubo un error al agregar la métrica.');
         }
     };
