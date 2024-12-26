@@ -4,6 +4,7 @@ import React from "react";
 import { Medicion } from "@/types/metrics"; // Asegúrate de tener esta ruta correcta
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Props {
     data: Medicion[];
@@ -24,6 +25,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
         visceral_fat: 0,
         body_age: 0,
     });
+    const router = useRouter();
 
     function onEdit(item: Medicion) {
         setEdit(true);
@@ -32,6 +34,8 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
     }
     function onDelete(date: string) {
         setDeleteItem(true);
+        console.log(date);
+        console.log(deleteItem)
         return
     }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +56,8 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
             if (res.ok) {
                 setEdit(false);
                 alert("Métrica editada correctamente");
+                router.refresh();
+
             } else {
                 alert("Hubo un error al editar la métrica");
             }
@@ -63,7 +69,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
 
     const { data: session } = useSession();
     return (
-        <div className="overflow-x-auto m-auto justify-center flex">
+        <div className="overflow-x-auto m-auto justify-center flex my-10">
             <table className="w-10/12 bg-gray-800 text-white border border-gray-700 rounded-lg text-center">
                 <thead>
                     <tr className="bg-gray-900 text-left">
@@ -80,7 +86,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                 </thead>
                 <tbody>
                     {data.slice().reverse().map((item) => (
-                        <tr key={item.userID + item.date} className="even:bg-gray-700 hover:bg-gray-600">
+                        <tr key={item.userID + item.date + item.IMC + item.body_age} className="even:bg-gray-700 hover:bg-gray-600">
                             <td className="py-2 px-4">{item.date}</td>
                             <td className="py-2 px-4">{item.weigth} kg</td>
                             <td className="py-2 px-4">{item.IMC}</td>
@@ -115,7 +121,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                     <div className="bg-white p-4 rounded-lg ">
                         <h2 className="text-xl font-bold">Editar métrica</h2>
                         <form onSubmit={handleSubmit} className="flex-col flex text-right">
-                        <div>
+                            <div>
                                 <label htmlFor="date">Fecha:</label>
                                 <input
                                     id="date"

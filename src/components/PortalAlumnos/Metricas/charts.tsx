@@ -2,7 +2,6 @@
 
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Medicion } from "@/types/metrics"
-import { Suspense } from "react"
 
 
 const Chart = ({ data }: { data: Medicion[] }) => {

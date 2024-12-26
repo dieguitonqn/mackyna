@@ -1,6 +1,6 @@
 
 'use client'
-import axios from 'axios';
+
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { IoCloseCircleSharp } from 'react-icons/io5';
@@ -67,6 +67,18 @@ function NewMetric(
             }
         
             alert('Métrica agregada con éxito');
+            setFormData({
+                userID: userID,
+                date: '',
+                weigth: '',
+                IMC: '',
+                body_fat: '',
+                body_musc: '',
+                visceral_fat: '',
+                body_age: '',
+            });
+            setSelectedNewMtric(false);
+            router.push(`/portalAlumnos/Metricas?id=${userID}`)
             // ... resto del código para limpiar el formulario y cerrar el modal
         } catch (error) {
             console.error('Error al agregar la métrica: ', error);

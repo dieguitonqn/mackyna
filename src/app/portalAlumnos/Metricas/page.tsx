@@ -70,7 +70,7 @@ async function page({
     try {
         await connect();
         if (sessionUserID != '' && !urlUserId) {
-            const rawMetricsData = await Metric.find({ userID: sessionUserID }).lean<MedicionLocal[]>();
+            const rawMetricsData = await Metric.find({ userID: sessionUserID }).sort({date:-1}).lean<MedicionLocal[]>();
             if (!rawMetricsData || rawMetricsData.length === 0) {
                 return (
                     <div className="flex justify-center items-center text-4xl text-white h-screen">
@@ -88,9 +88,9 @@ async function page({
 
                 const metricsData = processMetricsData(rawMetricsData);
 
-                console.log(metricsData);
+                // console.log(metricsData);
                 return (
-                    <div className='h-screen  justify-center '>
+                    <div className='h-full  justify-center '>
                         <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
                             Métricas de {session.user.name}
                         </div>
@@ -116,13 +116,13 @@ async function page({
             }
         } else if (urlUserId != '') {
             const userInfo: IUser | null = await User.findOne({ _id: new ObjectId(urlUserId) }).lean<IUser>();
-            console.log(userInfo);
-            const rawMetricsData = await Metric.find({ userID: urlUserId }).lean<MedicionLocal[]>();
-            console.log(rawMetricsData)
+            // console.log(userInfo);
+            const rawMetricsData = await Metric.find({ userID: urlUserId }).sort({date:1}).lean<MedicionLocal[]>();
+            // console.log(rawMetricsData)
             if (rawMetricsData === null || rawMetricsData.length === 0) {
-                console.log('bandera')
+                // console.log('bandera')
                 return (
-                    <div className=" container h-screen">
+                    <div className=" container h-full">
 
                         {(session.user.rol === "teach" || session.user.rol === 'admin') && (
                             <div>
@@ -136,12 +136,12 @@ async function page({
                     </div>
                 );
             } else {
-                console.log('bandera2')
+                // console.log('bandera2')
 
                 const metricsData = processMetricsData(rawMetricsData);
-                console.log(metricsData);
+                // console.log(metricsData);
                 return (
-                    <div className='h-screen  justify-center gap-10'>
+                    <div className='h-full  justify-center gap-10'>
                         <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
                             Métricas de {userInfo!.nombre}
                         </div>
