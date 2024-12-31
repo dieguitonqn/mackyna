@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { FormUserValues } from '@/types/user';
-import { redirect } from 'next/dist/server/api-utils';
 
 
 
@@ -67,7 +66,6 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
         body: JSON.stringify(formValues),
       });
       if (response.ok) {
-        const updatedUser = await response.json();
         
         window.alert('Usuario actualizado correctamente');
       }

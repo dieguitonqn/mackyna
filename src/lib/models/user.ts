@@ -1,6 +1,5 @@
 import { ObjectId, Schema, model, models } from "mongoose"
-import Facebook from "next-auth/providers/facebook";
-import Twitter from "next-auth/providers/twitter";
+
 
 
 interface IUser {

@@ -2,7 +2,7 @@ import connect from "@/lib/db";
 import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-import { FormUserValues, IUser } from "@/types/user";
+
 
 
 export const GET = async (req: Request) => {
