@@ -15,10 +15,11 @@ const Chart = ({ data }: { data: Medicion[] }) => {
                         height={500}
                         data={data}
                         margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
+                            top: 20,
+                            right: 20,
+                            left: 10,
                             bottom: 5,
+                            
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />

@@ -110,7 +110,7 @@ export const SignUpForm = () => {
                     type="email"
                     id="email"
                     className="border-slate-500 border rounded-sm p-1"
-                    onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value.toLocaleLowerCase() }))}
                 />
 
                 <label htmlFor="pwd">Contraseña:</label>

@@ -70,7 +70,7 @@ async function page({
     try {
         await connect();
         if (sessionUserID != '' && !urlUserId) {
-            const rawMetricsData = await Metric.find({ userID: sessionUserID }).sort({date:-1}).lean<MedicionLocal[]>();
+            const rawMetricsData = await Metric.find({ userID: sessionUserID }).sort({ date: 1 }).lean<MedicionLocal[]>();
             if (!rawMetricsData || rawMetricsData.length === 0) {
                 return (
                     <div className="flex justify-center items-center text-4xl text-white h-screen">
@@ -90,12 +90,12 @@ async function page({
 
                 // console.log(metricsData);
                 return (
-                    <div className='h-full  justify-center '>
+                    <div className='md:h-screen  h-full  justify-center mx-auto '>
                         <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
                             Métricas de {session.user.name}
                         </div>
 
-                        <div className="flex justify-center items-center">
+                        <div className="flex flex-wrap gap-10 justify-center items-center">
                             <MetricCard />
                             <Chart data={metricsData} />
                         </div>
@@ -105,24 +105,27 @@ async function page({
                                 <NewMetric userID={urlUserId} userName={session.user.name} />
                             </div>
                         )}
-                        <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
+                        
+                            <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
 
-                            <MetriscsTable data={metricsData} />
-                        </Suspense>
+                                <MetriscsTable data={metricsData} />
+                            </Suspense>
+                        
 
-                    </div>
+
+                    </div >
 
                 );
             }
         } else if (urlUserId != '') {
             const userInfo: IUser | null = await User.findOne({ _id: new ObjectId(urlUserId) }).lean<IUser>();
             // console.log(userInfo);
-            const rawMetricsData = await Metric.find({ userID: urlUserId }).sort({date:1}).lean<MedicionLocal[]>();
+            const rawMetricsData = await Metric.find({ userID: urlUserId }).sort({ date: 1 }).lean<MedicionLocal[]>();
             // console.log(rawMetricsData)
             if (rawMetricsData === null || rawMetricsData.length === 0) {
                 // console.log('bandera')
                 return (
-                    <div className=" container h-full">
+                    <div className=" container h-screen">
 
                         {(session.user.rol === "teach" || session.user.rol === 'admin') && (
                             <div>
@@ -147,7 +150,7 @@ async function page({
                         </div>
 
 
-                        <div className="flex flow-col justify-center items-center my-10">
+                        <div className="flex flow-wrap justify-center items-center my-10">
                             <MetricCard />
                             <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
                                 <Chart data={metricsData} />

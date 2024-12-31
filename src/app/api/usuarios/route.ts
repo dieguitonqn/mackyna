@@ -2,21 +2,9 @@ import connect from "@/lib/db";
 import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
+import { FormUserValues, IUser } from "@/types/user";
 
-// export const GET = async () => {
-//     try {
 
-//         await connect();
-//         const users = await User.find();
-
-//         return new NextResponse(JSON.stringify(users), { status: 200 });
-//     } catch (error: unknown) {
-//         if (error instanceof Error) {
-//             return new NextResponse("error: " + error.message, { status: 500 });
-//         }
-
-//     }
-// }
 export const GET = async (req: Request) => {
     const { searchParams } = new URL(req.url);
     const _id = searchParams.get("id");
@@ -81,21 +69,21 @@ export const POST = async (req: Request) => {
 export const PUT = async (req: Request) => {
     try {
         await connect();
+        const { _id, ...rest } = await req.json();
 
-        const { email, nombre, apellido, rol } = await req.json();
-        console.log(rol);
 
-        if (!email) {
+        const userId = new ObjectId(_id);
+
+
+        if (!rest.email) {
             return new NextResponse("El email es obligatorio", { status: 400 });
         }
 
-        const updatedUser = await User.findOneAndUpdate(
-            { email },
-            { nombre, apellido, rol },
-            { new: true }
-        );
+        const updatedUser = await User.findByIdAndUpdate(userId, rest, { new: true });
+
 
         if (!updatedUser) {
+
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
 

@@ -1,54 +1,88 @@
-// import Chart from '@/components/PortalAlumnos/charts';
-import PerfilUserForm from '@/components/PortalAlumnos/perfilForm';
-// import connect from '@/lib/db';
-// import Medicion from '@/lib/models/metrics';
+
+import PerfilUserForm from '@/components/PortalAlumnos/Perfil/perfilForm';
+import { authOptions } from '@/lib/auth0';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { FormUserValues, IUser } from '@/types/user';
+
 import React from 'react';
-
-// interface MedicionL {
-//     userID: string;
-//     date: string; // Actualizamos el tipo a string porque contendrá la fecha formateada
-//     weigth: number;
-//     IMC: number;
-//     body_fat: number;
-//     body_musc: number;
-//     visceral_fat: number;
-//     body_age: number;
-//     createdAt: Date;
-// }
-
-async function page() {
-    // await connect();
-    // const rawMetricsData = await Medicion.find({ userID: "user123" }).lean();
-
-    // // Transformar los datos para extraer día, mes y año
-    // const metricsData: MedicionL[] = rawMetricsData.map(({ _id, createdAt, updatedAt, date, ...rest }: any) => {
-    //     const parsedDate = new Date(createdAt);
+import User from '@/lib/models/user';
+import { ObjectId } from 'mongodb';
 
 
-    //     // Extraer día, mes y año
-    //     const day = parsedDate.getDate();
-    //     const month = parsedDate.toLocaleString('default', { month: 'short' }); // "Jan", "Feb", etc.
-    //     const year = parsedDate.getFullYear();
 
-    //     // Formatear como "dd-MMM-yyyy", ej: "15-Jan-2024"
-    //     const formattedDate = `${day}-${month}-${year}`;
+async function page({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+        redirect('/login');
+    }
+    const sessionUserID = session?.user.id.toString();
+    console.log("session: " + sessionUserID);
+    const urlUserId = (await searchParams).id as string;
+    console.log("url: " + urlUserId);
 
-    //     return { ...rest, date: formattedDate }; // Reemplazo date con la fecha formateada
-    // });
+    if (urlUserId) {
+        try {
+            const user = await User.findOne({ _id: new ObjectId(urlUserId) });
+            console.log("usuario url: " + user);
+            return (
+                <div className='md:h-screen h-full '>
+                    <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
+                        Perfil de usuario
+                    </div>
+                    <div>
+                        {/* <PerfilUserForm user={user}/> */}
+                    </div>
+                </div>
+            )
 
-    // console.log(metricsData);
+        } catch (error: unknown) {
+            console.log(error);
+            window.alert("Usuario no encontrado");
 
-    return (
-        <div className='h-full '>
-            <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
-                Perfil de usuario
-            </div>
-            <div>
-                <PerfilUserForm />
-            </div>
-            {/* <Chart data={metricsData} /> */}
-        </div>
-    );
+
+        }
+
+    } else if (sessionUserID && !urlUserId) {
+        try {
+            const rawUser = await User.findOne({ email: session.user.email }).lean<IUser>();
+            console.log("Usuario actual: ");
+            console.log(rawUser);
+            const user: FormUserValues = {
+                ...rawUser,
+                _id: rawUser!._id.toString(),
+                nombre: rawUser!.nombre,
+                email: rawUser!.email,
+                pwd: rawUser!.pwd,
+                rol: rawUser!.rol,
+
+            }
+            console.log(user);
+            return (
+                <div className='w-[620]:h-screen h-full '>
+                    <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
+                        Perfil de usuario
+                    </div>
+                    <div>
+                        <PerfilUserForm user={user} />
+                    </div>
+                </div>
+            );
+
+        } catch (error: unknown) {
+            console.log(error);
+            window.alert("Usuario no encontrado");
+            redirect('/login');
+
+        }
+
+    } else {
+        redirect('/login');
+    }
 }
 
 export default page;

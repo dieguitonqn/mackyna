@@ -58,11 +58,11 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
             key={typeof user._id === "object" ? user._id.toString() : user._id} // Convierte el ObjectId si es un objeto
               
               onClick={() => handleSelect(user)}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100 border-b"
+              className="px-4 py-2 cursor-pointer hover:bg-gray-100 border-b text-sm"
             >
               <p className="font-semibold">{user.nombre + ", " + user.apellido }</p>
               
-              <p className="italic font-extralight">{" email: " + user.email}</p>
+              <p className="italic font-extralight text-sm">{" email: " + user.email}</p>
             </li>
           ))}
         </ul>

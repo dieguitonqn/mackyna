@@ -17,25 +17,33 @@ const Planillas: React.FC = () => {
     const [selectedPlani, setSelectedPlani] = useState<Plani | null>(null);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [isTeach, setIsTeach] = useState<boolean>(false);
+    const [userName, setUserName] = useState<string>('');
     const router = useRouter();
     
 
     useEffect(() => {
         const fetchPlanis = async () => {
-            const plani_id = searchParams.get('id');
+            const user_id = searchParams.get('id');
             try {
                 if (session?.user.rol === "admin") {
                     setIsAdmin(true);
                 } else if (session?.user.rol === "teach") {
                     setIsTeach(true);
                 }
-                if (plani_id) {
-                    const response = await fetch(`/api/planillas?id=${plani_id}`);
+                if (user_id) {
+                    const response = await fetch(`/api/planillas?id=${user_id}`);
                     if (!response.ok) {
                         throw new Error('Error obteniendo las planillas del usuario');
                     }
                     const planillas = await response.json();
                     setPlanillasUser(planillas);
+
+                    const responseUser = await fetch(`/api/usuarios?id=${user_id}`);
+                    if (!responseUser.ok) {
+                        throw new Error('Error obteniendo el usuario');
+                    }
+                    setUserName((await responseUser.json()).nombre);
+
                 } else if (session) {
                     const userId = session.user.id;
                     const response = await fetch(`/api/planillas?id=${userId}`);
@@ -45,13 +53,7 @@ const Planillas: React.FC = () => {
                     const planillas = await response.json();
                     setPlanillasUser(planillas);
                 } 
-                // else {
-                //     const response = await fetch(`/api/planillas`);
-                //     if (!response.ok) {
-                //         throw new Error('Error obteniendo las planillas del usuario');
-                //     }
-                //     const planillas = await response.json();
-                // }
+                
             } catch (err: unknown) {
                 console.error(err);
             }
@@ -140,7 +142,7 @@ const Planillas: React.FC = () => {
     return (
         <div className="min-h-screen p-4">
             <div className="flex justify-center">
-                <h1 className="text-4xl font-bold mb-4 text-center text-gray-200">Rutinas de entrenamiento</h1>
+                <h1 className="text-4xl font-bold mb-4 text-center text-gray-200">Rutinas de entrenamiento de {userName ? userName : session?.user.name}</h1>
             </div>
 
             {planillasUser ? (

@@ -69,7 +69,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
 
     const { data: session } = useSession();
     return (
-        <div className="overflow-x-auto m-auto justify-center flex my-10">
+        <div className="overflow-x-auto md:flex justify-center  my-10">
             <table className="w-10/12 bg-gray-800 text-white border border-gray-700 rounded-lg text-center">
                 <thead>
                     <tr className="bg-gray-900 text-left">

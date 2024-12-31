@@ -1,8 +1,46 @@
+import { ObjectId } from "mongodb";
 
 export interface IUser {
-        nombre: string;
-        apellido:string;
-        email: string;
-        pwd:string;
-        rol: string;
-}
+    _id:ObjectId;
+    nombre: string;
+    apellido?:string;
+    genero?: string;
+    fecha_nacimiento?: Date | null;
+    localidad?: string;
+    telefono?: string;
+    email: string;
+    pwd:string;
+    rol: string;
+    altura?: number | 0;
+    objetivo?: string;
+    lesiones?: string;
+    habilitado?: boolean;
+    bloqueado?: boolean;
+    ultimo_pago?: Date;
+    redes?: {
+        Facebook?: string;
+        Instagram?: string;
+        Twitter?: string;    
+
+  }};
+
+  export interface FormUserValues {
+    _id:string | '';
+    nombre: string;
+    apellido?: string | "";
+    genero?: string | "";
+    fecha_nacimiento?: Date | null;
+    localidad?: string | "";
+    telefono?: string | "";
+    email: string;
+    pwd: string;
+    rol: string;
+    altura?: number | 0;
+    objetivo?: string | "";
+    lesiones?: string | "";
+    redes?: {
+      Facebook?: string | "";
+      Instagram?: string | "";
+      Twitter?: string | "";
+    };
+  }

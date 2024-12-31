@@ -54,14 +54,15 @@ function Navbar() {
             height={50}
           />
         </Link>
-        <p className='flex flex-row items-center gap-2'>Hola {session.user.name}!
+        <Link href="/portalAlumnos/Perfil" className='flex flex-row items-center gap-2'>Hola {session.user.name}!
+          
           {session.user.image &&
             <img
               src={session.user.image}
               alt='user image'
               className='w-10 h-10 rounded-full cursor-pointer'
             />}
-        </p>
+        </Link>
 
 
 
