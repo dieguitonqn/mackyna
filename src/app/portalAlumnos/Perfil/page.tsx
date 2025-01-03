@@ -21,9 +21,9 @@ async function page({
         redirect('/login');
     }
     const sessionUserID = session?.user.id.toString();
-    console.log("session: " + sessionUserID);
+    // console.log("session: " + sessionUserID);
     const urlUserId = (await searchParams).id as string;
-    console.log("url: " + urlUserId);
+    // console.log("url: " + urlUserId);
 
     if (urlUserId) {
         try {
@@ -50,8 +50,7 @@ async function page({
     } else if (sessionUserID && !urlUserId) {
         try {
             const rawUser = await User.findOne({ email: session.user.email }).lean<IUser>();
-            console.log("Usuario actual: ");
-            console.log(rawUser);
+           
             const user: FormUserValues = {
                 ...rawUser,
                 _id: rawUser!._id.toString(),
@@ -61,7 +60,7 @@ async function page({
                 rol: rawUser!.rol,
 
             }
-            console.log(user);
+            
             return (
                 <div className='w-[620]:h-screen h-full '>
                     <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>

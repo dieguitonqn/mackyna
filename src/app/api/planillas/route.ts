@@ -1,5 +1,6 @@
 import connect from "@/lib/db";
 import Plani from "@/lib/models/planillas";
+import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 // import NextAuth, { AuthOptions } from "next-auth";
@@ -57,7 +58,10 @@ export const POST = async (req: Request) => {
             return new NextResponse("No se pudo ingresar el entreno", { status: 400 });
 
         }
-
+        const ultima_planilla = await User.findByIdAndUpdate({ _id: new ObjectId(planilla.userId as string) }, { ultima_plani: Date.now() }, { new: true });
+        if (!ultima_planilla) {
+            return new NextResponse("No se pudo actualizar la fecha de la ultima planilla", { status: 400 });
+        }   
         return new NextResponse("ejercicio agregado con exito", { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {

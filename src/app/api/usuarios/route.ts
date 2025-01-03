@@ -43,7 +43,6 @@ export const POST = async (req: Request) => {
     try {
         await connect();
 
-        // Parsear el cuerpo de la solicitud
         const { email } = await req.json();
 
         if (!email) {
@@ -72,7 +71,7 @@ export const PUT = async (req: Request) => {
         const { _id, ...rest } = await req.json();
 
 
-        const userId = new ObjectId(_id);
+        const userId = new ObjectId(_id as string);
 
 
         if (!rest.email) {

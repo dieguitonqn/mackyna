@@ -1,15 +1,25 @@
 import Metric from "@/lib/models/metrics";
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+import User from "@/lib/models/user";
+import { ObjectId } from "mongodb";
 
 
 export  const POST = async (req:Request)=>{
     try {
-        const newMtric = await req.json();
-        console.log(newMtric)
-        const nuevaMedicion = await Metric.create(newMtric);
+        const newMetric = await req.json();
+        // console.log(newMetric);
+        // const userID = newMetric.userID;
+        // console.log(userID);
+        const nuevaMedicion = await Metric.create(newMetric);
         if(!nuevaMedicion){
             return new NextResponse ("No se pudo ingresar la medidicón",{status:500})
         }
+
+        const ultima_metrica = await User.findByIdAndUpdate({ _id: new ObjectId(newMetric.userID as string) }, { ultima_metrica: Date.now() }, { new: true });
+        if (!ultima_metrica) {
+            return new NextResponse("No se pudo actualizar la fecha de la ultima planilla", { status: 400 });
+        }   
+
         return new NextResponse("Todo ok",{status:202})
     } catch (error:unknown) {
         return NextResponse.json({error: "error desconocido"+error},{status:500});

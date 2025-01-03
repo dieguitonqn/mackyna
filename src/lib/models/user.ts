@@ -19,6 +19,9 @@ interface IUser {
     habilitado: boolean;
     bloqueado: boolean;
     ultimo_pago: Date;
+    ultima_plani: Date;
+    ultima_metrica: Date;
+
     redes: {
         Facebook: string;
         Instagram: string;
@@ -49,9 +52,11 @@ const UserSchema = new Schema(
         altura:{type: Number, required:false},
         objetivo:{type: String, required:false},
         lesiones:{type: String, required:false},
-        habilitado:{type: Boolean, default:false},
-        bloqueado:{type: Boolean, default:false},
+        habilitado:{type: Boolean, required:false, default:false},
+        bloqueado:{type: Boolean, required:false, default:false},
         ultimo_pago:{type: Date, required:false},
+        ultima_plani:{type: Date, required:false},
+        ultima_metrica:{type: Date, required:false},
         redes:{type: RedesSchema, required:false},
 
     },

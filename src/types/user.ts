@@ -17,6 +17,8 @@ export interface IUser {
     habilitado?: boolean;
     bloqueado?: boolean;
     ultimo_pago?: Date;
+    ultima_plani?: Date;
+    ultima_metrica?: Date;
     redes?: {
         Facebook?: string;
         Instagram?: string;
