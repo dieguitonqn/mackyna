@@ -18,6 +18,7 @@ import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
 
 
 interface MedicionLocal {
+    _id: string;
     userID: string;
     date: string; // Actualizamos el tipo a string porque contendrá la fecha formateada
     weigth: number;
@@ -49,10 +50,10 @@ async function page({
     }
 
     function processMetricsData(rawMetricsData: MedicionLocal[]): MedicionLocal[] {
-        return rawMetricsData.map(({ date, ...rest }) => ({
+        return rawMetricsData.map(({ _id,date, ...rest }) => ({
             ...rest,
             date: formatDate(date),
-            _id: undefined,
+            _id: _id.toString(),
         }));
     }
 

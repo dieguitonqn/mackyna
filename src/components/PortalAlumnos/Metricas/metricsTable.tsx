@@ -16,6 +16,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
     const [edit, setEdit] = useState(false);
     const [deleteItem, setDeleteItem] = useState(false);
     const [editedItem, setEditedItem] = useState<Medicion>({
+        _id: "",
         userID: "",
         date: "",
         weigth: 0,
@@ -32,11 +33,28 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
         setEditedItem(item);
         return
     }
-    function onDelete(date: string) {
+    async function onDelete(key: string) {
         setDeleteItem(true);
-        console.log(date);
+        if (!window.confirm("¿Estás seguro de que deseas eliminar esta métrica?")) {
+            return
+        }
+        try {
+            const res = await fetch(`/api/metricas?id=${key}`, {
+                method: "DELETE",
+            })
+            if (res.ok) {
+                alert("Métrica eliminada correctamente");
+                router.refresh();
+            } else {
+                alert("Hubo un error al eliminar la métrica");
+            }
+        } catch (error:unknown) {
+            console.error("Error:", error);
+            
+        }
+        console.log(key);
         console.log(deleteItem)
-        return
+
     }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -86,7 +104,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                 </thead>
                 <tbody>
                     {data.slice().reverse().map((item) => (
-                        <tr key={item.userID + item.date + item.IMC + item.body_age} className="even:bg-gray-700 hover:bg-gray-600">
+                        <tr key={item._id} className="even:bg-gray-700 hover:bg-gray-600">
                             <td className="py-2 px-4">{item.date}</td>
                             <td className="py-2 px-4">{item.weigth} kg</td>
                             <td className="py-2 px-4">{item.IMC}</td>
@@ -104,7 +122,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                                     </button>)}
                                 {(session?.user.rol == "admin" || session?.user.rol == "teach") && (
                                     <button
-                                        onClick={() => onDelete(item.date)}
+                                        onClick={() => onDelete(item._id)}
                                         className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
                                     >
                                         Borrar

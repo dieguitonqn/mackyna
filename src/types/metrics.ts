@@ -1,4 +1,5 @@
 export interface Medicion {
+    _id: string;
     userID: string;
     date: string;
     weigth: number;

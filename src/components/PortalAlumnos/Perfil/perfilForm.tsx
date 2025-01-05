@@ -131,16 +131,16 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
           <div className=' border border-slate-400 bg-slate-200 p-5 mx-auto'>
             <h1 className='text-2xl'>Datos De Usuario</h1>
             <div>
-              <label htmlFor="nombre" className="block text-sm font-semibold mt-5">
+              <label htmlFor="email" className="block text-sm font-semibold mt-5">
                 email:
               </label>
               <input
                 type="text"
-                id="nombre"
-                name="nombre"
+                id="email"
+                name="email"
                 value={formValues.email || ''}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none text-sm"
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none"
                 disabled
               />
             </div>
