@@ -2,7 +2,7 @@
 import NextAuth from "next-auth"
 
 import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook";
+
 import User from "@/lib/models/user";
 
 import CredentialsProvider from "next-auth/providers/credentials";

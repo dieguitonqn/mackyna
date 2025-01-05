@@ -20,7 +20,7 @@ export const MetricCard = (
         if (!birthDate || birthDate=== null){
             return { años: 0, meses: 0 };
         }
-        let fecha_hoy = new Date();
+        const fecha_hoy = new Date();
         let años = fecha_hoy.getFullYear() - birthDate.getFullYear();
         let meses = fecha_hoy.getMonth() - birthDate.getMonth();
         if (meses < 0) {
