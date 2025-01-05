@@ -2,24 +2,17 @@ import connect from "@/lib/db";
 import Ejercicio from "@/lib/models/ejercicios";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth0";
+import { getServerSession } from "next-auth";
 
-// export const GET = async () => {
-//     try {
 
-//         await connect();
-//         const ejercicios = await Ejercicio.find();
-
-//         return new NextResponse(JSON.stringify(ejercicios), { status: 200 });
-//     } catch (error: unknown) {
-//         if (error instanceof Error) {
-//             return new NextResponse("error: " + error.message, { status: 500 });
-//         }
-
-//     }
-// }
 
 
 export const GET = async (req: Request) => {
+    const session = await getServerSession({ req, ...authOptions });
+    if(!session){
+        return new NextResponse("No autorizado", { status: 401 });
+    }
     const { searchParams } = new URL(req.url);
     const _id = searchParams.get("id");
     try {
@@ -53,6 +46,10 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
+    const session = await getServerSession({ req, ...authOptions });
+    if(!session){
+        return new NextResponse("No autorizado", { status: 401 });
+    }
     try {
         await connect();
 
@@ -82,6 +79,10 @@ export const POST = async (req: Request) => {
 
 
 export const PUT = async (req: Request) => {
+    const session = await getServerSession({ req, ...authOptions });
+    if(!session){
+        return new NextResponse("No autorizado", { status: 401 });
+    }
     try {
         await connect();
 
@@ -113,6 +114,10 @@ export const PUT = async (req: Request) => {
 
 
 export const DELETE = async (req: Request): Promise<NextResponse> => {
+    const session = await getServerSession({ req, ...authOptions });
+    if(!session){
+        return new NextResponse("No autorizado", { status: 401 });
+    }
     try {
         // Conectar a la base de datos
         await connect();

@@ -59,7 +59,7 @@ const EditEjercicioForm: React.FC<EditEjercicioFormProps> = ({ _id, onClose }) =
         throw new Error('Error al actualizar los datos');
       }
   
-      alert('Usuario actualizado con éxito');
+      alert('Ejercicio actualizado con éxito');
       onClose(); // Cierra el formulario
       
     } catch (err: unknown) {

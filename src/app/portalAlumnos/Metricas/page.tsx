@@ -35,6 +35,11 @@ async function page({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
 
+    const session = await getServerSession(authOptions);
+    if (!session) {
+        redirect('/login');
+    }
+
     function formatDate(date: string): string {
         const parsedDate = new Date(date);
         const day = parsedDate.getDate();
@@ -51,10 +56,7 @@ async function page({
         }));
     }
 
-    const session = await getServerSession(authOptions);
-    if (!session) {
-        redirect('/login');
-    }
+
     const sessionUserID = session?.user.id.toString();
     const urlUserId = (await searchParams).id as string
 
@@ -71,6 +73,8 @@ async function page({
         await connect();
         if (sessionUserID != '' && !urlUserId) {
             const rawMetricsData = await Metric.find({ userID: sessionUserID }).sort({ date: 1 }).lean<MedicionLocal[]>();
+            const user = await User.findOne({ _id: new ObjectId(sessionUserID) }).lean<IUser>();
+
             if (!rawMetricsData || rawMetricsData.length === 0) {
                 return (
                     <div className="flex justify-center items-center text-4xl text-white h-screen">
@@ -96,7 +100,7 @@ async function page({
                         </div>
 
                         <div className="flex flex-wrap gap-10 justify-center items-center">
-                            <MetricCard />
+                            <MetricCard birthDate={user?.fecha_nacimiento} altura={user?.altura} objetivo={user?.objetivo}/>
                             <Chart data={metricsData} />
                         </div>
 
@@ -105,12 +109,12 @@ async function page({
                                 <NewMetric userID={urlUserId} userName={session.user.name} />
                             </div>
                         )}
-                        
-                            <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
 
-                                <MetriscsTable data={metricsData} />
-                            </Suspense>
-                        
+                        <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
+
+                            <MetriscsTable data={metricsData} />
+                        </Suspense>
+
 
 
                     </div >

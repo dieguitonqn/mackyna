@@ -3,19 +3,18 @@ import Plani from "@/lib/models/planillas";
 import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-// import NextAuth, { AuthOptions } from "next-auth";
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth0";
+import { getServerSession } from "next-auth";
+
 
 export const GET = async (req: Request) => {
+    const session = await getServerSession({ req, ...authOptions });
+        if(!session){
+            return new NextResponse("No autorizado", { status: 401 });
+        }
     const { searchParams } = new URL(req.url);
     const _id = searchParams.get("id");
-    // const session = await getServerSession(authOptions)
-
-    // if (!session) {
-
-    //   return new NextResponse("El ID no es válido", { status: 400 });
-    // }
+  
 
     try {
         await connect();
@@ -48,6 +47,10 @@ export const GET = async (req: Request) => {
 
 
 export const POST = async (req: Request) => {
+    const session = await getServerSession({ req, ...authOptions });
+        if(!session){
+            return new NextResponse("No autorizado", { status: 401 });
+        }
     try {
         await connect();
         const planilla = await req.json();
@@ -72,6 +75,10 @@ export const POST = async (req: Request) => {
 }
 
 export const DELETE = async (req: Request): Promise<NextResponse>=>{
+    const session = await getServerSession({ req, ...authOptions });
+        if(!session){
+            return new NextResponse("No autorizado", { status: 401 });
+        }
    
     try {
         await connect();
@@ -102,6 +109,10 @@ export const DELETE = async (req: Request): Promise<NextResponse>=>{
 
 
 export const PUT = async (req:Request):Promise<NextResponse>=>{
+    const session = await getServerSession({ req, ...authOptions });
+        if(!session){
+            return new NextResponse("No autorizado", { status: 401 });
+        }
     try {
         const {id,plani} = await req.json();
         

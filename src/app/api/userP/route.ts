@@ -2,8 +2,14 @@ import { NextResponse } from "next/server";
 import argon2 from "argon2";
 import { ObjectId } from "mongodb";
 import User from "@/lib/models/user";
+import { authOptions } from "@/lib/auth0";
+import { getServerSession } from "next-auth";
 
 export const PUT = async (req: Request) => {
+    const session = await getServerSession({ req, ...authOptions });
+            if(!session){
+                return new NextResponse("No autorizado", { status: 401 });
+            }
     try {
         const { _id, pwd } = await req.json();
         console.log(_id, pwd)

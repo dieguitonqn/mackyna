@@ -2,9 +2,15 @@ import Metric from "@/lib/models/metrics";
 import { NextResponse } from "next/server";
 import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
+import { authOptions } from "@/lib/auth0";
+import { getServerSession } from "next-auth";
 
 
 export  const POST = async (req:Request)=>{
+    const session = await getServerSession({ req, ...authOptions });
+    if(!session){
+        return new NextResponse("No autorizado", { status: 401 });
+    }
     try {
         const newMetric = await req.json();
         // console.log(newMetric);
@@ -28,6 +34,10 @@ export  const POST = async (req:Request)=>{
 }
 
 export const PUT = async (req:Request)=>{
+    const session = await getServerSession({ req, ...authOptions });
+    if(!session){
+        return new NextResponse("No autorizado", { status: 401 });
+    }
     try {
         const editedMetric0 = await req.json();
         console.log(editedMetric0);
