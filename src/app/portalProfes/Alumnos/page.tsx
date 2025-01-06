@@ -67,6 +67,25 @@ const Usuarios: React.FC = () => {
     setSelectedEmail(null);
   };
 
+  const handleResetPwd = async (id: string) => {
+    try {
+      const response = await fetch('/api/userP', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ _id: id, pwd: "1234" }),
+      });
+      if (!response.ok) {
+        throw new Error('Error al resetear la contraseña');
+      }
+      alert('Contraseña reseteada correctamente');
+    } catch (err) {
+      console.error(err);
+      alert('Error al resetear la contraseña');
+    };
+  };
+
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
@@ -79,7 +98,7 @@ const Usuarios: React.FC = () => {
           <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
             <thead>
               <tr className="bg-gray-100">
-                {['Nombre', 'Apellido', 'Email', 'Última Planilla','Última medición', 'Acciones'].map(
+                {['Nombre', 'Apellido', 'Email', 'Última Planilla', 'Última medición', 'Acciones'].map(
                   (heading, idx) => (
                     <th
                       key={idx}
@@ -116,7 +135,7 @@ const Usuarios: React.FC = () => {
                   <td className="px-2 py-2">{user.nombre}</td>
                   <td className="px-2 py-2">{user.apellido || ''}</td>
                   <td className="px-2 py-2">{user.email}</td>
-                  
+
                   <td className="px-2 py-2">
                     {user.ultima_plani
                       ? new Date(user.ultima_plani).toLocaleDateString()
@@ -140,6 +159,10 @@ const Usuarios: React.FC = () => {
                     >
                       Métricas
                     </a>
+                    <button
+                    className="px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
+                    onClick={()=>handleResetPwd(user._id.toString())}
+                    >Reset PWD</button>
                   </td>
                 </tr>
               ))}

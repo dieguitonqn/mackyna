@@ -144,7 +144,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                                 <input
                                     id="date"
                                     type="text"
-                                    placeholder="Peso"
+                                    placeholder="fecha"
                                     className="p-1 border border-slate-200 m-2 rounded-sm"
                                     value={editedItem?.date}
                                     onChange={(e) => handleInputChange(e)} />
