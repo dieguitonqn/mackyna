@@ -36,7 +36,7 @@ export const GET = async (req: Request) => {
         }
 
         //     // Si no hay `id`, devolver todos los ejercicios
-        const ejercicios = await Ejercicio.find();
+        const ejercicios = await Ejercicio.find().sort({ nombre: 1 });
         return new NextResponse(JSON.stringify(ejercicios), { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {

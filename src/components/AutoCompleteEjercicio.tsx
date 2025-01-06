@@ -54,7 +54,7 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
         required
       />
       {showDropdown && (
-        <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-white rounded-lg shadow-lg z-10 mt-1">
+        <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-white rounded-lg shadow-lg z-10 mt-1 overflow-y-scroll max-h-80">
           {filtered.map((ejercicio) => (
             <li
               key={ejercicio._id} // Convierte el ObjectId si es un objeto
