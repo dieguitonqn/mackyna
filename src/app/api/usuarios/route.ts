@@ -36,7 +36,7 @@ export const GET = async (req: Request) => {
         }
 
         //     // Si no hay `id`, devolver todos los users
-        const users = await User.find();
+        const users = await User.find().sort({nombre:1,apellido:1});
         return new NextResponse(JSON.stringify(users), { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {

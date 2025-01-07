@@ -19,9 +19,9 @@ type Ejercicio = {
 const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
     // const [selectedEjercicio, setSelectedEjercicio] = useState<Ejercicio>(); // Usuario seleccionado
-
+    const [exercises, setExercises] = useState<Exercise[]>([]);
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchEjercicios = async () => {
             try {
                 const response = await fetch('/api/ejercicios');
                 const ejerciciosDB = await response.json();
@@ -31,14 +31,14 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                 }));
 
                 setEjercicios(ejerciciosWithStringId);
-                // console.log(ejerciciosWithStringId);
+                console.log(ejerciciosWithStringId);
             } catch (err) {
-                console.error('Error al obtener usuarios:', err);
+                console.error('Error al obtener ejercicios:', err);
             }
         };
-        fetchUsers();
-    }, []);
-    const [exercises, setExercises] = useState<Exercise[]>([]);
+        fetchEjercicios();
+    }, [exercises]);
+    
 
     const handleAddExercise = () => {
         const newExercise: Exercise = { name: '', reps: '', sets: 1, notas:'',videoLink: '' };
