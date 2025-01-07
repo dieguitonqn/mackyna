@@ -44,7 +44,7 @@ async function page({
     function formatDate(date: string): string {
         const parsedDate = new Date(date);
         const day = parsedDate.getDate();
-        const month = parsedDate.toLocaleString('default', { month: 'short' });
+        const month = parsedDate.toLocaleString('es-ES', { month: 'short' });
         const year = parsedDate.getFullYear();
         return `${day}-${month}-${year}`;
     }
