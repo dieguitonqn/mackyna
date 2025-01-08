@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-r from-black via-green-700 to-black min-h-screen overflow-x-scroll`}// bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from from-green-700 to-black h-full`}
       >

@@ -27,7 +27,7 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
 
     // Filtrar usuarios que coincidan con el texto ingresado
     const filtered = users.filter((user) =>
-      user.nombre.toLowerCase().includes(value.toLowerCase())
+      user.nombre.toLowerCase().includes(value.toLowerCase() ) || user.apellido.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredUsers(filtered);
 
