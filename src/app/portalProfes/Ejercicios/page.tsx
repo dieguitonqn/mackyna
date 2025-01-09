@@ -9,7 +9,7 @@ import { MdOutlineAddChart } from "react-icons/md";
 type Ejercicio = {
     _id: string;
     nombre: string;
-    grupoMusc: string;
+    grupoMusc?: string;
     specificMusc: string;
     description: string;
     video: string;
@@ -60,7 +60,7 @@ const Ejercicios: React.FC = () => {
     useEffect(() => {
         const filtered = ejercicios.filter((ejercicio) =>
             ejercicio.nombre.toLowerCase().includes(filters.nombre.toLowerCase()) &&
-            ejercicio.grupoMusc.toLowerCase().includes(filters.grupoMusc.toLowerCase()) &&
+            // ejercicio.grupoMusc.toLowerCase().includes(filters.grupoMusc.toLowerCase()) &&
             ejercicio.specificMusc.toLowerCase().includes(filters.specificMusc.toLowerCase()) &&
             ejercicio.description.toLowerCase().includes(filters.description.toLowerCase()) &&
             ejercicio.video.toLowerCase().includes(filters.video.toLowerCase())
@@ -144,7 +144,7 @@ const Ejercicios: React.FC = () => {
 
 
                         </th>
-                        <th
+                        {/* <th
                             className="border border-gray-300 px-2 py-2 text-left text-gray-600"
                         >
                             Grupo Muscular
@@ -162,7 +162,7 @@ const Ejercicios: React.FC = () => {
                                 required
                             />
 
-                        </th>
+                        </th> */}
                         <th
                             className="border border-gray-300 px-2 py-2 text-left text-gray-600"
                         >
@@ -233,7 +233,7 @@ const Ejercicios: React.FC = () => {
                             className="hover:bg-gray-200 border "
                         >
                             <td className="px-2 py-2 border">{ejercicio.nombre}</td>
-                            <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td>
+                            {/* <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td> */}
                             <td className="px-2 py-2 border">{ejercicio.specificMusc}</td>
                             <td className="px-2 py-2 border">{ejercicio.description}</td>
                             <td className="px-2 py-2 border">

@@ -92,7 +92,7 @@ const EditEjercicioForm: React.FC<EditEjercicioFormProps> = ({ _id, onClose }) =
             />
           </div>
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label htmlFor="grupoMusc" className="block text-gray-700">
               Grupo Muscular
             </label>
@@ -105,7 +105,7 @@ const EditEjercicioForm: React.FC<EditEjercicioFormProps> = ({ _id, onClose }) =
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               required
             />
-          </div>
+          </div> */}
 
           <div className="mb-4">
             <label htmlFor="specificMusc" className="block text-gray-700">

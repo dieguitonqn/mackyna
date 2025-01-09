@@ -187,6 +187,7 @@ const NewPlan: React.FC = () => {
                 setPlan((prevPlan) => ({ ...prevPlan, startDate: e.target.value }))
               }
               className="border p-2 rounded-md"
+              required
             />
           </div>
           <div className='flex flex-col'>
@@ -203,6 +204,7 @@ const NewPlan: React.FC = () => {
                 setPlan((prevPlan) => ({ ...prevPlan, endDate: e.target.value }))
               }
               className="border p-2 rounded-md"
+              required
             />
           </div>
         </div>
