@@ -58,16 +58,22 @@ const Ejercicios: React.FC = () => {
     }, [selectedEjercicio, selectedNewEjercicio, deletedEjercicio]);
 
     useEffect(() => {
+        const normalizeText = (text:string) => 
+            text
+                .normalize("NFD") // Descompone caracteres acentuados
+                .replace(/[\u0300-\u036f]/g, "") // Elimina los acentos
+                .toLowerCase(); // Convierte a minúsculas
+    
         const filtered = ejercicios.filter((ejercicio) =>
-            ejercicio.nombre.toLowerCase().includes(filters.nombre.toLowerCase()) &&
-            // ejercicio.grupoMusc.toLowerCase().includes(filters.grupoMusc.toLowerCase()) &&
-            ejercicio.specificMusc.toLowerCase().includes(filters.specificMusc.toLowerCase()) &&
-            ejercicio.description.toLowerCase().includes(filters.description.toLowerCase()) &&
-            ejercicio.video.toLowerCase().includes(filters.video.toLowerCase())
-
+            normalizeText(ejercicio.nombre).includes(normalizeText(filters.nombre)) &&
+            // normalizeText(ejercicio.grupoMusc).includes(normalizeText(filters.grupoMusc)) &&
+            normalizeText(ejercicio.specificMusc).includes(normalizeText(filters.specificMusc)) &&
+            normalizeText(ejercicio.description).includes(normalizeText(filters.description)) &&
+            normalizeText(ejercicio.video).includes(normalizeText(filters.video))
         );
         setFilteredEjercicios(filtered);
-    }, [filters]);
+    }, [filters, ejercicios]); // Incluye `ejercicios` como dependencia
+    
 
     const handleEditEjercicio = (_id: string) => {
         setSelectedEjercicio(_id);
