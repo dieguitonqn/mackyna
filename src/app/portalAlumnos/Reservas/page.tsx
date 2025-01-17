@@ -24,7 +24,7 @@ async function Reservas() {
 
 
     try {
-        const reservas: IReserva[] = (await Reserva.find({ "userInfo.userId": session.user.id }).lean()).map(reserva => ({
+        const reservas: IReserva[] = (await Reserva.find({ "userInfo.userId": session.user.id }).sort({ "turnoInfo.dia_semana": 1, "turnoInfo.hora_inicio": 1 }).lean()).map(reserva => ({
             userInfo: {
                 userId: reserva.userInfo.userId,
                 nombre: reserva.userInfo.nombre,

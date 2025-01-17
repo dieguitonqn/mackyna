@@ -5,11 +5,11 @@ const MONGODB_URI=process.env.MONGODB_URI;
 const connect =async ()=>{
     const connection = mongoose.connection.readyState;
     if(connection === 1){
-        console.log("already conncected");
+        // console.log("already conncected");
         return;
     }
     if(connection === 2){
-        console.log("Connecting...");
+        // console.log("Connecting...");
         return;
     }
     try {
@@ -17,7 +17,7 @@ const connect =async ()=>{
             dbName:'Mackyna',
             bufferCommands:true
         });
-        console.log("Connected");
+        // console.log("Connected");
     } catch (error:unknown) {
         // console.log("error"+error);
         if(error instanceof Error){

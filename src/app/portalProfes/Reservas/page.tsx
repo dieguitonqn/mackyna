@@ -7,7 +7,7 @@ import { IReserva } from "@/types/reserva";
 // ... imports existentes ...
 import { TableCell } from '@/components/PortalProfes/Reservas/TableCell';
 
-
+export const revalidate = 0;
 
 export default async function Reservas() {
     const HORAS = [

@@ -3,11 +3,13 @@
 
 import { IReserva } from '@/types/reserva'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 
 function CellDetail({ reservas, cantidad }: { reservas: IReserva[], cantidad: number }) {
-    const [showReservas, setShowReservas] = useState(false)
-
+    const [showReservas, setShowReservas] = useState(false);
+    const router = useRouter();
+    router.refresh();
     return (
         <>
             <div
