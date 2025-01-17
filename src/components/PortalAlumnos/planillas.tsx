@@ -186,8 +186,8 @@ const Planillas: React.FC = () => {
             )}
 
             {selectedPlani && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-scroll print:bg-white print:bg-opacity-100">
-                    <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-lg" id="printable-content">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-auto print:overflow-visible print:static print:bg-white print:bg-opacity-100">
+                    <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-4xl print:shadow-none print:w-full print:max-w-none" id="printable-content">
                         <div className='flex justify-between items-center mb-4 print:hidden'>
                             <button
                                 onClick={handlePrint}

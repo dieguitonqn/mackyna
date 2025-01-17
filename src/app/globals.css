@@ -43,39 +43,72 @@ body {
 }
 
 @media print {
-    /* Ocultar todo excepto el contenido a imprimir */
+    @page {
+        margin: 1cm;
+        size: auto;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
     body * {
         visibility: hidden;
     }
 
-    /* Mostrar solo el contenido que queremos imprimir */
     #printable-content,
     #printable-content * {
         visibility: visible;
     }
 
-    /* Asegurar que el contenido imprimible ocupe toda la página */
     #printable-content {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
+        padding: 20px;
+        overflow: visible !important;
     }
 
-    /* Ocultar elementos específicos durante la impresión */
+    .print-content {
+        break-inside: avoid-page;
+        page-break-inside: auto;
+    }
+
     .print\:hidden {
         display: none !important;
     }
 
-    /* Ajustes adicionales para la impresión */
-    .max-w-lg {
-        max-width: none !important;
+    /* Asegurar que cada día comience en una nueva página si es necesario */
+    .training-day {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+    }
+
+    /* Ajustes para el contenedor modal */
+    .fixed {
+        position: static !important;
+    }
+
+    .overflow-y-auto {
+        overflow: visible !important;
     }
 
     /* Asegurar que los bordes y textos sean visibles */
     .print-content * {
         color: black !important;
         border-color: #ddd !important;
+    }
+
+    /* Eliminar márgenes y paddings innecesarios */
+    .max-w-lg,
+    .max-w-4xl {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 }
 
