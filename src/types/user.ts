@@ -16,6 +16,7 @@ export interface IUser {
     lesiones?: string;
     habilitado?: boolean;
     bloqueado?: boolean;
+    dias_permitidos?: number;
     ultimo_pago?: Date;
     ultima_plani?: Date;
     ultima_metrica?: Date;

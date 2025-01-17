@@ -14,11 +14,11 @@ function Page() {
                     </div>
                 <div className='flex flex-wrap gap-16 justify-center items-center '>
                     
-                    {/* <CardInit 
+                    <CardInit 
                     imagen='/turnos.png'
                     titulo='Turnos'
                     desc='Días y horarios en que asistirá. También podrá agendar nuevos turnos o editar los que ya tenga.'
-                    link='/portalAlumnos/Turnos'/> */}
+                    link='/portalAlumnos/Reservas'/>
                     <CardInit 
                     imagen='/planillas.png'
                     titulo='Rutinas de entrenamiento'

@@ -3,6 +3,7 @@
 import EditUserForm from '@/components/EditUserForm';
 import React, { useEffect, useState } from 'react';
 import { IUser } from '@/types/user';
+import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
 
 type FilteredUser = {
   _id: string;
@@ -25,7 +26,9 @@ const Usuarios: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [showSetDias, setShowSetDias] = useState<boolean>(false);
+  const [userID, setUserID] = useState<string | null>(null);
+  const [diasPermitidos, setDiasPermitidos] = useState<number | null>(null);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -66,6 +69,13 @@ const Usuarios: React.FC = () => {
   const handleClose = () => {
     setSelectedEmail(null);
   };
+
+  const handleCloseDias = () => {
+    setShowSetDias(false);
+    setUserID(null);
+  }
+
+  
 
   const handleResetPwd = async (id: string) => {
     try {
@@ -160,9 +170,20 @@ const Usuarios: React.FC = () => {
                       Métricas
                     </a>
                     <button
-                    className="px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
-                    onClick={()=>handleResetPwd(user._id.toString())}
+                      className="px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
+                      onClick={() => handleResetPwd(user._id.toString())}
                     >Reset PWD</button>
+                    
+                    <button
+                      className='px-2 py-1 bg-yellow-600 text-white rounded-sm text-sm'
+                      onClick={() => {
+                        setShowSetDias(!showSetDias)
+                        setUserID(user._id.toString())
+                        setDiasPermitidos(user.dias_permitidos || null)
+                      }}
+                    >
+                      Set días
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -170,6 +191,9 @@ const Usuarios: React.FC = () => {
           </table>
           {selectedEmail && (
             <EditUserForm email={selectedEmail} onClose={handleClose} />
+          )}
+          {showSetDias && (
+            <SetDiasForm userID={userID!} diasPermitidos={diasPermitidos!} onCloseSetDias={handleCloseDias} />
           )}
         </div>
       )}
