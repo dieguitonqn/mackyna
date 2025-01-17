@@ -9,6 +9,7 @@ import { Turnos } from "@/types/turnos";
 import { ObjectId } from 'mongodb';
 import CancelButton from '@/components/PortalAlumnos/Reservas/cancelButton';
 import Link from 'next/link';
+import { FaRegCalendarPlus } from "react-icons/fa";
 
 
 
@@ -24,27 +25,27 @@ async function Reservas() {
 
     try {
         const reservas: IReserva[] = (await Reserva.find({ "userInfo.userId": session.user.id }).lean()).map(reserva => ({
-            userInfo:{
-                userId:reserva.userInfo.userId,
-                nombre:reserva.userInfo.nombre,
-                apellido:reserva.userInfo.apellido
+            userInfo: {
+                userId: reserva.userInfo.userId,
+                nombre: reserva.userInfo.nombre,
+                apellido: reserva.userInfo.apellido
 
-            }, 
-            turnoInfo:{
-                turnoId:reserva.turnoInfo.turnoId,
-                dia_semana:reserva.turnoInfo.dia_semana,
-                hora_inicio:reserva.turnoInfo.hora_inicio,
-                hora_fin:reserva.turnoInfo.hora_fin,
+            },
+            turnoInfo: {
+                turnoId: reserva.turnoInfo.turnoId,
+                dia_semana: reserva.turnoInfo.dia_semana,
+                hora_inicio: reserva.turnoInfo.hora_inicio,
+                hora_fin: reserva.turnoInfo.hora_fin,
 
             },
             fecha: reserva.fecha,
             estado: reserva.estado,
             observaciones: reserva.observaciones
         }));
-        if(reservas.length === 0){
+        if (reservas.length === 0) {
             return <div>No existen reservas para este usuario</div>
         }
-        
+
         const reservasConTurnos = await Promise.all(
             reservas.map(async (reserva) => {
                 const turnoDoc = await Turno.findById(new ObjectId(reserva.turnoInfo.turnoId)).lean() as unknown as Turnos;
@@ -59,14 +60,14 @@ async function Reservas() {
         );
 
         return (
-            <div className='h-screen'>
+            <div className='h-full md:h-screen'>
                 <div className='flex justify-center items-center text-slate-300 text-5xl font-bold'>
-                    Mis reservas 
+                    Mis reservas
                 </div>
-                <div className='flex justify-end mr-10'>
+                <div className='flex justify-end m-5 md:m-10'>
                     <Link
-                    className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:font-bold'
-                    href='/portalAlumnos/Turnos'>Nueva Reserva</Link>
+                        className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:font-bold flex flex-row items-center gap-2 '
+                        href='/portalAlumnos/Turnos'><FaRegCalendarPlus className='flex' />Nueva Reserva</Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                     {
@@ -88,23 +89,8 @@ async function Reservas() {
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-gray-500">Personas en el turno</span>
-                                        <span className="font-semibold">{12-reserva.turnoInfo.cupos_disponibles}/12</span>
+                                        <span className="font-semibold">{12 - reserva.turnoInfo.cupos_disponibles}/12</span>
                                     </div>
-                                    {/* <div className="flex items-center justify-between">
-                                        <span className="text-sm text-gray-500">Estado</span>
-                                        <span className={`px-3 py-1 rounded-full text-sm ${reserva.estado === 'confirmada' ? 'bg-green-100 text-green-800' :
-                                                reserva.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
-                                                    'bg-red-100 text-red-800'
-                                            }`}>
-                                            {reserva.estado}
-                                        </span>
-                                    </div> */}
-                                    {/* {reserva.observaciones && (
-                                        <div className="mt-4 pt-4 border-t border-gray-100">
-                                            <p className="text-sm text-gray-500">Observaciones:</p>
-                                            <p className="text-sm mt-1">{reserva.observaciones}</p>
-                                        </div>
-                                    )} */}
                                     <div>
                                         <CancelButton turnoId={reserva.turnoInfo.turnoId} userId={reserva.userInfo.userId} />
                                     </div>
@@ -115,11 +101,11 @@ async function Reservas() {
                 </div>
             </div>
         )
-    } catch (error:unknown) {
+    } catch (error: unknown) {
         console.log(error);
         return <div>No existen reservas para este usuario</div>
     }
-    
+
 }
 
 export default Reservas

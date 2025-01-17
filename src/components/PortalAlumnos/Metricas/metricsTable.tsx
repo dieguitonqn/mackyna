@@ -95,7 +95,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                         <th className="py-2 px-4">Peso</th>
                         <th className="py-2 px-4">IMC</th>
                         <th className="py-2 px-4">% Grasa Corporal</th>
-                        <th className="py-2 px-4">% Grasa Muscular</th>
+                        <th className="py-2 px-4">% Masa Muscular</th>
                         <th className="py-2 px-4">% Grasa Visceral</th>
                         <th className="py-2 px-4">Edad Corporal</th>
                         {(session?.user.rol == "admin" || session?.user.rol == "teach") && (

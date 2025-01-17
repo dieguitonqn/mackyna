@@ -19,7 +19,7 @@ const Planillas: React.FC = () => {
     const [isTeach, setIsTeach] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>('');
     const router = useRouter();
-    
+
 
     useEffect(() => {
         const fetchPlanis = async () => {
@@ -52,8 +52,8 @@ const Planillas: React.FC = () => {
                     }
                     const planillas = await response.json();
                     setPlanillasUser(planillas);
-                } 
-                
+                }
+
             } catch (err: unknown) {
                 console.error(err);
             }
@@ -94,7 +94,7 @@ const Planillas: React.FC = () => {
     const handleSaveNote = async () => {
         console.log("a guardar en la base de datos");
         console.log(selectedPlani?._id);
-        
+
         try {
             // Enviar los datos al backend
             const response = await fetch(`/api/planillas`, {
@@ -102,9 +102,9 @@ const Planillas: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    id:selectedPlani?._id,
-                    plani:selectedPlani
+                body: JSON.stringify({
+                    id: selectedPlani?._id,
+                    plani: selectedPlani
                 }),
             });
 
@@ -123,10 +123,18 @@ const Planillas: React.FC = () => {
 
 
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }).replace(/\//g, '-');
+    };
 
 
 
-    const handleDeletePlani = async (id: string, userId:string) => {
+    const handleDeletePlani = async (id: string, userId: string) => {
         const isConfirmed = window.confirm("¿Estás seguro de que deseas borrar esta rutina?");
         if (!isConfirmed) {
             return;
@@ -176,8 +184,8 @@ const Planillas: React.FC = () => {
             {selectedPlani && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-scroll">
                     <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-lg">
-                        <div 
-                        className=' flex justify-end'>
+                        <div
+                            className=' flex justify-end'>
                             <button
                                 className="text-white bg-red-500 rounded-md p-1 font-bold text-xl"
                                 onClick={closeModal}
@@ -187,6 +195,15 @@ const Planillas: React.FC = () => {
                         </div>
 
                         <h2 className="text-xl font-bold mb-4">Planilla: {selectedPlani.month} {selectedPlani.year}</h2>
+                        <div className='flex justify-between'>
+                            <h2 className="text-md font-bold mb-4">
+                                Desde: {formatDate(selectedPlani.startDate)}
+                            </h2>
+                            <h2 className="text-md font-bold mb-4">
+                                Hasta: {formatDate(selectedPlani.endDate)}
+                            </h2>
+                        </div>
+
                         {selectedPlani.trainingDays.map((day, dayIndex) => (
                             <div key={dayIndex} className="mt-4 bg-slate-100 rounded-md p-5 border">
                                 <h3 className="text-2xl font-bold text-center">{day.day}</h3>
@@ -224,7 +241,7 @@ const Planillas: React.FC = () => {
                                                         {exercise.videoLink && (
                                                             <p className='flex flex-row items-center gap-2 mb-1'>
                                                                 <strong>Video:</strong>
-                                                                <a href={exercise.videoLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer"> <span className='text-red-600'><ImYoutube2 className='h-7 w-12  rounded-md bg-slate-300 px-0.5 hover:border-none border'/></span></a>
+                                                                <a href={exercise.videoLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer"> <span className='text-red-600'><ImYoutube2 className='h-7 w-12  rounded-md bg-slate-300 px-0.5 hover:border-none border' /></span></a>
                                                             </p>
                                                         )}
                                                     </li>

@@ -10,20 +10,20 @@ import { Turnos } from "@/types/turnos";
 
 export const POST = async (req: Request) => {
     const body = await req.json();
-    console.log(body);
+    // console.log(body);
     try {
         await connect()
         const user: IUser | null = await User.findOne({ _id: new ObjectId(body.userID as string) });
         if (!user) {
             throw new Error("User not found");
         }
-        console.log(user.dias_permitidos);
+        // console.log(user.dias_permitidos);
         let dias_disp: number | undefined;
         try {
             const userReservas: number = await Reserva.countDocuments({ "userInfo.userId": body.userID });
             const userPrevReservas: number = await Reserva.countDocuments({ "userInfo.userId": body.userID, "turnoInfo.turnoId": body.turnoID });
             const turno: Turnos | null = await Turno.findById(body.turnoID);
-            console.log("Cantidad de reservas del usuario: " + userPrevReservas);
+            // console.log("Cantidad de reservas del usuario: " + userPrevReservas);
             // const user:IUser | null = await User.findById(body.userID);
             if(userPrevReservas > 0){
                 return new NextResponse("Ya tienes una reserva en este turno", { status: 403 })
@@ -33,7 +33,7 @@ export const POST = async (req: Request) => {
             }
             if (user.dias_permitidos !== undefined) {
                 dias_disp = user.dias_permitidos as number - userReservas;
-                console.log("Cantidad de días disponible del usuario: " + dias_disp);
+                // console.log("Cantidad de días disponible del usuario: " + dias_disp);
             } else if (turno?.cupos_disponibles === 0) {
                 return new NextResponse("No hay cupos disponibles", { status: 402 });
             } else {
@@ -56,7 +56,7 @@ export const POST = async (req: Request) => {
                 observaciones: " "
 
             })
-            console.log(newReserva);
+            // console.log(newReserva);
             await newReserva.save();
             await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: -1 } });
             return new NextResponse(JSON.stringify({ message: "todo ok", dias_disp: dias_disp - 1 }), { status: 200 });
@@ -72,7 +72,7 @@ export const POST = async (req: Request) => {
 
 export const DELETE = async (req: Request) => {
     const body = await req.json();
-    console.log(body);
+    // console.log(body);
     await connect();
     try {
         const reservaC = await Reserva.deleteOne({"turnoInfo.turnoId":body.turnoID,"userInfo.userId":body.userID});

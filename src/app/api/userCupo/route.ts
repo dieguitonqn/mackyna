@@ -11,7 +11,7 @@ export const PUT = async (req: Request) => {
             }
     try {
         const { userID, dias_permitidos } = await req.json();
-        console.log(userID, dias_permitidos)
+        // console.log(userID, dias_permitidos)
         
         
         const newCupoDias = await User.findByIdAndUpdate({ _id: new ObjectId(userID as string) }, { dias_permitidos: dias_permitidos }, { new: true });

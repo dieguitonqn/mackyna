@@ -32,8 +32,8 @@ function Page() {
   }
 
   const handleReserva = async (_id: string) => {
-    console.log(session?.user.id);
-    console.log(_id);
+    // console.log(session?.user.id);
+    // console.log(_id);
     try {
       const reserva = await fetch("/api/reservas", {
         method: "POST",
@@ -46,7 +46,7 @@ function Page() {
       if (reserva.ok) {
         const data = await reserva.json();
         const dias_disp = data.dias_disp;
-        console.log(dias_disp)
+        // console.log(dias_disp)
         alert(`Reserva creada exitosamente. Te quedan ${dias_disp} días disponibles.`);
 
       } else if (reserva.status === 401) {

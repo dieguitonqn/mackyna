@@ -8,9 +8,9 @@ import { IReserva } from "@/types/reserva";
 import { TableCell } from '@/components/PortalProfes/Reservas/TableCell';
 
 const HORAS = [
-    "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
+    "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
     "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
-    "20:00", "21:00", "22:00"
+    "20:00", "21:00",
 ];
 
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -57,14 +57,14 @@ export default async function Reservas() {
             dia_semana: doc.turnoInfo.dia_semana,
             hora_inicio: doc.turnoInfo.hora_inicio,
             hora_fin: doc.turnoInfo.hora_fin,
-            cupos_disponibles: doc.turnoInfo.cupos_disponibles
+            
         },
         fecha: doc.fecha,
         estado: doc.estado,
         observaciones: doc.observaciones
     }));
 
-    console.log(reservas);
+    
     return (
         <div >
             <h1 className="flex justify-center items-center text-4xl font-semibold my-5">Reservas</h1>
