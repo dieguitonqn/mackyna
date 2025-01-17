@@ -112,7 +112,7 @@ const handler = NextAuth({
           session.user.rol = userWithRole.rol;
           session.user.id=userWithRole._id;
         }
-        console.log(session.user.rol);
+        // console.log(session.user.rol);
         return session;
   
       }
@@ -120,4 +120,4 @@ const handler = NextAuth({
   
   })
   
-  export { handler as GET, handler as POST }  
+  export {  handler as GET, handler as POST }  

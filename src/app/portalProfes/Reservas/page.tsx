@@ -1,15 +1,13 @@
-import connect from "@/lib/db";
-import Reserva from "@/lib/models/reservas"
+'use client'
 
+import useSWR from 'swr';
+import { TableCell } from '@/components/PortalProfes/Reservas/TableCell';
 import { IReserva } from "@/types/reserva";
 
+// Primero creamos un fetcher genérico
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-// ... imports existentes ...
-import { TableCell } from '@/components/PortalProfes/Reservas/TableCell';
-
-export const revalidate = 0;
-
-export default async function Reservas() {
+export default function Reservas() {
     const HORAS = [
         "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
         "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
@@ -17,9 +15,18 @@ export default async function Reservas() {
     ];
     
     const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-    
-    
-    
+
+    // Usar SWR para obtener las reservas
+    const { data: reservas, error, isLoading } = useSWR<IReserva[]>(
+        '/api/reservas', 
+        fetcher,
+        {
+            refreshInterval: 5000, // Actualizar cada 5 segundos
+            revalidateOnFocus: true,
+            revalidateOnReconnect: true
+        }
+    );
+
     const getColorByReservas = (cantidad: number): string => {
         switch (cantidad) {
             case 12: return 'bg-red-600';
@@ -34,7 +41,7 @@ export default async function Reservas() {
             case 3: return 'bg-green-300';
             case 2: return 'bg-green-400';
             case 1: return 'bg-green-500';
-            default: return 'bg-green-600'; // Color por defecto si cantidad no está en el rango.
+            default: return 'bg-green-600';
         }
     };
     
@@ -44,33 +51,16 @@ export default async function Reservas() {
             reserva.turnoInfo.hora_inicio === hora
         );
     };
-    await connect();
-    const reservasData = await Reserva.find().lean();
 
-    const reservas: IReserva[] = reservasData.map(doc => ({
-        userInfo: {
-            userId: doc.userInfo.userId.toString(),
-            nombre: doc.userInfo.nombre,
-            apellido: doc.userInfo.apellido
-        },
-        turnoInfo: {
-            turnoId: doc.turnoInfo.turnoId.toString(),
-            dia_semana: doc.turnoInfo.dia_semana,
-            hora_inicio: doc.turnoInfo.hora_inicio,
-            hora_fin: doc.turnoInfo.hora_fin,
-            
-        },
-        fecha: doc.fecha,
-        estado: doc.estado,
-        observaciones: doc.observaciones
-    }));
-
+    if (error) return <div className="text-center p-4">Error al cargar las reservas</div>;
+    if (isLoading) return <div className="text-center p-4">Cargando...</div>;
+    if (!reservas) return <div className="text-center p-4">No hay reservas disponibles</div>;
     
     return (
-        <div >
+        <div>
             <h1 className="flex justify-center items-center text-4xl font-semibold my-5">Reservas</h1>
-            <div className="flex justify-center items-centeroverflow-x-auto">
-                <table className=" table-auto border-collapse border border-gray-200">
+            <div className="flex justify-center items-center overflow-x-auto">
+                <table className="table-auto border-collapse border border-gray-200">
                     <thead className="bg-gray-800 text-white">
                         <tr>
                             <th className="px-4 py-2 border border-gray-300 text-left">Hora</th>
@@ -93,7 +83,6 @@ export default async function Reservas() {
                                         <TableCell
                                             key={`${dia}-${hora}`}
                                             reservas={reservasFiltradas}
-                                            
                                             getColorClass={getColorByReservas}
                                         />
                                     );

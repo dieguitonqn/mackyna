@@ -86,3 +86,35 @@ export const DELETE = async (req: Request) => {
     }
     
 }
+
+
+export async function GET() {
+    try {
+        await connect();
+        const reservasData = await Reserva.find().lean();
+
+        const reservas = reservasData.map(doc => ({
+            userInfo: {
+                userId: doc.userInfo.userId.toString(),
+                nombre: doc.userInfo.nombre,
+                apellido: doc.userInfo.apellido
+            },
+            turnoInfo: {
+                turnoId: doc.turnoInfo.turnoId.toString(),
+                dia_semana: doc.turnoInfo.dia_semana,
+                hora_inicio: doc.turnoInfo.hora_inicio,
+                hora_fin: doc.turnoInfo.hora_fin,
+            },
+            fecha: doc.fecha,
+            estado: doc.estado,
+            observaciones: doc.observaciones
+        }));
+
+        return NextResponse.json(reservas);
+    } catch (error) {
+        return NextResponse.json(
+            { error: 'Error al obtener las reservas' +error},
+            { status: 500 }
+        );
+    }
+}
