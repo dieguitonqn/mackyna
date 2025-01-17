@@ -7,42 +7,43 @@ import { IReserva } from "@/types/reserva";
 // ... imports existentes ...
 import { TableCell } from '@/components/PortalProfes/Reservas/TableCell';
 
-const HORAS = [
-    "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
-    "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
-    "20:00", "21:00",
-];
 
-const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-
-
-
-const getColorByReservas = (cantidad: number): string => {
-    switch (cantidad) {
-        case 12: return 'bg-red-600';
-        case 11: return 'bg-red-500';
-        case 10: return 'bg-red-400';
-        case 9: return 'bg-orange-600';
-        case 8: return 'bg-orange-500';
-        case 7: return 'bg-orange-400';
-        case 6: return 'bg-yellow-500';
-        case 5: return 'bg-yellow-400';
-        case 4: return 'bg-yellow-300';
-        case 3: return 'bg-green-300';
-        case 2: return 'bg-green-400';
-        case 1: return 'bg-green-500';
-        default: return 'bg-green-600'; // Color por defecto si cantidad no está en el rango.
-    }
-};
-
-const filtrarReservas = (reservas: IReserva[], dia: string, hora: string) => {
-    return reservas.filter(reserva =>
-        reserva.turnoInfo.dia_semana === dia &&
-        reserva.turnoInfo.hora_inicio === hora
-    );
-};
 
 export default async function Reservas() {
+    const HORAS = [
+        "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
+        "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
+        "20:00", "21:00",
+    ];
+    
+    const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+    
+    
+    
+    const getColorByReservas = (cantidad: number): string => {
+        switch (cantidad) {
+            case 12: return 'bg-red-600';
+            case 11: return 'bg-red-500';
+            case 10: return 'bg-red-400';
+            case 9: return 'bg-orange-600';
+            case 8: return 'bg-orange-500';
+            case 7: return 'bg-orange-400';
+            case 6: return 'bg-yellow-500';
+            case 5: return 'bg-yellow-400';
+            case 4: return 'bg-yellow-300';
+            case 3: return 'bg-green-300';
+            case 2: return 'bg-green-400';
+            case 1: return 'bg-green-500';
+            default: return 'bg-green-600'; // Color por defecto si cantidad no está en el rango.
+        }
+    };
+    
+    const filtrarReservas = (reservas: IReserva[], dia: string, hora: string) => {
+        return reservas.filter(reserva =>
+            reserva.turnoInfo.dia_semana === dia &&
+            reserva.turnoInfo.hora_inicio === hora
+        );
+    };
     await connect();
     const reservasData = await Reserva.find().lean();
 
