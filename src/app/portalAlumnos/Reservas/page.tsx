@@ -43,7 +43,18 @@ async function Reservas() {
             observaciones: reserva.observaciones
         }));
         if (reservas.length === 0) {
-            return <div>No existen reservas para este usuario</div>
+            return (
+                <div className='h-screen flex flex-col justify-center items-center'>
+                    <div className='text-2xl font-bold text-slate-300'>No existen reservas para este usuario</div>
+                    <div className='flex justify-end m-5 md:m-10'>
+                        <Link
+                            className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:font-bold flex flex-row items-center gap-2 '
+                            href='/portalAlumnos/Turnos'><FaRegCalendarPlus className='flex' />Nueva Reserva</Link>
+                    </div>
+                    
+                </div>
+            )
+
         }
 
         const reservasConTurnos = await Promise.all(
