@@ -42,3 +42,40 @@ body {
   transform: scale(1.2);
 }
 
+@media print {
+    /* Ocultar todo excepto el contenido a imprimir */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Mostrar solo el contenido que queremos imprimir */
+    #printable-content,
+    #printable-content * {
+        visibility: visible;
+    }
+
+    /* Asegurar que el contenido imprimible ocupe toda la página */
+    #printable-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Ocultar elementos específicos durante la impresión */
+    .print\:hidden {
+        display: none !important;
+    }
+
+    /* Ajustes adicionales para la impresión */
+    .max-w-lg {
+        max-width: none !important;
+    }
+
+    /* Asegurar que los bordes y textos sean visibles */
+    .print-content * {
+        color: black !important;
+        border-color: #ddd !important;
+    }
+}
+

@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { Exercise, Plani, TrainingDay } from '@/types/plani';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaSave } from "react-icons/fa";
+import { FaSave, FaPrint } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { ImYoutube2 } from "react-icons/im";
 
@@ -147,6 +147,10 @@ const Planillas: React.FC = () => {
         router.push(`/portalAlumnos/Planilla?id=${userId}`);
     };
 
+    const handlePrint = () => {
+        window.print();
+    };
+
     return (
         <div className="min-h-screen p-4">
             <div className="flex justify-center">
@@ -182,10 +186,15 @@ const Planillas: React.FC = () => {
             )}
 
             {selectedPlani && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-scroll">
-                    <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-lg">
-                        <div
-                            className=' flex justify-end'>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-scroll print:bg-white print:bg-opacity-100">
+                    <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-lg" id="printable-content">
+                        <div className='flex justify-between items-center mb-4 print:hidden'>
+                            <button
+                                onClick={handlePrint}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-600"
+                            >
+                                <FaPrint /> Imprimir
+                            </button>
                             <button
                                 className="text-white bg-red-500 rounded-md p-1 font-bold text-xl"
                                 onClick={closeModal}
@@ -194,64 +203,66 @@ const Planillas: React.FC = () => {
                             </button>
                         </div>
 
-                        <h2 className="text-xl font-bold mb-4">Planilla: {selectedPlani.month} {selectedPlani.year}</h2>
-                        <div className='flex justify-between'>
-                            <h2 className="text-md font-bold mb-4">
-                                Desde: {formatDate(selectedPlani.startDate)}
-                            </h2>
-                            <h2 className="text-md font-bold mb-4">
-                                Hasta: {formatDate(selectedPlani.endDate)}
-                            </h2>
-                        </div>
-
-                        {selectedPlani.trainingDays.map((day, dayIndex) => (
-                            <div key={dayIndex} className="mt-4 bg-slate-100 rounded-md p-5 border">
-                                <h3 className="text-2xl font-bold text-center">{day.day}</h3>
-                                {Object.entries(day).map(([bloque, ejercicios]) => (
-                                    bloque.startsWith('Bloque') && ejercicios.length > 0 && (
-                                        <div key={bloque} className="mt-2 shadow-sm shadow-black p-2  ">
-                                            <h4 className="text-md font-semibold">{bloque}</h4>
-                                            <ul className="list-disc pl-5  ">
-                                                {ejercicios.map((exercise: Exercise, exerciseIndex: number) => (
-                                                    <li key={exerciseIndex} className='border-b-slate-400 border-b my-1'>
-                                                        <p><strong>Ejercicio:</strong> {exercise.name}</p>
-                                                        <p><strong>Repeticiones:</strong> {exercise.reps}</p>
-                                                        <p><strong>Series:</strong> {exercise.sets}</p>
-                                                        <div className='flex flex-row items-center  my-2'>
-                                                            <strong>Notas:</strong>
-                                                            <div>
-                                                                <input
-                                                                    type="text"
-                                                                    className="flex shadow-sm rounded-sm p-1 w-full border border-slate-200"
-                                                                    value={exercise.notas || ''}
-                                                                    onChange={(e) =>
-                                                                        handleInputChange(dayIndex, bloque, exerciseIndex, e.target.value)
-                                                                    }
-                                                                />
-                                                            </div>
-
-                                                            <button
-                                                                onClick={() => handleSaveNote()}
-                                                                className='flex border border-slate-300 bg-green-200 rounded-sm hover:border-2 hover:bg-green-500'
-                                                            >
-                                                                <FaSave
-                                                                    className='h-8 w-8 p-1' />
-                                                            </button>
-                                                        </div>
-                                                        {exercise.videoLink && (
-                                                            <p className='flex flex-row items-center gap-2 mb-1'>
-                                                                <strong>Video:</strong>
-                                                                <a href={exercise.videoLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer"> <span className='text-red-600'><ImYoutube2 className='h-7 w-12  rounded-md bg-slate-300 px-0.5 hover:border-none border' /></span></a>
-                                                            </p>
-                                                        )}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )
-                                ))}
+                        <div className="print-content">
+                            <h2 className="text-xl font-bold mb-4">Planilla: {selectedPlani.month} {selectedPlani.year}</h2>
+                            <div className='flex justify-between'>
+                                <h2 className="text-md font-bold mb-4">
+                                    Desde: {formatDate(selectedPlani.startDate)}
+                                </h2>
+                                <h2 className="text-md font-bold mb-4">
+                                    Hasta: {formatDate(selectedPlani.endDate)}
+                                </h2>
                             </div>
-                        ))}
+
+                            {selectedPlani.trainingDays.map((day, dayIndex) => (
+                                <div key={dayIndex} className="mt-4 bg-slate-100 rounded-md p-5 border">
+                                    <h3 className="text-2xl font-bold text-center">{day.day}</h3>
+                                    {Object.entries(day).map(([bloque, ejercicios]) => (
+                                        bloque.startsWith('Bloque') && ejercicios.length > 0 && (
+                                            <div key={bloque} className="mt-2 shadow-sm shadow-black p-2  ">
+                                                <h4 className="text-md font-semibold">{bloque}</h4>
+                                                <ul className="list-disc pl-5  ">
+                                                    {ejercicios.map((exercise: Exercise, exerciseIndex: number) => (
+                                                        <li key={exerciseIndex} className='border-b-slate-400 border-b my-1'>
+                                                            <p><strong>Ejercicio:</strong> {exercise.name}</p>
+                                                            <p><strong>Repeticiones:</strong> {exercise.reps}</p>
+                                                            <p><strong>Series:</strong> {exercise.sets}</p>
+                                                            <div className='flex flex-row items-center  my-2'>
+                                                                <strong>Notas:</strong>
+                                                                <div>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="flex shadow-sm rounded-sm p-1 w-full border border-slate-200"
+                                                                        value={exercise.notas || ''}
+                                                                        onChange={(e) =>
+                                                                            handleInputChange(dayIndex, bloque, exerciseIndex, e.target.value)
+                                                                        }
+                                                                    />
+                                                                </div>
+
+                                                                <button
+                                                                    onClick={() => handleSaveNote()}
+                                                                    className='flex border border-slate-300 bg-green-200 rounded-sm hover:border-2 hover:bg-green-500'
+                                                                >
+                                                                    <FaSave
+                                                                        className='h-8 w-8 p-1' />
+                                                                </button>
+                                                            </div>
+                                                            {exercise.videoLink && (
+                                                                <p className='flex flex-row items-center gap-2 mb-1'>
+                                                                    <strong>Video:</strong>
+                                                                    <a href={exercise.videoLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer"> <span className='text-red-600'><ImYoutube2 className='h-7 w-12  rounded-md bg-slate-300 px-0.5 hover:border-none border' /></span></a>
+                                                                </p>
+                                                            )}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}

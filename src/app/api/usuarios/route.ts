@@ -4,11 +4,12 @@ import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
+import { NextRequest } from 'next/server';
 
 
 
-export const GET = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+export const GET = async (req: NextRequest) => {
+    const session = await getServerSession(authOptions);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
     }
@@ -46,8 +47,8 @@ export const GET = async (req: Request) => {
 };
 
 
-export const POST = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+export const POST = async (req: NextRequest) => {
+    const session = await getServerSession(authOptions);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
     }
@@ -76,8 +77,8 @@ export const POST = async (req: Request) => {
 };
 
 
-export const PUT = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+export const PUT = async (req: NextRequest) => {
+    const session = await getServerSession(authOptions);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
     }
@@ -110,8 +111,8 @@ export const PUT = async (req: Request) => {
 };
 
 
-export const DELETE = async (req: Request): Promise<NextResponse> => {
-    const session = await getServerSession({ req, ...authOptions });
+export const DELETE = async (req: NextRequest) => {
+    const session = await getServerSession(authOptions);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
     }
