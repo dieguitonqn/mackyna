@@ -5,149 +5,149 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
 import { NextRequest } from 'next/server';
-
-
+import logger from '@/lib/logger';
 
 export const GET = async (req: NextRequest) => {
-    const session = await getServerSession(authOptions);
-    if(!session){
-        return new NextResponse("No autorizado", { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const _id = searchParams.get("id");
     try {
+        const session = await getServerSession(authOptions);
+        if(!session){
+            logger.error("[GET] Error de autenticación: Usuario no autorizado");
+            return new NextResponse("No autorizado", { status: 401 });
+        }
+
+        const { searchParams } = new URL(req.url);
+        const _id = searchParams.get("id");
+
         await connect();
+        logger.info("[GET] Conexión a DB establecida");
 
-        // Si se proporciona un `id`, buscar el ejercicio específico
         if (_id) {
-
-
             if (!ObjectId.isValid(_id)) {
+                logger.error(`[GET] ID inválido: ${_id}`);
                 return new NextResponse("El ID no es válido", { status: 400 });
             }
 
             const user = await User.findById(new ObjectId(_id));
-
             if (!user) {
+                logger.error(`[GET] Usuario no encontrado con ID: ${_id}`);
                 return new NextResponse("Usuario no encontrado", { status: 404 });
             }
 
+            logger.info(`[GET] Usuario encontrado: ${user.email}`);
             return new NextResponse(JSON.stringify(user), { status: 200 });
         }
 
-        //     // Si no hay `id`, devolver todos los users
         const users = await User.find().sort({nombre:1,apellido:1});
+        logger.info(`[GET] Recuperados ${users.length} usuarios`);
         return new NextResponse(JSON.stringify(users), { status: 200 });
+
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            return new NextResponse("Error: " + error.message, { status: 500 });
-        }
+        logger.error("[GET] Error:", { error: error instanceof Error ? error.message : error });
+        return new NextResponse("Error interno del servidor", { status: 500 });
     }
 };
 
-
 export const POST = async (req: NextRequest) => {
-    const session = await getServerSession(authOptions);
-    if(!session){
-        return new NextResponse("No autorizado", { status: 401 });
-    }
     try {
+        const session = await getServerSession(authOptions);
+        if(!session){
+            logger.error("[POST] Error de autenticación: Usuario no autorizado");
+            return new NextResponse("No autorizado", { status: 401 });
+        }
+
         await connect();
+        logger.info("[POST] Conexión a DB establecida");
 
         const { email } = await req.json();
-
         if (!email) {
+            logger.error("[POST] Email no proporcionado");
             return new NextResponse("El email es obligatorio", { status: 400 });
         }
 
-        // Buscar usuario por email
         const user = await User.findOne({ email });
-
         if (!user) {
+            logger.error(`[POST] Usuario no encontrado con email: ${email}`);
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
 
+        logger.info(`[POST] Usuario encontrado: ${user.email}`);
         return new NextResponse(JSON.stringify(user), { status: 200 });
+
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            return new NextResponse("Error: " + error.message, { status: 500 });
-        }
+        logger.error("[POST] Error:", { error: error instanceof Error ? error.message : error });
+        return new NextResponse("Error interno del servidor", { status: 500 });
     }
 };
 
-
 export const PUT = async (req: NextRequest) => {
-    const session = await getServerSession(authOptions);
-    if(!session){
-        return new NextResponse("No autorizado", { status: 401 });
-    }
     try {
+        const session = await getServerSession(authOptions);
+        if(!session){
+            logger.error("[PUT] Error de autenticación: Usuario no autorizado");
+            return new NextResponse("No autorizado", { status: 401 });
+        }
+
         await connect();
+        logger.info("[PUT] Conexión a DB establecida");
+
         const { _id, ...rest } = await req.json();
-
-
         const userId = new ObjectId(_id as string);
 
-
         if (!rest.email) {
+            logger.error("[PUT] Email no proporcionado");
             return new NextResponse("El email es obligatorio", { status: 400 });
         }
 
         const updatedUser = await User.findByIdAndUpdate(userId, rest, { new: true });
-
-
         if (!updatedUser) {
-
+            logger.error(`[PUT] Usuario no encontrado con ID: ${_id}`);
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
 
+        logger.info(`[PUT] Usuario actualizado: ${updatedUser.email}`);
         return new NextResponse(JSON.stringify(updatedUser), { status: 200 });
+
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            return new NextResponse("Error: " + error.message, { status: 500 });
-        }
+        logger.error("[PUT] Error:", { error: error instanceof Error ? error.message : error });
+        return new NextResponse("Error interno del servidor", { status: 500 });
     }
 };
 
-
 export const DELETE = async (req: NextRequest) => {
-    const session = await getServerSession(authOptions);
-    if(!session){
-        return new NextResponse("No autorizado", { status: 401 });
-    }
     try {
-        // Conectar a la base de datos
-        await connect();
+        const session = await getServerSession(authOptions);
+        if(!session){
+            logger.error("[DELETE] Error de autenticación: Usuario no autorizado");
+            return new NextResponse("No autorizado", { status: 401 });
+        }
 
-        // Obtener el _id del query string
+        await connect();
+        logger.info("[DELETE] Conexión a DB establecida");
+
         const url = new URL(req.url);
         const id = url.searchParams.get("id");
 
-        // Validar que se proporcione el ID
         if (!id) {
+            logger.error("[DELETE] ID no proporcionado");
             return NextResponse.json({ error: "El ID es obligatorio" }, { status: 400 });
         }
 
-        // Validar formato del ObjectId
         if (!ObjectId.isValid(id)) {
+            logger.error(`[DELETE] ID inválido: ${id}`);
             return NextResponse.json({ error: "El ID proporcionado no es válido" }, { status: 400 });
         }
 
-        // Intentar eliminar el documento
-        const deletedEjercicio = await User.findByIdAndDelete(new ObjectId(id));
-
-        // Si no se encuentra el documento
-        if (!deletedEjercicio) {
-            return NextResponse.json({ error: "Ejercicio no encontrado" }, { status: 404 });
+        const deletedUser = await User.findByIdAndDelete(new ObjectId(id));
+        if (!deletedUser) {
+            logger.error(`[DELETE] Usuario no encontrado con ID: ${id}`);
+            return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
         }
 
-        // Respuesta exitosa
-        return NextResponse.json({ message: "Ejercicio eliminado con éxito", ejercicio: deletedEjercicio }, { status: 200 });
+        logger.info(`[DELETE] Usuario eliminado: ${deletedUser.email}`);
+        return NextResponse.json({ message: "Usuario eliminado con éxito", user: deletedUser }, { status: 200 });
+
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            return NextResponse.json({ error: `Error al eliminar el ejercicio: ${error.message}` }, { status: 500 });
-        }
-        return NextResponse.json({ error: "Error desconocido al eliminar el ejercicio" }, { status: 500 });
+        logger.error("[DELETE] Error:", { error: error instanceof Error ? error.message : error });
+        return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
     }
 };
