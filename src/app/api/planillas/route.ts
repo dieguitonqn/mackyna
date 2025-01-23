@@ -47,6 +47,24 @@ export const GET = async (req: Request) => {
     }
 };
 
+// Modificar la interfaz para ser más flexible con las repeticiones
+interface ExerciseValidation {
+    name: string;
+    reps: string | number; // Permitir tanto números como texto
+    sets: number;
+    videoLink?: string;
+    notas?: string;
+}
+
+interface PlanillaValidation {
+    userId: string;
+    exercises: {
+        [key: string]: {
+            [key: string]: ExerciseValidation[];
+        };
+    };
+}
+
 export const POST = async (req: Request) => {
     const session = await getServerSession({ req, ...authOptions });
     if(!session){
@@ -57,14 +75,59 @@ export const POST = async (req: Request) => {
     try {
         await connect();
         const planilla = await req.json();
-        logger.info(`Intentando crear nueva planilla para usuario: ${planilla.userId}`);
         
-        const newPlanilla = await Plani.create(planilla);
-        if (!newPlanilla) {
-            logger.error('Error al crear nueva planilla');
-            return new NextResponse("No se pudo ingresar el entreno", { status: 400 });
+        // Validación de datos requeridos
+        if (!planilla.userId) {
+            logger.error('Intento de crear planilla sin userId');
+            return NextResponse.json({ error: "userId es requerido" }, { status: 400 });
         }
 
+        // Validar que exercises exista y tenga la estructura correcta
+        if (!planilla.exercises || typeof planilla.exercises !== 'object') {
+            logger.error('Intento de crear planilla con estructura de ejercicios inválida');
+            return NextResponse.json({ error: "Estructura de ejercicios inválida" }, { status: 400 });
+        }
+
+        // Validar cada ejercicio
+        for (const day in planilla.exercises) {
+            for (const bloque in planilla.exercises[day]) {
+                const exercises = planilla.exercises[day][bloque];
+                if (!Array.isArray(exercises)) {
+                    logger.error(`Estructura inválida de ejercicios para día ${day}, bloque ${bloque}`);
+                    return NextResponse.json({ 
+                        error: `Estructura inválida de ejercicios para día ${day}, bloque ${bloque}` 
+                    }, { status: 400 });
+                }
+
+                for (const exercise of exercises) {
+                    // Validar que los campos requeridos existan y no estén vacíos
+                    if (!exercise.name || exercise.name.trim() === '') {
+                        logger.error('Ejercicio sin nombre');
+                        return NextResponse.json({ 
+                            error: "Todos los ejercicios deben tener nombre" 
+                        }, { status: 400 });
+                    }
+
+                    if (!exercise.reps || (typeof exercise.reps === 'string' && exercise.reps.trim() === '')) {
+                        logger.error('Ejercicio sin repeticiones especificadas');
+                        return NextResponse.json({ 
+                            error: "Todos los ejercicios deben especificar las repeticiones" 
+                        }, { status: 400 });
+                    }
+
+                    if (!exercise.sets || exercise.sets < 1) {
+                        logger.error('Ejercicio con número de series inválido');
+                        return NextResponse.json({ 
+                            error: "Todos los ejercicios deben tener al menos 1 serie" 
+                        }, { status: 400 });
+                    }
+                }
+            }
+        }
+
+        logger.info(`Intentando crear nueva planilla para usuario: ${planilla.userId}`);
+        const newPlanilla = await Plani.create(planilla);
+        
         const ultima_planilla = await User.findByIdAndUpdate(
             { _id: new ObjectId(planilla.userId as string) }, 
             { ultima_plani: Date.now() }, 
@@ -81,7 +144,9 @@ export const POST = async (req: Request) => {
     } catch (error: unknown) {
         if (error instanceof Error) {
             logger.error(`Error en POST /api/planillas: ${error.message}`);
-            return NextResponse.json({ error: "Error: " + error.message }, { status: 500 });
+            return NextResponse.json({ 
+                error: "Error al procesar la planilla: " + error.message 
+            }, { status: 500 });
         }
         logger.error('Error desconocido en POST /api/planillas');
         return NextResponse.json({ error: "Error desconocido" }, { status: 500 });
