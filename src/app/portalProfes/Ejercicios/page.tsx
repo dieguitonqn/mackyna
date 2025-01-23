@@ -15,6 +15,9 @@ type Ejercicio = {
     video: string;
 };
 
+const normalizeText = (text: string): string => {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
 
 const Ejercicios: React.FC = () => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]);
@@ -25,7 +28,7 @@ const Ejercicios: React.FC = () => {
 
     const [filters, setFilters] = useState({
         nombre: '',
-        grupoMusc: '',
+        
         specificMusc: '',
         description: '',
         video: '',
@@ -59,15 +62,13 @@ const Ejercicios: React.FC = () => {
 
     useEffect(() => {
         const filtered = ejercicios.filter((ejercicio) =>
-            ejercicio.nombre.toLowerCase().includes(filters.nombre.toLowerCase()) &&
-            // ejercicio.grupoMusc.toLowerCase().includes(filters.grupoMusc.toLowerCase()) &&
-            ejercicio.specificMusc.toLowerCase().includes(filters.specificMusc.toLowerCase()) &&
-            ejercicio.description.toLowerCase().includes(filters.description.toLowerCase()) &&
-            ejercicio.video.toLowerCase().includes(filters.video.toLowerCase())
-
+            normalizeText(ejercicio.nombre).includes(normalizeText(filters.nombre)) &&
+            normalizeText(ejercicio.specificMusc).includes(normalizeText(filters.specificMusc)) &&
+            normalizeText(ejercicio.description).includes(normalizeText(filters.description)) &&
+            normalizeText(ejercicio.video).includes(normalizeText(filters.video))
         );
         setFilteredEjercicios(filtered);
-    }, [filters]);
+    }, [filters, ejercicios]);
 
     const handleEditEjercicio = (_id: string) => {
         setSelectedEjercicio(_id);
