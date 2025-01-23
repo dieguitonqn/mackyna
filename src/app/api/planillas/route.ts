@@ -49,12 +49,13 @@ export const GET = async (req: Request) => {
 export const POST = async (req: Request) => {
     const session = await getServerSession({ req, ...authOptions });
         if(!session){
+            console.log("No autorizado");
             return new NextResponse("No autorizado", { status: 401 });
         }
     try {
         await connect();
         const planilla = await req.json();
-        // console.log(planilla);
+        console.log(planilla);
         const newPlanilla = await Plani.create(planilla);
 
         if (!newPlanilla) {
@@ -68,8 +69,10 @@ export const POST = async (req: Request) => {
         return new NextResponse("ejercicio agregado con exito", { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error) {
+            console.log(error);
             return NextResponse.json({ error: "Error: " + error.message }, { status: 500 });
         }
+        console.log(error);
         return NextResponse.json({ error: "Error desconocido" }, { status: 500 });
     }
 }

@@ -29,6 +29,14 @@ const Usuarios: React.FC = () => {
   const [showSetDias, setShowSetDias] = useState<boolean>(false);
   const [userID, setUserID] = useState<string | null>(null);
   const [diasPermitidos, setDiasPermitidos] = useState<number | null>(null);
+
+  const normalizeString = (str: string) => {
+    return str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -52,12 +60,11 @@ const Usuarios: React.FC = () => {
 
   useEffect(() => {
     const filtered = users.filter((user) =>
-      Object.entries(filters).every(([key, value]) =>
-        user[key as keyof IUser]
-          ?.toString()
-          .toLowerCase()
-          .includes(value?.toLowerCase() || '')
-      )
+      Object.entries(filters).every(([key, value]) => {
+        const fieldValue = user[key as keyof IUser]?.toString() || '';
+        const searchValue = value?.toString() || '';
+        return normalizeString(fieldValue).includes(normalizeString(searchValue));
+      })
     );
     setFilteredUsers(filtered);
   }, [filters, users]);

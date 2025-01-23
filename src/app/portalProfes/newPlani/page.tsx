@@ -103,8 +103,8 @@ const NewPlan: React.FC = () => {
       alert('Por favor, selecciona un usuario.');
       return;
     }
-    // console.log("El plan es: ")
-    // console.log(plan);
+    console.log("El plan es: ")
+    console.log(plan);
     try {
       const response = await fetch('/api/planillas', {
         method: 'POST',
