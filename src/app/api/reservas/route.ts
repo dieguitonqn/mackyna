@@ -6,68 +6,98 @@ import { ObjectId } from "mongodb";
 import { IUser } from "@/types/user"
 import Turno from "@/lib/models/turnos";
 import { Turnos } from "@/types/turnos";
-
+import logger from "@/lib/logger";
 
 export const POST = async (req: Request) => {
     const body = await req.json();
-    // console.log(body);
+    
     try {
         await connect()
         const user: IUser | null = await User.findOne({ _id: new ObjectId(body.userID as string) });
         if (!user) {
-            throw new Error("User not found");
+            logger.error(`Usuario no encontrado: ${body.userID}`);
+            return new NextResponse("Usuario no encontrado", { status: 404 });
         }
-        // console.log(user.dias_permitidos);
-        let dias_disp: number | undefined;
+
         try {
             const userReservas: number = await Reserva.countDocuments({ "userInfo.userId": body.userID });
-            const userPrevReservas: number = await Reserva.countDocuments({ "userInfo.userId": body.userID, "turnoInfo.turnoId": body.turnoID });
             const turno: Turnos | null = await Turno.findById(body.turnoID);
-            // console.log("Cantidad de reservas del usuario: " + userPrevReservas);
-            // const user:IUser | null = await User.findById(body.userID);
-            if(userPrevReservas > 0){
-                return new NextResponse("Ya tienes una reserva en este turno", { status: 403 })
+            
+            if (!turno) {
+                logger.error(`Turno no encontrado: ${body.turnoID}`);
+                return new NextResponse("Turno no encontrado", { status: 404 });
             }
+
+            // Verificar si el usuario ya tiene una reserva en el mismo día
+            const reservasMismoDia = await Reserva.findOne({
+                "userInfo.userId": body.userID,
+                "turnoInfo.dia_semana": turno.dia_semana
+            });
+
+            if (reservasMismoDia) {
+                logger.warn(`Usuario ${body.userID} intentó reservar más de un turno en el día ${turno.dia_semana}`);
+                return new NextResponse("Ya tienes una reserva para este día", { status: 403 });
+            }
+
+            // Verificar si el usuario ya tiene una reserva en este turno específico
+            const userPrevReservas: number = await Reserva.countDocuments({ 
+                "userInfo.userId": body.userID, 
+                "turnoInfo.turnoId": body.turnoID 
+            });
+
+            if (userPrevReservas > 0) {
+                logger.warn(`Usuario ${body.userID} intentó reservar el mismo turno dos veces`);
+                return new NextResponse("Ya tienes una reserva en este turno", { status: 403 });
+            }
+
+            // Verificar límite de reservas del usuario
             if (user.dias_permitidos !== undefined && userReservas >= user.dias_permitidos) {
-                return new NextResponse("Exeso de reservas", { status: 401 })
+                logger.warn(`Usuario ${body.userID} excedió su límite de reservas`);
+                return new NextResponse("Exceso de reservas", { status: 401 });
             }
-            if (user.dias_permitidos !== undefined) {
-                dias_disp = user.dias_permitidos as number - userReservas;
-                // console.log("Cantidad de días disponible del usuario: " + dias_disp);
-            } else if (turno?.cupos_disponibles === 0) {
+
+            // Verificar cupos disponibles
+            if (turno.cupos_disponibles === 0) {
+                logger.warn(`Intento de reserva en turno sin cupos: ${body.turnoID}`);
                 return new NextResponse("No hay cupos disponibles", { status: 402 });
-            } else {
-                return new NextResponse("Dias permitidos is undefined", { status: 400 });
             }
+
+            const dias_disp = user.dias_permitidos ? user.dias_permitidos - userReservas : undefined;
+            
             const newReserva = new Reserva({
-                userInfo:{
-                    userId:user?._id.toString(),
-                    nombre:user?.nombre,
-                    apellido:user?.apellido
+                userInfo: {
+                    userId: user._id.toString(),
+                    nombre: user.nombre,
+                    apellido: user.apellido
                 }, 
-                turnoInfo:{
-                    turnoId:turno?._id.toString(),
-                    dia_semana:turno?.dia_semana,
-                    hora_inicio:turno?.hora_inicio,
-                    hora_fin:turno?.hora_fin,
+                turnoInfo: {
+                    turnoId: turno._id.toString(),
+                    dia_semana: turno.dia_semana,
+                    hora_inicio: turno.hora_inicio,
+                    hora_fin: turno.hora_fin,
                 },
                 fecha: new Date(),
                 estado: "activa",
                 observaciones: " "
+            });
 
-            })
-            // console.log(newReserva);
             await newReserva.save();
             await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: -1 } });
-            return new NextResponse(JSON.stringify({ message: "todo ok", dias_disp: dias_disp - 1 }), { status: 200 });
+            
+            logger.info(`Reserva creada exitosamente para usuario ${body.userID} en turno ${body.turnoID}`);
+            return new NextResponse(JSON.stringify({ 
+                message: "Reserva confirmada", 
+                dias_disp: dias_disp ? dias_disp - 1 : undefined 
+            }), { status: 200 });
+
         } catch (error: unknown) {
-            console.log(error)
+            logger.error(`Error al procesar la reserva: ${error}`);
+            return new NextResponse("Error al procesar la reserva", { status: 500 });
         }
     } catch (error: unknown) {
-        console.log(error)
+        logger.error(`Error en la conexión: ${error}`);
+        return new NextResponse("Error de conexión", { status: 500 });
     }
-
-
 }
 
 export const DELETE = async (req: Request) => {
