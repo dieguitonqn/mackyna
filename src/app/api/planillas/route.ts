@@ -48,22 +48,22 @@ export const GET = async (req: Request) => {
 };
 
 // Modificar la interfaz para ser más flexible con las repeticiones
-interface ExerciseValidation {
-    name: string;
-    reps: string | number; // Permitir tanto números como texto
-    sets: number;
-    videoLink?: string;
-    notas?: string;
-}
+// interface ExerciseValidation {
+//     name: string;
+//     reps: string | number; // Permitir tanto números como texto
+//     sets: number;
+//     videoLink?: string;
+//     notas?: string;
+// }
 
-interface PlanillaValidation {
-    userId: string;
-    exercises: {
-        [key: string]: {
-            [key: string]: ExerciseValidation[];
-        };
-    };
-}
+// interface PlanillaValidation {
+//     userId: string;
+//     exercises: {
+//         [key: string]: {
+//             [key: string]: ExerciseValidation[];
+//         };
+//     };
+// }
 
 export const POST = async (req: Request) => {
     const session = await getServerSession({ req, ...authOptions });
@@ -126,7 +126,7 @@ export const POST = async (req: Request) => {
         }
 
         logger.info(`Intentando crear nueva planilla para usuario: ${planilla.userId}`);
-        const newPlanilla = await Plani.create(planilla);
+        await Plani.create(planilla);
 
         const ultima_planilla = await User.findByIdAndUpdate(
             { _id: new ObjectId(planilla.userId as string) },
