@@ -60,6 +60,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     };
 
     const handleInputChange = (index: number, field: keyof Exercise, value: string | number) => {
+        console.log(value);
         const updatedExercises = [...exercises];
         
         // Validaciones específicas por campo
@@ -67,12 +68,12 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
             value = 1; // Mínimo 1 serie
         }
         
-        if (field === 'reps') {
-            // Permitir cualquier valor de texto no vacío para repeticiones
-            if (typeof value === 'string' && value.trim() === '') {
-                return; // No actualizar si está vacío
-            }
-        }
+        // if (field === 'reps') {
+        //     // Permitir cualquier valor de texto no vacío para repeticiones
+        //     if (typeof value === 'string' && value.trim() === '') {
+        //         return; // No actualizar si está vacío
+        //     }
+        // }
 
         updatedExercises[index] = { ...updatedExercises[index], [field]: value };
         setExercises(updatedExercises);

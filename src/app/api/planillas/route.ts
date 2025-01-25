@@ -74,7 +74,8 @@ export const POST = async (req: Request) => {
 
     try {
         await connect();
-        const planilla = await req.json();
+        const planilla : Plani = await req.json();
+        console.log(planilla.trainingDays[1].Bloque2);
 
         // Validación de datos requeridos
         if (!planilla.userId) {
@@ -82,48 +83,48 @@ export const POST = async (req: Request) => {
             return NextResponse.json({ error: "userId es requerido" }, { status: 400 });
         }
 
-        // Validar que exercises exista y tenga la estructura correcta
-        if (!planilla.exercises || typeof planilla.exercises !== 'object') {
-            logger.error('Intento de crear planilla con estructura de ejercicios inválida');
-            return NextResponse.json({ error: "Estructura de ejercicios inválida" }, { status: 400 });
-        }
+        // // Validar que exercises exista y tenga la estructura correcta
+        // if (!planilla.exercises || typeof planilla.exercises !== 'object') {
+        //     logger.error('Intento de crear planilla con estructura de ejercicios inválida');
+        //     return NextResponse.json({ error: "Estructura de ejercicios inválida" }, { status: 400 });
+        // }
 
-        // Validar cada ejercicio
-        for (const day in planilla.exercises) {
-            for (const bloque in planilla.exercises[day]) {
-                const exercises = planilla.exercises[day][bloque];
-                if (!Array.isArray(exercises)) {
-                    logger.error(`Estructura inválida de ejercicios para día ${day}, bloque ${bloque}`);
-                    return NextResponse.json({
-                        error: `Estructura inválida de ejercicios para día ${day}, bloque ${bloque}`
-                    }, { status: 400 });
-                }
+        // // Validar cada ejercicio
+        // for (const day in planilla.exercises) {
+        //     for (const bloque in planilla.exercises[day]) {
+        //         const exercises = planilla.exercises[day][bloque];
+        //         if (!Array.isArray(exercises)) {
+        //             logger.error(`Estructura inválida de ejercicios para día ${day}, bloque ${bloque}`);
+        //             return NextResponse.json({
+        //                 error: `Estructura inválida de ejercicios para día ${day}, bloque ${bloque}`
+        //             }, { status: 400 });
+        //         }
 
-                for (const exercise of exercises) {
-                    // Validar que los campos requeridos existan y no estén vacíos
-                    if (!exercise.name || exercise.name.trim() === '') {
-                        logger.error('Ejercicio sin nombre');
-                        return NextResponse.json({
-                            error: "Todos los ejercicios deben tener nombre"
-                        }, { status: 400 });
-                    }
+        //         for (const exercise of exercises) {
+        //             // Validar que los campos requeridos existan y no estén vacíos
+        //             if (!exercise.name || exercise.name.trim() === '') {
+        //                 logger.error('Ejercicio sin nombre');
+        //                 return NextResponse.json({
+        //                     error: "Todos los ejercicios deben tener nombre"
+        //                 }, { status: 400 });
+        //             }
 
-                    if (!exercise.reps || (typeof exercise.reps === 'string' && exercise.reps.trim() === '')) {
-                        logger.error('Ejercicio sin repeticiones especificadas');
-                        return NextResponse.json({
-                            error: "Todos los ejercicios deben especificar las repeticiones"
-                        }, { status: 400 });
-                    }
+        //             if (!exercise.reps || (typeof exercise.reps === 'string' && exercise.reps.trim() === '')) {
+        //                 logger.error('Ejercicio sin repeticiones especificadas');
+        //                 return NextResponse.json({
+        //                     error: "Todos los ejercicios deben especificar las repeticiones"
+        //                 }, { status: 400 });
+        //             }
 
-                    if (!exercise.sets || exercise.sets < 1) {
-                        logger.error('Ejercicio con número de series inválido');
-                        return NextResponse.json({
-                            error: "Todos los ejercicios deben tener al menos 1 serie"
-                        }, { status: 400 });
-                    }
-                }
-            }
-        }
+        //             if (!exercise.sets || exercise.sets < 1) {
+        //                 logger.error('Ejercicio con número de series inválido');
+        //                 return NextResponse.json({
+        //                     error: "Todos los ejercicios deben tener al menos 1 serie"
+        //                 }, { status: 400 });
+        //             }
+        //         }
+        //     }
+        // }
 
         logger.info(`Intentando crear nueva planilla para usuario: ${planilla.userId}`);
         await Plani.create(planilla);
