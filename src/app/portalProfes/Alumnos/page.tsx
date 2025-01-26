@@ -4,6 +4,9 @@ import EditUserForm from '@/components/EditUserForm';
 import React, { useEffect, useState } from 'react';
 import { IUser } from '@/types/user';
 import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
+import { useRouter } from 'next/navigation';
+import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import Tooltip from '@/components/ui/Tooltip';
 
 type FilteredUser = {
   _id: string;
@@ -29,6 +32,7 @@ const Usuarios: React.FC = () => {
   const [showSetDias, setShowSetDias] = useState<boolean>(false);
   const [userID, setUserID] = useState<string | null>(null);
   const [diasPermitidos, setDiasPermitidos] = useState<number | null>(null);
+  const router = useRouter();
 
   const normalizeString = (str: string) => {
     return str
@@ -82,8 +86,6 @@ const Usuarios: React.FC = () => {
     setUserID(null);
   }
 
-  
-
   const handleResetPwd = async (id: string) => {
     try {
       const response = await fetch('/api/userP', {
@@ -101,6 +103,41 @@ const Usuarios: React.FC = () => {
       console.error(err);
       alert('Error al resetear la contraseña');
     };
+  };
+
+  const handleToggleHabilitado = async (userId: string, estadoActual: boolean) => {
+    const confirmar = window.confirm(
+      `¿Estás seguro que deseas ${estadoActual ? 'deshabilitar' : 'habilitar'} a este usuario?`
+    );
+
+    if (confirmar) {
+      try {
+        const response = await fetch('/api/usuarios', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            habilitado: !estadoActual
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al actualizar el estado del usuario');
+        }
+
+        setUsers(users.map(user => 
+          user._id.toString() === userId ? { ...user, habilitado: !estadoActual } : user
+        ));
+        
+        alert(`Usuario ${estadoActual ? 'deshabilitado' : 'habilitado'} correctamente`);
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        alert('Error al actualizar el estado del usuario');
+      }
+    }
   };
 
   return (
@@ -163,34 +200,55 @@ const Usuarios: React.FC = () => {
                       ? new Date(user.ultima_metrica).toLocaleDateString()
                       : '---'}
                   </td>
-                  <td className="px-2 py-2 flex flex-row justify-center gap-2 items-center">
-                    <a
-                      className="px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
-                      href={`../portalAlumnos/Planilla?id=${user._id}`}
-                    >
-                      Planillas
-                    </a>
-                    <a
-                      className="px-2 py-1 bg-blue-600 text-white rounded-sm text-sm"
-                      href={`../portalAlumnos/Metricas?id=${user._id}`}
-                    >
-                      Métricas
-                    </a>
-                    <button
-                      className="px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
-                      onClick={() => handleResetPwd(user._id.toString())}
-                    >Reset PWD</button>
-                    
-                    <button
-                      className='px-2 py-1 bg-yellow-600 text-white rounded-sm text-sm'
-                      onClick={() => {
-                        setShowSetDias(!showSetDias)
-                        setUserID(user._id.toString())
-                        setDiasPermitidos(user.dias_permitidos || null)
-                      }}
-                    >
-                      Set días
-                    </button>
+                  <td className="px-2 py-2 flex flex-row justify-center gap-3 items-center">
+                    <Tooltip text="Ver Planillas">
+                      <a
+                        href={`../portalAlumnos/Planilla?id=${user._id}`}
+                        className="text-green-600 hover:text-green-800 transition-colors"
+                      >
+                        <FaClipboardList className="h-5 w-5" />
+                      </a>
+                    </Tooltip>
+
+                    <Tooltip text="Ver Métricas">
+                      <a
+                        href={`../portalAlumnos/Metricas?id=${user._id}`}
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        <FaChartBar className="h-5 w-5" />
+                      </a>
+                    </Tooltip>
+
+                    <Tooltip text="Resetear Contraseña">
+                      <button
+                        onClick={() => handleResetPwd(user._id.toString())}
+                        className="text-red-600 hover:text-red-800 transition-colors"
+                      >
+                        <FaKey className="h-5 w-5" />
+                      </button>
+                    </Tooltip>
+
+                    <Tooltip text="Configurar Días">
+                      <button
+                        onClick={() => {
+                          setShowSetDias(!showSetDias)
+                          setUserID(user._id.toString())
+                          setDiasPermitidos(user.dias_permitidos || null)
+                        }}
+                        className="text-yellow-600 hover:text-yellow-800 transition-colors"
+                      >
+                        <FaCalendarAlt className="h-5 w-5" />
+                      </button>
+                    </Tooltip>
+
+                    <Tooltip text={user.habilitado ? 'Deshabilitar Usuario' : 'Habilitar Usuario'}>
+                      <button
+                        onClick={() => handleToggleHabilitado(user._id.toString(), user.habilitado || false)}
+                        className={`${user.habilitado ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'} transition-colors`}
+                      >
+                        {user.habilitado ? <FaToggleOn className="h-5 w-5" /> : <FaToggleOff className="h-5 w-5" />}
+                      </button>
+                    </Tooltip>
                   </td>
                 </tr>
               ))}

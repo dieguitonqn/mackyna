@@ -151,3 +151,25 @@ export const DELETE = async (req: NextRequest) => {
         return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
     }
 };
+
+export async function PATCH(req: Request) {
+    try {
+        await connect();
+        const { userId, habilitado } = await req.json();
+        
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { habilitado },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return new Response('Usuario no encontrado', { status: 404 });
+        }
+
+        return new Response(JSON.stringify(updatedUser), { status: 200 });
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+        return new Response('Error al actualizar usuario', { status: 500 });
+    }
+}
