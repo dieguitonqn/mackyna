@@ -6,7 +6,7 @@ import { IUser } from '@/types/user';
 import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
 import { useRouter } from 'next/navigation';
 import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa';
-import Tooltip from '@/components/ui/Tooltip';
+import Tooltip from '@/components/PortalProfes/Tooltip';
 
 type FilteredUser = {
   _id: string;
