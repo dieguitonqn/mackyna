@@ -143,6 +143,12 @@ const Usuarios: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
+      <div className="text-center mb-4 text-gray-600">
+        <p>Total de alumnos en el sistema: {users.length}</p>
+        {users.length !== filteredUsers.length && (
+          <p>Alumnos mostrados: {filteredUsers.length}</p>
+        )}
+      </div>
 
       {loading && <p className="text-center">Cargando usuarios...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
