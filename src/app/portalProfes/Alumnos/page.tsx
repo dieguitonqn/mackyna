@@ -244,7 +244,7 @@ const Usuarios: React.FC = () => {
                     <Tooltip text={user.habilitado ? 'Deshabilitar Usuario' : 'Habilitar Usuario'}>
                       <button
                         onClick={() => handleToggleHabilitado(user._id.toString(), user.habilitado || false)}
-                        className={`${user.habilitado ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'} transition-colors`}
+                        className={`${user.habilitado ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
                       >
                         {user.habilitado ? <FaToggleOn className="h-5 w-5" /> : <FaToggleOff className="h-5 w-5" />}
                       </button>
