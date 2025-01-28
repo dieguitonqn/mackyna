@@ -15,6 +15,9 @@ type Ejercicio = {
     video: string;
 };
 
+const normalizeText = (text: string): string => {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
 
 const Ejercicios: React.FC = () => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]);
@@ -25,7 +28,7 @@ const Ejercicios: React.FC = () => {
 
     const [filters, setFilters] = useState({
         nombre: '',
-        grupoMusc: '',
+        
         specificMusc: '',
         description: '',
         video: '',
@@ -66,14 +69,12 @@ const Ejercicios: React.FC = () => {
     
         const filtered = ejercicios.filter((ejercicio) =>
             normalizeText(ejercicio.nombre).includes(normalizeText(filters.nombre)) &&
-            // normalizeText(ejercicio.grupoMusc).includes(normalizeText(filters.grupoMusc)) &&
             normalizeText(ejercicio.specificMusc).includes(normalizeText(filters.specificMusc)) &&
             normalizeText(ejercicio.description).includes(normalizeText(filters.description)) &&
             normalizeText(ejercicio.video).includes(normalizeText(filters.video))
         );
         setFilteredEjercicios(filtered);
-    }, [filters, ejercicios]); // Incluye `ejercicios` como dependencia
-    
+    }, [filters, ejercicios]);
 
     const handleEditEjercicio = (_id: string) => {
         setSelectedEjercicio(_id);

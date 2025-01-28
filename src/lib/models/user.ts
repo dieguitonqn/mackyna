@@ -18,6 +18,7 @@ interface IUser {
     lesiones: string;
     habilitado: boolean;
     bloqueado: boolean;
+    dias_permitidos: number;
     ultimo_pago: Date;
     ultima_plani: Date;
     ultima_metrica: Date;
@@ -54,6 +55,7 @@ const UserSchema = new Schema(
         lesiones:{type: String, required:false},
         habilitado:{type: Boolean, required:false, default:false},
         bloqueado:{type: Boolean, required:false, default:false},
+        dias_permitidos:{type: Number, required:false},
         ultimo_pago:{type: Date, required:false},
         ultima_plani:{type: Date, required:false},
         ultima_metrica:{type: Date, required:false},

@@ -103,8 +103,8 @@ const NewPlan: React.FC = () => {
       alert('Por favor, selecciona un usuario.');
       return;
     }
-    // console.log("El plan es: ")
-    // console.log(plan);
+    console.log("El plan es: ")
+    console.log(plan);
     try {
       const response = await fetch('/api/planillas', {
         method: 'POST',
@@ -163,7 +163,6 @@ const NewPlan: React.FC = () => {
             <option value="" disabled>
               Selecciona el año
             </option>
-            <option value="2024">2024</option>
             <option value="2025">2025</option>
             <option value="2026">2026</option>
             <option value="2027">2027</option>

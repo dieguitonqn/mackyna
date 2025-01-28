@@ -1,4 +1,3 @@
-
 import NextAuth from "next-auth"
 
 import GoogleProvider from "next-auth/providers/google";
@@ -101,23 +100,23 @@ const handler = NextAuth({
         }
       },
       async session({ session }) {
-        // Suponemos que el token contiene propiedades 'accessToken' y 'id'
-        await connect()
-  
-        // Suponiendo que tienes un modelo de usuario llamado 'User' con un campo 'role'
-        const userWithRole = await User.findOne({ email: session.user.email });
-  
-        // Si encontramos al usuario en la base de datos, agregamos su rol a la sesión
-        if (userWithRole) {
-          session.user.rol = userWithRole.rol;
-          session.user.id=userWithRole._id;
+        await connect();
+        const userWithRole = await User.findOne({ 
+            email: session.user.email,
+            habilitado: true,
+            bloqueado: false 
+        });
+
+        if (!userWithRole) {
+            throw new Error('Usuario no encontrado o no autorizado');
         }
-        console.log(session.user.rol);
+
+        session.user.rol = userWithRole.rol;
+        session.user.id = userWithRole._id;
         return session;
-  
       }
     }
   
   })
   
-  export { handler as GET, handler as POST }  
+  export {  handler as GET, handler as POST }  

@@ -41,3 +41,74 @@ body {
 .wap_icon:hover {
   transform: scale(1.2);
 }
+
+@media print {
+    @page {
+        margin: 1cm;
+        size: auto;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    #printable-content,
+    #printable-content * {
+        visibility: visible;
+    }
+
+    #printable-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 20px;
+        overflow: visible !important;
+    }
+
+    .print-content {
+        break-inside: avoid-page;
+        page-break-inside: auto;
+    }
+
+    .print\:hidden {
+        display: none !important;
+    }
+
+    /* Asegurar que cada día comience en una nueva página si es necesario */
+    .training-day {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+    }
+
+    /* Ajustes para el contenedor modal */
+    .fixed {
+        position: static !important;
+    }
+
+    .overflow-y-auto {
+        overflow: visible !important;
+    }
+
+    /* Asegurar que los bordes y textos sean visibles */
+    .print-content * {
+        color: black !important;
+        border-color: #ddd !important;
+    }
+
+    /* Eliminar márgenes y paddings innecesarios */
+    .max-w-lg,
+    .max-w-4xl {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+

@@ -41,7 +41,13 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     
 
     const handleAddExercise = () => {
-        const newExercise: Exercise = { name: '', reps: '', sets: 1, notas:'',videoLink: '' };
+        const newExercise: Exercise = { 
+            name: '', 
+            reps: '',  // Permitir string vacío inicial
+            sets: 1,   // valor por defecto
+            notas: '',
+            videoLink: '' 
+        };
         const updatedExercises = [...exercises, newExercise];
         setExercises(updatedExercises);
         onChange(day, bloque, updatedExercises);
@@ -54,7 +60,21 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     };
 
     const handleInputChange = (index: number, field: keyof Exercise, value: string | number) => {
+        console.log(value);
         const updatedExercises = [...exercises];
+        
+        // Validaciones específicas por campo
+        if (field === 'sets' && (typeof value === 'number' && value < 1)) {
+            value = 1; // Mínimo 1 serie
+        }
+        
+        // if (field === 'reps') {
+        //     // Permitir cualquier valor de texto no vacío para repeticiones
+        //     if (typeof value === 'string' && value.trim() === '') {
+        //         return; // No actualizar si está vacío
+        //     }
+        // }
+
         updatedExercises[index] = { ...updatedExercises[index], [field]: value };
         setExercises(updatedExercises);
         onChange(day, bloque, updatedExercises);

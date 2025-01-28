@@ -40,19 +40,19 @@ export default function DashboardLayout({
                             </Link>
                         </li>
                         <li>
-                            <Link href="/dashboard/turnos">
+                            <Link href="/portalProfes/Reservas">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                                    Turnos
+                                    Reservas
                                 </div>
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link href="/dashboard/pagos">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                                     Pagos
                                 </div>
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link href="/portalProfes/newPlani">
                                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
@@ -71,7 +71,7 @@ export default function DashboardLayout({
 
             {/* Main Content */}
             <main className="flex-grow p-8">
-                <h1 className="text-2xl font-bold text-gray-800">Portal de Profesores</h1>
+                {/* <h1 className="text-2xl font-bold text-gray-800">Portal de Profesores</h1> */}
                 
                 {children}
             </main>

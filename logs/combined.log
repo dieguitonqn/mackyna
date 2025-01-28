@@ -1,0 +1,129 @@
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:02:32"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:02:32"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:02:32"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:02:32"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:03:05"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:03:05"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:03:06"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:03:06"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:04:12"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.1.Bloque2.0.name: Path `name` is required.","timestamp":"2025-01-25 08:04:12"}
+{"level":"error","message":"Intento de crear planilla con estructura de ejercicios inválida","timestamp":"2025-01-25 08:04:46"}
+{"level":"error","message":"Intento de crear planilla con estructura de ejercicios inválida","timestamp":"2025-01-25 08:05:46"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:12:09"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.1.Bloque2.0.name: Path `name` is required.","timestamp":"2025-01-25 08:12:09"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:12:34"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.1.Bloque2.0.name: Path `name` is required.","timestamp":"2025-01-25 08:12:34"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:16:25"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.1.Bloque2.0.name: Path `name` is required.","timestamp":"2025-01-25 08:16:25"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:17:10"}
+{"level":"info","message":"Planilla creada exitosamente para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:17:10"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:17:33"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:17:33"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:17:34"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:17:34"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:18:52"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.0.Bloque1.0.sets: Path `sets` is required., trainingDays.2.Bloque1.0.name: Path `name` is required.","timestamp":"2025-01-25 08:18:52"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:19:19"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.2.Bloque1.0.name: Path `name` is required.","timestamp":"2025-01-25 08:19:19"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:20:00"}
+{"level":"error","message":"Error en POST /api/planillas: Plani validation failed: trainingDays.2.Bloque1.0.name: Path `name` is required.","timestamp":"2025-01-25 08:20:00"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:26:27"}
+{"level":"info","message":"Planilla creada exitosamente para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:26:27"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:27:36"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:27:36"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:27:36"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:27:36"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:19"}
+{"level":"info","message":"Planilla creada exitosamente para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:19"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:28"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:28"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:29:28"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:29:28"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:29:36"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:29:42"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:29:42"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:29:42"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:35:34"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:35:34"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:35:34"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:35:37"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:35:37"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:35:37"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:37:25"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:37:25"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:37:25"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:37:25"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:38:22"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:38:22"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:38:22"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:38:22"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:38:25"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:38:25"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:38:25"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:38:25"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:38:28"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:38:28"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:38:28"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:38:28"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:40:16"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:40:16"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:40:16"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:40:16"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:45:02"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:45:02"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:45:02"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:45:02"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:45:43"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:45:43"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:45:43"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:45:43"}
+{"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:52:15"}
+{"level":"info","message":"Planilla creada exitosamente para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:52:15"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:52:31"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:52:31"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:52:31"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-25 08:52:31"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"Planillas recuperadas para el usuario 6747d9e276271e6ad56251cc","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Usuario encontrado: diegoariel.morales@gmail.com","timestamp":"2025-01-25 08:52:38"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:26:06"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:26:06"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:26:06"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:26:06"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:30:04"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:30:04"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:30:04"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:30:04"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:31:23"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:31:23"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:31:23"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:31:23"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:34:30"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:34:30"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:34:30"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:34:30"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:37:50"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:37:50"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-01-26 16:37:50"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-01-26 16:37:50"}
