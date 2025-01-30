@@ -101,7 +101,7 @@ async function page({
                         </div>
 
                         <div className="flex flex-wrap gap-10 justify-center items-center">
-                            <MetricCard birthDate={user?.fecha_nacimiento} altura={user?.altura} objetivo={user?.objetivo}/>
+                            <MetricCard userID={user!._id.toString()} birthDate={user?.fecha_nacimiento} altura={user?.altura} objetivo={user?.objetivo}/>
                             <Chart data={metricsData} />
                         </div>
 
@@ -156,7 +156,7 @@ async function page({
 
 
                         <div className="flex flow-wrap justify-center items-center my-10">
-                            <MetricCard />
+                            <MetricCard userID={userInfo!._id.toString()} />
                             <Suspense fallback={<div className="text-8xl text-white">Loading...</div>}>
                                 <Chart data={metricsData} />
                             </Suspense>

@@ -168,15 +168,27 @@ const Planillas: React.FC = () => {
                             <Image src="/planilla.png" alt="logo planilla" width={100} height={100} />
                             <p className="text-center">{plani.month} {plani.year}</p>
                             {(isAdmin || isTeach) && (
-                                <button
-                                    className="bg-red-500 px-2 py-1 hover:font-semibold rounded-md mt-2"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeletePlani(plani._id!, plani.userId);
-                                    }}
-                                >
-                                    Borrar
-                                </button>
+                                <div className='flex flex-wrap items-center gap-2'>
+                                    <button
+                                        className="bg-red-500 px-2 py-1 hover:font-semibold rounded-md mt-2"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeletePlani(plani._id!, plani.userId);
+                                        }}
+                                    >
+                                        Borrar
+                                    </button>
+                                    <button
+                                        className='bg-emerald-600 px-2 py-1 hover:font-semibold rounded-md mt-2'
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            alert('Funcionalidad no implementada aún');
+                                        }
+                                        }
+                                    >
+                                        Editar
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ))}

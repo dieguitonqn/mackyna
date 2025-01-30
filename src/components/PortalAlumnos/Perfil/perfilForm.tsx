@@ -256,7 +256,7 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
                 <option value="">Seleccionar</option>
                 <option value="masculino">Masculino</option>
                 <option value="femenino">Femenino</option>
-                <option value="no_binario">No binario</option>
+                
               </select>
             </div>
 
