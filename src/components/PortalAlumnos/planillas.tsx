@@ -182,7 +182,8 @@ const Planillas: React.FC = () => {
                                         className='bg-emerald-600 px-2 py-1 hover:font-semibold rounded-md mt-2'
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            alert('Funcionalidad no implementada aún');
+                                            // alert('Funcionalidad no implementada aún');
+                                            router.push('/portalProfes/editPlani?planiID=' + plani._id);
                                         }
                                         }
                                     >
