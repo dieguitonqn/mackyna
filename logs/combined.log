@@ -134,3 +134,15 @@
 {"level":"error","message":"Error en POST /api/planillas: Cannot read properties of undefined (reading 'Bloque2')","timestamp":"2025-02-06 15:31:15"}
 {"level":"info","message":"Intentando crear nueva planilla para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-02-06 15:35:59"}
 {"level":"info","message":"Planilla creada exitosamente para usuario: 6747d9e276271e6ad56251cc","timestamp":"2025-02-06 15:35:59"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-02-07 06:53:52"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-02-07 06:53:52"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-02-07 06:53:52"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-02-07 06:53:52"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-02-07 06:53:52"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-02-07 06:53:52"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-02-07 06:53:53"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-02-07 06:53:53"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-02-07 06:56:29"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-02-07 06:56:29"}
+{"level":"info","message":"[GET] Conexión a DB establecida","timestamp":"2025-02-07 06:56:29"}
+{"level":"info","message":"[GET] Recuperados 5 usuarios","timestamp":"2025-02-07 06:56:29"}
