@@ -10,7 +10,7 @@ import logger from "@/lib/logger";
 
 export const POST = async (req: Request) => {
     const body = await req.json();
-    
+
     try {
         await connect()
         const user: IUser | null = await User.findOne({ _id: new ObjectId(body.userID as string) });
@@ -22,7 +22,7 @@ export const POST = async (req: Request) => {
         try {
             const userReservas: number = await Reserva.countDocuments({ "userInfo.userId": body.userID });
             const turno: Turnos | null = await Turno.findById(body.turnoID);
-            
+
             if (!turno) {
                 logger.error(`Turno no encontrado: ${body.turnoID}`);
                 return new NextResponse("Turno no encontrado", { status: 404 });
@@ -40,9 +40,9 @@ export const POST = async (req: Request) => {
             }
 
             // Verificar si el usuario ya tiene una reserva en este turno específico
-            const userPrevReservas: number = await Reserva.countDocuments({ 
-                "userInfo.userId": body.userID, 
-                "turnoInfo.turnoId": body.turnoID 
+            const userPrevReservas: number = await Reserva.countDocuments({
+                "userInfo.userId": body.userID,
+                "turnoInfo.turnoId": body.turnoID
             });
 
             if (userPrevReservas > 0) {
@@ -63,13 +63,13 @@ export const POST = async (req: Request) => {
             }
 
             const dias_disp = user.dias_permitidos ? user.dias_permitidos - userReservas : undefined;
-            
+
             const newReserva = new Reserva({
                 userInfo: {
                     userId: user._id.toString(),
                     nombre: user.nombre,
                     apellido: user.apellido
-                }, 
+                },
                 turnoInfo: {
                     turnoId: turno._id.toString(),
                     dia_semana: turno.dia_semana,
@@ -83,11 +83,11 @@ export const POST = async (req: Request) => {
 
             await newReserva.save();
             await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: -1 } });
-            
+
             logger.info(`Reserva creada exitosamente para usuario ${body.userID} en turno ${body.turnoID}`);
-            return new NextResponse(JSON.stringify({ 
-                message: "Reserva confirmada", 
-                dias_disp: dias_disp ? dias_disp - 1 : undefined 
+            return new NextResponse(JSON.stringify({
+                message: "Reserva confirmada",
+                dias_disp: dias_disp ? dias_disp - 1 : undefined
             }), { status: 200 });
 
         } catch (error: unknown) {
@@ -105,16 +105,16 @@ export const DELETE = async (req: Request) => {
     // console.log(body);
     await connect();
     try {
-        const reservaC = await Reserva.deleteOne({"turnoInfo.turnoId":body.turnoID,"userInfo.userId":body.userID});
-        if(reservaC.deletedCount === 0){
+        const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
+        if (reservaC.deletedCount === 0) {
             return new NextResponse("Reserva no encontrada", { status: 404 });
         }
         await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: 1 } });
         return new NextResponse("Reserva cancelada correctamente", { status: 200 });
-    } catch (error:unknown) {
-        return new NextResponse("Error al cancelar la reserva"+error, {status:500})
+    } catch (error: unknown) {
+        return new NextResponse("Error al cancelar la reserva" + error, { status: 500 })
     }
-    
+
 }
 
 
@@ -123,27 +123,35 @@ export async function GET() {
         await connect();
         const reservasData = await Reserva.find().lean();
 
-        const reservas = reservasData.map(doc => ({
-            userInfo: {
-                userId: doc.userInfo.userId.toString(),
-                nombre: doc.userInfo.nombre,
-                apellido: doc.userInfo.apellido
-            },
-            turnoInfo: {
-                turnoId: doc.turnoInfo.turnoId.toString(),
-                dia_semana: doc.turnoInfo.dia_semana,
-                hora_inicio: doc.turnoInfo.hora_inicio,
-                hora_fin: doc.turnoInfo.hora_fin,
-            },
-            fecha: doc.fecha,
-            estado: doc.estado,
-            observaciones: doc.observaciones
+        const reservas = await Promise.all(reservasData.map(async doc => {
+            const userHab = await User.findOne({ _id: new ObjectId(doc.userInfo.userId.toString() as string) , habilitado: true });
+            if (userHab) {
+                return {
+                    userInfo: {
+                        userId: doc.userInfo.userId.toString(),
+                        nombre: doc.userInfo.nombre,
+                        apellido: doc.userInfo.apellido
+                    },
+                    turnoInfo: {
+                        turnoId: doc.turnoInfo.turnoId.toString(),
+                        dia_semana: doc.turnoInfo.dia_semana,
+                        hora_inicio: doc.turnoInfo.hora_inicio,
+                        hora_fin: doc.turnoInfo.hora_fin,
+                    },
+                    fecha: doc.fecha,
+                    estado: doc.estado,
+                    observaciones: doc.observaciones
+                };
+            }
+            return null;
         }));
 
-        return NextResponse.json(reservas);
+        const reservasFiltradas = reservas.filter(reserva => reserva !== null);
+
+        return NextResponse.json(reservasFiltradas);
     } catch (error) {
         return NextResponse.json(
-            { error: 'Error al obtener las reservas' +error},
+            { error: 'Error al obtener las reservas: ' + error },
             { status: 500 }
         );
     }
