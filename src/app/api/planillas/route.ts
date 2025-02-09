@@ -75,7 +75,7 @@ export const POST = async (req: Request) => {
     try {
         await connect();
         const planilla : Plani = await req.json();
-        console.log(planilla.trainingDays[1].Bloque2);
+        // console.log(planilla.trainingDays[1].Bloque2);
 
         // Validación de datos requeridos
         if (!planilla.userId) {
