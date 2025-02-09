@@ -215,13 +215,14 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
 
     try {
         const { id, plani } = await req.json();
-
+        await connect();
+        console.log(id);
         if (!ObjectId.isValid(id)) {
             logger.warn(`ID inválido proporcionado para actualización: ${id}`);
             return NextResponse.json({ error: "El ID proporcionado no es válido" }, { status: 400 });
         }
 
-        const editedPlani = await Plani.findByIdAndUpdate(new ObjectId(id), plani);
+        const editedPlani = await Plani.findByIdAndUpdate(new ObjectId(id as string), plani);
         if (!editedPlani) {
             logger.error(`No se pudo editar la planilla con ID: ${id}`);
             return NextResponse.json({ message: "No se pudo editar la planilla" }, { status: 501 });

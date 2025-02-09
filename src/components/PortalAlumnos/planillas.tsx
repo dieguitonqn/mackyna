@@ -125,6 +125,7 @@ const Planillas: React.FC = () => {
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
         return date.toLocaleDateString('es-ES', {
             day: '2-digit',
             month: '2-digit',

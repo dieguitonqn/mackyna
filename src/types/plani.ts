@@ -1,5 +1,5 @@
 export interface Exercise {
-    name: string;
+    name: string | JSX.Element;
     reps: string;
     sets: number;
     notas: string;
