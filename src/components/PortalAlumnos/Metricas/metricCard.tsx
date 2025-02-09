@@ -5,7 +5,8 @@ import { GoGoal } from "react-icons/go";
 
 
 export const MetricCard = (
-    {   userID,
+    {   
+        userID,
         birthDate,
         altura,
         objetivo
@@ -33,7 +34,7 @@ export const MetricCard = (
     }
     
     const edad = calcularEdad(birthDate = birthDate as Date);
-
+    console.log(userID);
 
     return (
         <div className="card bg-slate-200 p-5 rounded-md mx-10">

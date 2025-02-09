@@ -15,9 +15,9 @@ type Ejercicio = {
     video: string;
 };
 
-const normalizeText = (text: string): string => {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-};
+// const normalizeText = (text: string): string => {
+//     return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+// };
 
 const Ejercicios: React.FC = () => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]);

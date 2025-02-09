@@ -1,27 +1,17 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-import { Exercise, Plani, TrainingDay } from '@/types/plani';
+import { Exercise, Plani } from '@/types/plani';
 
 
 import ExerciseForm from '@/components/ExerciseForm';
-
-
-type Ejercicio = {
-    _id: string;
-    nombre: string;
-    grupoMusc: string;
-    specificMusc: string;
-    description: string;
-    video: string;
-};
 
 const EditPlani = () => {
     const searchParams = useSearchParams();
     const queryPlaniID = searchParams.get('planiID');
     const [plani, setPlani] = useState<Plani>();
-    
+
     const [editedPlani, setEditedPlani] = useState<Plani>({
         month: '',
         year: '',
@@ -31,7 +21,7 @@ const EditPlani = () => {
         startDate: '',
         endDate: '',
     });
-  
+
 
     useEffect(() => {
         if (queryPlaniID) {
@@ -55,7 +45,7 @@ const EditPlani = () => {
         return <div>Cargando...</div>;
     }
 
-  
+
 
     const handlePlaniChange = (field: string, value: string | number) => {
         setEditedPlani({
@@ -65,7 +55,7 @@ const EditPlani = () => {
     };
 
     // Agregar un nuevo ejercicio al bloque indicado
-   
+
 
     // Actualización: handleAddDay recibe el largo actual y verifica que no supere 5 días.
     const handleAddDay = (e: React.MouseEvent<HTMLButtonElement>, currentLength: number) => {
@@ -103,14 +93,14 @@ const EditPlani = () => {
     const handleInputChange2 = (day: string, bloque: string, exercises: Exercise[]) => {
         // Extract day number and convert to index (e.g., "Día 1" -> 0)
         const dayIndex = parseInt(day.split(' ')[1]) - 1;
-        
+
         if (dayIndex < 0 || dayIndex >= editedPlani.trainingDays.length) {
             console.error('Invalid day index');
             return;
         }
 
-        const updatedTrainingDays = editedPlani.trainingDays.map((trainingDay, index) => 
-            index === dayIndex 
+        const updatedTrainingDays = editedPlani.trainingDays.map((trainingDay, index) =>
+            index === dayIndex
                 ? { ...trainingDay, [bloque]: exercises }
                 : trainingDay
         );
@@ -130,18 +120,18 @@ const EditPlani = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({id:plani._id?.toString(), plani: editedPlani}),
+                body: JSON.stringify({ id: plani._id?.toString(), plani: editedPlani }),
             });
             if (!response.ok) {
                 throw new Error('Error al actualizar planilla');
             }
             alert('Planilla actualizada correctamente');
-        } catch (error:unknown) {
+        } catch (error: unknown) {
             if (error instanceof Error) {
                 console.error('Error al actualizar planilla:', error);
                 alert('Error al actualizar planilla');
             }
-            
+
         }
         // try {
         //     const response = await axios.put(`/api/planillas?planiID=${queryPlaniID}`, editedPlani);
@@ -187,14 +177,14 @@ const EditPlani = () => {
                         <h2 className='text-2xl font-bold mb-2'>{trainingDay.day}</h2>
                         <div key={dayIndex} className='my-6 flex flex-wrap gap-10 items-center'>
 
-                        {trainingDay.Bloque1 !== undefined && (
+                            {trainingDay.Bloque1 !== undefined && (
                                 <div>
                                     {trainingDay.Bloque1.length > 0 ? (
                                         trainingDay.Bloque1.map((exercise, exerciseIndex) => (
                                             <div key={exerciseIndex}>
                                                 <ExerciseForm
                                                     day={trainingDay.day}
-                                                    
+
                                                     bloque="Bloque1"
                                                     initialName={exercise.name as string}
                                                     initialReps={exercise.reps}
@@ -315,4 +305,9 @@ const EditPlani = () => {
     );
 };
 
-export default EditPlani;
+const EditPlaniPage = () => (
+    <Suspense fallback={<div>Cargando...</div>}>
+        <EditPlani />
+    </Suspense>
+);
+export default EditPlaniPage;
