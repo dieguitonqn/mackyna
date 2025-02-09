@@ -5,11 +5,13 @@ import { GoGoal } from "react-icons/go";
 
 
 export const MetricCard = (
-    { birthDate,
+    {   userID,
+        birthDate,
         altura,
         objetivo
     }:
         {
+            userID: string,
             birthDate?: Date | null,
             altura?: number | 0,
             objetivo?: string
@@ -41,6 +43,11 @@ export const MetricCard = (
                 <p className="card-text flex items-center gap-1"><GiBodyHeight className="h-8 w-5" /><span className="underline font-semibold">Altura:</span> {altura? altura : 0} m</p>
                 <p className="card-text flex items-center gap-1"><GoGoal className="h-8 w-5" /><span className="underline font-semibold">Objetivo:</span> {objetivo}</p>
             </div>
+            <button 
+            
+            className="btn btn-primary mt-5">
+                Editar
+            </button>
         </div>
     )
 }

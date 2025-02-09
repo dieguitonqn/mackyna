@@ -4,8 +4,15 @@ import AutoCompleteInputEj from './AutoCompleteEjercicio';
 
 interface Props {
     day: string,
+    
     bloque: string;
     onChange: (day: string, bloque: string, exercises: Exercise[]) => void;
+    initialName?: string;
+    initialReps?: string;
+    initialSets?: number;
+    initialNotas?: string;
+    initialVideoLink?: string;
+
 }
 
 type Ejercicio = {
@@ -16,10 +23,18 @@ type Ejercicio = {
     description: string;
     video: string;
 };
-const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
+const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange , initialName, initialReps, initialSets, initialNotas, initialVideoLink}) => {
     const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
     // const [selectedEjercicio, setSelectedEjercicio] = useState<Ejercicio>(); // Usuario seleccionado
-    const [exercises, setExercises] = useState<Exercise[]>([]);
+    const [exercises, setExercises] = useState<Exercise[]>([
+        {
+            name: initialName ||'',
+            reps: initialReps || '',
+            sets: initialSets || 1,
+            notas: initialNotas || '',
+            videoLink: initialVideoLink || ''
+        }
+    ]);
     useEffect(() => {
         const fetchEjercicios = async () => {
             try {
@@ -56,7 +71,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
     const handleRemoveExercise = (index: number) => {
         const updatedExercises = exercises.filter((_, i) => i !== index);
         setExercises(updatedExercises);
-        onChange(day, bloque, updatedExercises);
+        onChange(day, bloque, updatedExercises );
     };
 
     const handleInputChange = (index: number, field: keyof Exercise, value: string | number) => {
@@ -111,7 +126,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                     <AutoCompleteInputEj
                         ejercicios={ejercicios}
                         onSelect={(ejercicio) => handleSelectEjercicio(index, ejercicio)}
-                        initialValue={exercise.name}
+                        initialValue={exercise.name as string}
                     />
                     <label htmlFor={`reps-${index}`} style={{ display: 'block', marginBottom: '0.2rem' }}>
                         Repeticiones
@@ -121,7 +136,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                         type="text"
                         value={exercise.reps}
                         onChange={(e) => handleInputChange(index, 'reps', e.target.value)}
-                        className='mb-4 shadow-sm    p-1 border border-slate-200' required />
+                        className='mb-4 shadow-sm    p-1 border border-slate-200'  />
 
                     <label htmlFor={`sets-${index}`} style={{ display: 'block', marginBottom: '0.2rem' }}>
                         Series
@@ -131,7 +146,7 @@ const ExerciseForm: React.FC<Props> = ({ day, bloque, onChange }) => {
                         type="number"
                         value={exercise.sets}
                         onChange={(e) => handleInputChange(index, 'sets', parseInt(e.target.value))}
-                        className='mb-4 shadow-sm    p-1 border border-slate-200' required
+                        className='mb-4 shadow-sm    p-1 border border-slate-200' 
                         min={1} />
 
 

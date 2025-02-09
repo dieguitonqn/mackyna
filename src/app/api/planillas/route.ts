@@ -16,6 +16,7 @@ export const GET = async (req: Request) => {
 
     const { searchParams } = new URL(req.url);
     const _id = searchParams.get("id");
+    const planiID = searchParams.get("planiID");
 
     try {
         await connect();
@@ -34,6 +35,20 @@ export const GET = async (req: Request) => {
                 return new NextResponse("Usuario no encontrado", { status: 404 });
             }
             return new NextResponse(JSON.stringify(planillas), { status: 201 });
+        } else if (planiID) {
+            if (!ObjectId.isValid(planiID)) {
+                logger.warn(`ID inválido proporcionado en GET /api/planillas: ${planiID}`);
+                return new NextResponse("El ID no es válido", { status: 400 });
+            }
+
+            const planilla = await Plani.findById(planiID);
+            logger.info(`Planilla recuperada con ID: ${planiID}`);
+
+            if (!planilla) {
+                logger.warn(`Planilla no encontrada con ID: ${planiID}`);
+                return new NextResponse("Planilla no encontrada", { status: 404 });
+            }
+            return new NextResponse(JSON.stringify(planilla), { status: 200 });
         }
 
         const planillas = await Plani.find();
@@ -200,13 +215,14 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
 
     try {
         const { id, plani } = await req.json();
-
+        await connect();
+        console.log(id);
         if (!ObjectId.isValid(id)) {
             logger.warn(`ID inválido proporcionado para actualización: ${id}`);
             return NextResponse.json({ error: "El ID proporcionado no es válido" }, { status: 400 });
         }
 
-        const editedPlani = await Plani.findByIdAndUpdate(new ObjectId(id), plani);
+        const editedPlani = await Plani.findByIdAndUpdate(new ObjectId(id as string), plani);
         if (!editedPlani) {
             logger.error(`No se pudo editar la planilla con ID: ${id}`);
             return NextResponse.json({ message: "No se pudo editar la planilla" }, { status: 501 });
