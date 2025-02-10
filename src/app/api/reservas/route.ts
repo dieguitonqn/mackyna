@@ -7,7 +7,7 @@ import { IUser } from "@/types/user"
 import Turno from "@/lib/models/turnos";
 import { Turnos } from "@/types/turnos";
 import logger from "@/lib/logger";
-import { parse } from "path";
+
 
 export const POST = async (req: Request) => {
     const body = await req.json();
