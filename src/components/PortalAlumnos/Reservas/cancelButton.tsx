@@ -12,6 +12,9 @@ export default function CancelButton({turnoId, userId}:{turnoId:string, userId:s
         if (response.ok) {
             alert('Reserva cancelada correctamente');
             router.refresh();
+        }else {
+            const errorMessage = await response.json();
+            alert('Error al cancelar la reserva: ' + errorMessage.mensaje || 'Error desconocido');
         }
         // alert('Reserva cancelada correctamente');
     };
