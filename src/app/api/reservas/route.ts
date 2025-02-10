@@ -122,7 +122,7 @@ export const DELETE = async (req: Request) => {
             return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno de un día anterior" }), { status: 403 });
         }
 
-        if (diaActual === turno.dia_semana.toLocaleLowerCase() && (horaActual > parseInt(turno.hora_inicio.split(":")[0]) || (horaActual === parseInt(turno.hora_inicio.split(":")[0]) && minutoActual > 50))) {
+        if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === parseInt(turno.hora_inicio.split(":")[0]) && minutoActual > 50))) {
             return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 10 min antes del turno" }), { status: 403 });
         }
 
