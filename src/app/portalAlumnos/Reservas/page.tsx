@@ -10,6 +10,7 @@ import { ObjectId } from 'mongodb';
 import CancelButton from '@/components/PortalAlumnos/Reservas/cancelButton';
 import Link from 'next/link';
 import { FaRegCalendarPlus } from "react-icons/fa";
+import { Condiciones } from '@/components/PortalAlumnos/Reservas/Condiciones';
 
 
 
@@ -45,25 +46,7 @@ async function Reservas() {
         if (reservas.length === 0) {
             return (
                 <div className='h-screen flex flex-col justify-center items-center'>
-                    <div className='card bg-white rounded-lg shadow-md p-6 my-5'>
-                        <h1 className='text-2xl font-semibold'>Condiciones para la cancelación de reservas</h1>
-                        <ul className='list-disc list-inside'>
-                            <li>
-                                Solo se pueden cancelar reservas con mas de 10 minutos de anticipación
-                            </li>
-                            <li>
-                                No se pueden cancelar reservas de días anteriores.
-                            </li>
-                            <li>
-                                Solo se pueden cancelar reservas de días futuros.
-                            </li>
-                            <li>
-                                Solo se podrá cancelar reservas los viernes a patir de las 20hs.
-                            </li>
-
-                        </ul>
-
-                    </div>
+                    <Condiciones />
                     <div className='text-2xl font-bold text-slate-300'>No existen reservas para este usuario</div>
                     <div className='flex justify-end m-5 md:m-10'>
                         <Link
@@ -94,25 +77,7 @@ async function Reservas() {
                 <div className='flex justify-center items-center text-slate-300 text-5xl font-bold'>
                     Mis reservas
                 </div>
-                <div className='card bg-white rounded-lg shadow-md p-6 my-5'>
-                    <h1>Condiciones para la cancelación de reservas</h1>
-                    <ul>
-                        <li>
-                            Solo se pueden cancelar reservas con mas de 10 minutos de anticipación
-                        </li>
-                        <li>
-                            No se pueden cancelar reservas de días anteriores.
-                        </li>
-                        <li>
-                            Solo se pueden cancelar reservas de días futuros.
-                        </li>
-                        <li>
-                            Solo se podrá cancelar reservas los viernes a patir de las 20hs.
-                        </li>
-
-                    </ul>
-
-                </div>
+                <Condiciones /> 
                 <div className='flex justify-end m-5 md:m-10'>
                     <Link
                         className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:font-bold flex flex-row items-center gap-2 '

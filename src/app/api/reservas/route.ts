@@ -122,12 +122,12 @@ export const DELETE = async (req: Request) => {
             return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno de un día anterior" }), { status: 403 });
         }
 
-        if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === parseInt(turno.hora_inicio.split(":")[0]) && minutoActual > 50))) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 10 min antes del turno" }), { status: 403 });
+        if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === parseInt(turno.hora_inicio.split(":")[0]) && minutoActual > 30))) {
+            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 30 min antes del turno" }), { status: 403 });
         }
 
         if (diaActual === turno.dia_semana.toLocaleLowerCase() && horaActual > parseInt(turno.hora_inicio.split(":")[0])) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno que ya comenzó" }), { status: 403 });
+            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno que ya comenzó o que pasó el mismo día" }), { status: 403 });
         }
 
         // Verificar si es viernes después de las 20hs
@@ -143,7 +143,7 @@ export const DELETE = async (req: Request) => {
             return new NextResponse("Reserva cancelada correctamente", { status: 200 });
         }
         
-        if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) > diasSemana.indexOf(diaActual)) {
+        if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) >= diasSemana.indexOf(diaActual)) {
             // Permitir cancelación
             const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
             if (reservaC.deletedCount === 0) {
