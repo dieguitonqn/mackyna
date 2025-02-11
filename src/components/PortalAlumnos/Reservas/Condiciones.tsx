@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Condiciones = () => {
     return (
-        <div className='card bg-white rounded-lg shadow-md p-6 my-5 flex flex-col gap-3 w-1/4 justify-center items-center mx-auto'>
+        <div className='card bg-white rounded-lg shadow-md p-6 my-5 flex flex-col gap-3 w-full md:w-1/4 justify-center items-center mx-auto'>
             <h1 className='text-2xl font-semibold'>Condiciones para la cancelación de reservas</h1>
             <ul className='list-disc list-inside'>
                 <li>
