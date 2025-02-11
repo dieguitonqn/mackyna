@@ -15,7 +15,7 @@ type EditMetricUser = {
 };
 
 export const EditButton = ({ userID }: EditButtonProps) => {
-  const [editing, setEditing] = useState(false);
+  
   const [user, setUser] = useState<EditMetricUser>({
     userID: userID,
     birthDate: null,
@@ -43,7 +43,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
   return (
     <div>
       <button className="btn btn-primary">Editar</button>
-      {editing && (
+      {/* {editing && (
         <div className="card bg-slate-200 p-5 rounded-md mx-10 inset-0 z-50">
           <form>
             <label htmlFor="birthdate">Fecha de Nacimiento: </label>
@@ -59,7 +59,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
             <button type="submit">Guardar</button>
           </form>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
