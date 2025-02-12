@@ -143,17 +143,10 @@ const Usuarios: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
-      <div className="flex flex-row items-center gap-5 mb-4">
-        <p className="w-full max-w-md text-xl font-bold text-gray-900 bg-gray-100 p-3 rounded-lg shadow">
-          Total de alumnos en el sistema: {users.length}
-        </p>
-        <p className="w-full max-w-md text-xl font-bold text-green-700 bg-green-50 p-3 rounded-lg shadow">
-          Total de alumnos activos: {users.filter(user => user.habilitado).length}
-        </p>
-        {users.filter(user => user.habilitado).length !== filteredUsers.filter(user => user.habilitado).length && (
-          <p className="w-full max-w-md text-xl font-bold text-blue-600 bg-blue-50 p-3 rounded-lg shadow">
-            Alumnos activos mostrados: {filteredUsers.filter(user => user.habilitado).length}
-          </p>
+      <div className="text-center mb-4 text-gray-600">
+        <p>Total de alumnos en el sistema: {users.length}</p>
+        {users.length !== filteredUsers.length && (
+          <p>Alumnos mostrados: {filteredUsers.length}</p>
         )}
       </div>
 
