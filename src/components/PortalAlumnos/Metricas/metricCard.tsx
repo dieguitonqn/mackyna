@@ -45,7 +45,7 @@ export const MetricCard = (
                 <p className="card-text flex items-center gap-1"><GiBodyHeight className="h-8 w-5" /><span className="underline font-semibold">Altura:</span> {altura? altura : 0} m</p>
                 <p className="card-text flex items-center gap-1"><GoGoal className="h-8 w-5" /><span className="underline font-semibold">Objetivo:</span> {objetivo}</p>
             </div>
-            <EditButton userID={userID} />
+            <EditButton userID={userID} fecha_nac={birthDate} />
         </div>
     )
 }

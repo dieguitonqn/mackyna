@@ -92,7 +92,7 @@ export const PUT = async (req: NextRequest) => {
 
         const { _id, ...rest } = await req.json();
         const userId = new ObjectId(_id as string);
-
+        console.log(rest);
         if (!rest.email) {
             logger.error("[PUT] Email no proporcionado");
             return new NextResponse("El email es obligatorio", { status: 400 });
