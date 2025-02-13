@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 // import { createPlan } from '@/services/api';
-import { Plani, TrainingDay } from '@/types/plani';
+import { Plani, TrainingDay } from "@/types/plani";
 // import ExerciseForm from '@/components/ExerciseForm';
-import AutoCompleteInput from '@/components/AutocompleteUsers';
-import { ObjectId } from 'mongodb';
-import TrainingDayForm from '@/components/trainingDayForm';
+import AutoCompleteInput from "@/components/AutocompleteUsers";
+import { ObjectId } from "mongodb";
+import TrainingDayForm from "@/components/trainingDayForm";
+import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
 
 interface User {
   _id: ObjectId | string;
@@ -15,26 +16,31 @@ interface User {
   email: string;
   pwd: string;
   rol: string;
+  altura?: number;
+  fecha_nacimiento?: Date;
+  objetivo?: string;
+  lesiones?: string;
 }
 
 const NewPlan: React.FC = () => {
   const [users, setUsers] = useState<User[] | null>(null);
+  const [userInfo, setUserInfo] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [days, setDays] = useState<number>(1); // Cantidad de días seleccionados
   const [plan, setPlan] = useState<Plani>({
-    month: '',
-    year: '',
-    userId: '',
-    email: '',
+    month: "",
+    year: "",
+    userId: "",
+    email: "",
     trainingDays: [],
-    startDate: '',
-    endDate: '',
+    startDate: "",
+    endDate: "",
   });
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/usuarios');
+        const response = await fetch("/api/usuarios");
         const usersDB = await response.json();
         const usersWithStringId = usersDB.map((user: User) => ({
           ...user,
@@ -43,7 +49,7 @@ const NewPlan: React.FC = () => {
 
         setUsers(usersWithStringId);
       } catch (err) {
-        console.error('Error al obtener usuarios:', err);
+        console.error("Error al obtener usuarios:", err);
       }
     };
     fetchUsers();
@@ -60,16 +66,20 @@ const NewPlan: React.FC = () => {
   // };
 
   const handleTrainingDayChange = (day: string, trainingDay: TrainingDay) => {
-    if (day === '') {
+    if (day === "") {
       // Handle the empty day scenario (optional)
-      console.warn('Received empty day value for training change. Ignoring update.');
+      console.warn(
+        "Received empty day value for training change. Ignoring update."
+      );
       return; // Early exit if day is empty
     }
-  
+
     // console.log(trainingDay);
     setPlan((prevPlan) => {
-      const existingIndex = prevPlan.trainingDays.findIndex((d) => d.day === day);
-  
+      const existingIndex = prevPlan.trainingDays.findIndex(
+        (d) => d.day === day
+      );
+
       let updatedTrainingDays;
       if (existingIndex !== -1) {
         // Update existing day
@@ -79,55 +89,75 @@ const NewPlan: React.FC = () => {
         // Add new day
         updatedTrainingDays = [...prevPlan.trainingDays, trainingDay];
       }
-  
+
       // console.log(updatedTrainingDays);
       return {
         ...prevPlan,
         trainingDays: updatedTrainingDays,
-        
       };
     });
   };
 
-
-
   const handleSelectUser = (user: User) => {
     setSelectedUser(user);
-    setPlan((prevPlan) => ({ ...prevPlan, userId: user._id.toString(), email: user.email }));
+    setUserInfo(true);
+    setPlan((prevPlan) => ({
+      ...prevPlan,
+      userId: user._id.toString(),
+      email: user.email,
+    }));
     // console.log('Usuario seleccionado:', user);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser) {
-      alert('Por favor, selecciona un usuario.');
+      alert("Por favor, selecciona un usuario.");
       return;
     }
-    console.log("El plan es: ")
+    console.log("El plan es: ");
     console.log(plan);
     try {
-      const response = await fetch('/api/planillas', {
-        method: 'POST',
+      const response = await fetch("/api/planillas", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...plan }),
       });
 
-      if (!response.ok) throw new Error('Error al crear la planilla');
-      alert('Planilla creada exitosamente');
+      if (!response.ok) throw new Error("Error al crear la planilla");
+      alert("Planilla creada exitosamente");
     } catch (error) {
       console.error(error);
-      alert('Error al crear la planilla');
+      alert("Error al crear la planilla");
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
+      <div className=" mb-3" >
+        {userInfo && selectedUser && (
+          <MetricCard
+            userID={selectedUser._id.toString()}
+            birthDate={
+              selectedUser.fecha_nacimiento
+                ? new Date(selectedUser.fecha_nacimiento)
+                : null
+            }
+            altura={selectedUser.altura}
+            objetivo={selectedUser.objetivo}
+            lesiones={selectedUser.lesiones}
+          />
+        )}
+      </div>
+
       <form onSubmit={handleSubmit} className="w-full">
         <div className="flex flex-wrap justify-center items-center gap-2 mb-5 max-w-3xl m-auto">
-          {users && <AutoCompleteInput users={users} onSelect={handleSelectUser} />}
+          {users && (
+            <AutoCompleteInput users={users} onSelect={handleSelectUser} />
+          )}
           <select
             value={plan.month}
             onChange={(e) =>
@@ -171,11 +201,9 @@ const NewPlan: React.FC = () => {
             <option value="2030">2030</option>
           </select>
         </div>
-        <div className='flex justify-center items-center gap-5'>
-          <div className='flex flex-col'>
-            <label htmlFor='startDate'>
-              Fecha de comienzo
-            </label>
+        <div className="flex justify-center items-center gap-5">
+          <div className="flex flex-col">
+            <label htmlFor="startDate">Fecha de comienzo</label>
 
             <input
               id="startDate"
@@ -183,16 +211,17 @@ const NewPlan: React.FC = () => {
               placeholder="Fecha de finalización"
               value={plan.startDate}
               onChange={(e) =>
-                setPlan((prevPlan) => ({ ...prevPlan, startDate: e.target.value }))
+                setPlan((prevPlan) => ({
+                  ...prevPlan,
+                  startDate: e.target.value,
+                }))
               }
               className="border p-2 rounded-md"
               required
             />
           </div>
-          <div className='flex flex-col'>
-            <label htmlFor='endDate'>
-              Fecha de Finalización
-            </label>
+          <div className="flex flex-col">
+            <label htmlFor="endDate">Fecha de Finalización</label>
 
             <input
               id="endDate"
@@ -200,7 +229,10 @@ const NewPlan: React.FC = () => {
               placeholder="Fecha de finalización"
               value={plan.endDate}
               onChange={(e) =>
-                setPlan((prevPlan) => ({ ...prevPlan, endDate: e.target.value }))
+                setPlan((prevPlan) => ({
+                  ...prevPlan,
+                  endDate: e.target.value,
+                }))
               }
               className="border p-2 rounded-md"
               required
@@ -222,11 +254,9 @@ const NewPlan: React.FC = () => {
 
         <div className="flex flex-wrap justify-center items-start gap-4">
           <div className="flex flex-wrap justify-center items-start gap-4">
-
             {Array(days)
               .fill(null)
               .map((_, index) => (
-
                 <div key={index} className="w-full">
                   <h2 className="text-xl mb-2 flex justify-center">
                     {`Día ${index + 1}`}
@@ -239,7 +269,6 @@ const NewPlan: React.FC = () => {
                 </div>
               ))}
           </div>
-
         </div>
 
         <div className="flex justify-center mt-5">

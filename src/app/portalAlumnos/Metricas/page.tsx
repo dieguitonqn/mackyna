@@ -101,7 +101,7 @@ async function page({
                         </div>
 
                         <div className="flex flex-wrap gap-10 justify-center items-center">
-                            <MetricCard userID={user!._id.toString()} birthDate={user?.fecha_nacimiento} altura={user?.altura} objetivo={user?.objetivo}/>
+                            <MetricCard userID={user!._id.toString()} birthDate={user?.fecha_nacimiento} altura={user?.altura} objetivo={user?.objetivo} lesiones={user?.lesiones}/>
                             <Chart data={metricsData} />
                         </div>
 

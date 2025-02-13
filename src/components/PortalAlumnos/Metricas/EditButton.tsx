@@ -14,6 +14,7 @@ type EditMetricUser = {
   fecha_nacimiento: Date | null;
   altura: number;
   objetivo: string;
+  lesiones: string;
 };
 
 export const EditButton = ({ userID, fecha_nac }: EditButtonProps) => {
@@ -23,6 +24,7 @@ export const EditButton = ({ userID, fecha_nac }: EditButtonProps) => {
     fecha_nacimiento: null,
     altura: 0,
     objetivo: "",
+    lesiones: "",
   });
 console.log("fecha_nac",fecha_nac);
 console.log("fecha_nacimiento",user.fecha_nacimiento);
@@ -69,6 +71,7 @@ console.log("fecha_nacimiento",user.fecha_nacimiento);
 
       if (response.ok) {
         alert("Datos guardados correctamente");
+        window.location.reload();
       }else{
         const errorMessage = await response.json();
         alert('Error al guardar los datos: ' + errorMessage.mensaje || 'Error desconocido');
@@ -90,7 +93,7 @@ console.log("fecha_nacimiento",user.fecha_nacimiento);
   return (
     <div>
       <button 
-        className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 gap-2 mx-auto mt-2"
+        className="flex items-center px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 gap-2 mx-auto mt-2"
         onClick={() => setEditing(true)}
       >
         <CiEdit className="h-5 w-5"/>
@@ -131,11 +134,26 @@ console.log("fecha_nacimiento",user.fecha_nacimiento);
                 onChange={handleInputChange}
               />
               </div>
+              <div className="flex flex-col">
+              <label htmlFor="lesiones" className="mb-1 font-medium text-gray-700">Lesiones: </label>
+              <input 
+                type="text" 
+                id="lesiones" 
+                className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition duration-200"
+                value={user.lesiones} 
+                onChange={handleInputChange}
+              />
+              </div>
+
               <div className="flex justify-end gap-3 mt-6">
               <button 
                 type="button" 
                 className="flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 gap-2 transition duration-200 shadow-sm"
-                onClick={() => setEditing(false)}
+                onClick={() => {
+                  setEditing(false);
+                  
+                }
+                }
               >
                 <MdCancel className="w-5 h-5" />
                 Cancelar
