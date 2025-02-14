@@ -22,6 +22,11 @@ export const MetricCard = (
         }
 ) => {
 
+    console.log("fecha_nac",birthDate);
+    console.log("altura",altura);
+    console.log("objetivo",objetivo);
+    console.log("lesiones",lesiones);
+
     function calcularEdad(birthDate: Date) {
         if (!birthDate || birthDate=== null){
             return { años: 0, meses: 0 };
