@@ -30,7 +30,7 @@ const handler = NextAuth({
               return null;
             }
   
-            console.log("El email ingresado es:", credentials.email);
+            // console.log("El email ingresado es:", credentials.email);
   
             // Conectar a la base de datos
             await connect();
@@ -42,7 +42,7 @@ const handler = NextAuth({
               return null;
             }
   
-            console.log("Usuario encontrado:", isUser);
+            // console.log("Usuario encontrado:", isUser);
   
             // Verificar la contraseña
             const isPasswordValid = await argon2.verify(isUser.pwd, credentials.password);

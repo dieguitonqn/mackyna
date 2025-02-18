@@ -16,7 +16,7 @@ function Navbar() {
   const isTeach = session?.user.rol === 'teach';
   const isUser = session?.user.rol === 'user';
 
-  console.log(session?.user.rol);
+  // console.log(session?.user.rol);
 
   if (!session) {
     return (

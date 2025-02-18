@@ -22,10 +22,7 @@ export const MetricCard = (
         }
 ) => {
 
-    console.log("fecha_nac",birthDate);
-    console.log("altura",altura);
-    console.log("objetivo",objetivo);
-    console.log("lesiones",lesiones);
+
 
     function calcularEdad(birthDate: Date) {
         if (!birthDate || birthDate=== null){
@@ -42,7 +39,7 @@ export const MetricCard = (
     }
     
     const edad = calcularEdad(birthDate = birthDate as Date);
-    console.log(userID);
+    
 
     return (
         <div className="card bg-slate-100 p-5 rounded-md mx-10 shadow-sm shadow-lime-700 border border-slate-200">

@@ -6,7 +6,7 @@ import { MdCancel, MdSave } from "react-icons/md";
 
 interface EditButtonProps {
   userID: string;
-  fecha_nac : Date;
+  fecha_nac ?: Date;
 }
 
 type EditMetricUser = {
@@ -17,7 +17,7 @@ type EditMetricUser = {
   lesiones: string;
 };
 
-export const EditButton = ({ userID, fecha_nac }: EditButtonProps) => {
+export const EditButton = ({ userID }: EditButtonProps) => {
   const [editing, setEditing] = useState(false);
   const [user, setUser] = useState<EditMetricUser>({
     userID: userID,
@@ -26,8 +26,7 @@ export const EditButton = ({ userID, fecha_nac }: EditButtonProps) => {
     objetivo: "",
     lesiones: "",
   });
-console.log("fecha_nac",fecha_nac);
-console.log("fecha_nacimiento",user.fecha_nacimiento);
+
   useEffect(() => {
     // fetch user data
     const fetchUser = async () => {
@@ -38,7 +37,6 @@ console.log("fecha_nacimiento",user.fecha_nacimiento);
           ...user,
           fecha_nacimiento: user.fecha_nacimiento,
         });
-        console.log(user);
       } catch (error) {
         console.error(error);
       }

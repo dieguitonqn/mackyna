@@ -20,7 +20,7 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
   const [query, setQuery] = useState<string>(initialValue || "");
   const [filtered, setFiltered] = useState<Ejercicio[]>([]); // Usuarios filtrados
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // Control del desplegable
-  console.log(query);
+  // console.log(query);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
