@@ -8,24 +8,25 @@ import AutoCompleteInput from "@/components/AutocompleteUsers";
 import { ObjectId } from "mongodb";
 import TrainingDayForm from "@/components/trainingDayForm";
 import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
+import { IUser } from "@/types/user";
 
-interface User {
-  _id: ObjectId | string;
-  nombre: string;
-  apellido: string;
-  email: string;
-  pwd: string;
-  rol: string;
-  altura?: number;
-  fecha_nacimiento?: Date;
-  objetivo?: string;
-  lesiones?: string;
-}
+// interface IUser {
+//   _id: ObjectId | string;
+//   nombre: string;
+//   apellido: string;
+//   email: string;
+//   pwd: string;
+//   rol: string;
+//   altura?: number;
+//   fecha_nacimiento?: Date;
+//   objetivo?: string;
+//   lesiones?: string;
+// }
 
 const NewPlan: React.FC = () => {
-  const [users, setUsers] = useState<User[] | null>(null);
+  const [users, setUsers] = useState<IUser[] | null>(null);
   const [userInfo, setUserInfo] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [days, setDays] = useState<number>(1); // Cantidad de días seleccionados
   const [plan, setPlan] = useState<Plani>({
     month: "",
@@ -42,7 +43,7 @@ const NewPlan: React.FC = () => {
       try {
         const response = await fetch("/api/usuarios");
         const usersDB = await response.json();
-        const usersWithStringId = usersDB.map((user: User) => ({
+        const usersWithStringId = usersDB.map((user: IUser) => ({
           ...user,
           id: user._id.toString(),
         }));
@@ -98,7 +99,7 @@ const NewPlan: React.FC = () => {
     });
   };
 
-  const handleSelectUser = (user: User) => {
+  const handleSelectUser = (user: IUser) => {
     setSelectedUser(user);
     setUserInfo(true);
     setPlan((prevPlan) => ({
@@ -137,7 +138,7 @@ const NewPlan: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
-      <div className=" mb-3" >
+      <div className=" mb-3">
         {userInfo && selectedUser && (
           <MetricCard
             userID={selectedUser._id.toString()}

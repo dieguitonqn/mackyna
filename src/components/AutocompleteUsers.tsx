@@ -1,23 +1,24 @@
+import { IUser } from "@/types/user";
 import { ObjectId } from "mongodb";
 import React, { useState } from "react";
 
-interface User {
-  _id: ObjectId | string;
-  nombre: string;
-  apellido: string;
-  email: string;
-  pwd: string;
-  rol: string;
-}
+// interface User {
+//   _id: ObjectId | string;
+//   nombre: string;
+//   apellido: string;
+//   email: string;
+//   pwd: string;
+//   rol: string;
+// }
 
 interface AutoCompleteProps {
-  users: User[];
-  onSelect: (user: User) => void;
+  users: IUser[];
+  onSelect: (user: IUser) => void;
 }
 
 const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => {
   const [query, setQuery] = useState<string>(""); // Texto ingresado
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // Usuarios filtrados
+  const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]); // Usuarios filtrados
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // Control del desplegable
   // console.log(users);
   
@@ -27,7 +28,7 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
 
     // Filtrar usuarios que coincidan con el texto ingresado
     const filtered = users.filter((user) =>
-      user.nombre.toLowerCase().includes(value.toLowerCase() ) || user.apellido.toLowerCase().includes(value.toLowerCase())
+      user.nombre.toLowerCase().includes(value.toLowerCase() ) || user.apellido?.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredUsers(filtered);
 
@@ -35,7 +36,7 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
     setShowDropdown(value.length > 0 && filtered.length > 0);
   };
 
-  const handleSelect = (user: User) => {
+  const handleSelect = (user: IUser) => {
     setQuery(user.nombre); // Colocar el nombre seleccionado en el campo
     setShowDropdown(false); // Cerrar el desplegable
     onSelect(user); // Notificar al padre
