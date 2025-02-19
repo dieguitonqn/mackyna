@@ -76,6 +76,8 @@ export const authOptions:NextAuthOptions = {
 
 
   ],
+  debug: true,
+  secret: process.env.SECRET,
   callbacks: {
     // Verificar si el usuario está registrado antes de permitirle iniciar sesión
     async signIn({ user }) {
