@@ -1,22 +1,19 @@
 import React from "react";
-import { IUser } from "@/types/user";
 import AutoCompleteInput from "@/components/AutocompleteUsers";
 import Pago from "@/lib/models/pagos";
 import { IPago } from "@/types/pago";
 import connect from "@/lib/db";
 import Link from "next/link";
-import User from "@/lib/models/user";
 
-interface usersWithStringId extends Omit<IUser, "_id"> {
-  _id: string;
-}
+
+
 
 async function Pagos() {
-  await connect();
+  
   let pagos: IPago[] = [];
-  let users: IUser[] = [];
-  let usersWithStringId: usersWithStringId[] = [];
+
   try {
+    await connect();
     pagos = await Pago.find();
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -33,9 +30,9 @@ async function Pagos() {
     <div>
       <div className="flex justify-end right-2 mb-10">
 
-        <Link 
+        <a 
         href="/portalProfes/Pagos/NuevoPago"
-        className="bg-blue-500 px-2 py-1 text-white ">+ Nuevo Pago</Link>
+        className="bg-blue-500 px-2 py-1 text-white ">+ Nuevo Pago</a>
       </div>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
         <thead className="bg-gray-50">

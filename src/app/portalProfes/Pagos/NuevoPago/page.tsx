@@ -8,14 +8,17 @@ import User from "@/lib/models/user";
 import AutoCompleteInput from '@/components/AutocompleteUsers'
 
 
-async function NuevoPago() {
+function NuevoPago() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [users, setUsers] = useState<IUser[]>([]);
   useEffect(() => {
     async function getUsers() {
       try {
-        await connect();
-        const users:IUser[] = await User.find();
+        const response = await fetch("/api/usuarios");
+        if (!response.ok) {
+          throw new Error("Error al obtener usuarios");
+        }
+        const users: IUser[] = await response.json();
         setUsers(users);
         console.log(users);
       } catch (error: unknown) {
