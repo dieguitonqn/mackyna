@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useState } from "react";
 // import Link from "next/link";
-// import { FcGoogle } from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 
 
 
@@ -69,14 +69,14 @@ export default function LoginForm() {
                         Iniciar sesión
                     </button>
                 </form>
-                {/* <p className="text-center">ó</p>
+                <p className="text-center">ó</p>
                 <button
                     onClick={() => signIn("google", { callbackUrl: '/' })}
                     className="p-2 rounded-lg w-1/4 items-center justify-center border bg-white border-slate-200 m-auto mt-5 ">
 
                     <FcGoogle className="m-auto h-9 w-9" />
 
-                </button> */}
+                </button>
                 <span className="flex justify-center mt-2">¿Aún no tenés cuenta? <a href={"/signUp"} className=" mx-2 underline text-emerald-700 hover:font-semibold" >Resgistrate AQUI</a></span>
             </div>
         </div>
