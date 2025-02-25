@@ -68,7 +68,7 @@ async function Pagos() {
         <tr key={pago.userID} className="hover:bg-gray-50">
           <td className="px-6 py-4 text-sm text-gray-500">
             {pago.userID}
-            {/* <AutoCompleteInput users={user} onSelect={() => {}} /> */}
+            
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
             <p>{pago.fecha.toLocaleDateString()}</p>
