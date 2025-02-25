@@ -63,7 +63,7 @@ export default function Page() {
 
         <section>
           <Image 
-          src={"/pagosEnero.jpeg"}
+          src={"/precios.jpeg"}
           alt="precios de enero"
           width={1920}
           height={1080}

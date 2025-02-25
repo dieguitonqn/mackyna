@@ -115,23 +115,10 @@ export const DELETE = async (req: Request) => {
         const minutoActual = fecha.getMinutes();
         const diaActual = fecha.toLocaleDateString('es-AR', { weekday: 'long' }).toLocaleLowerCase();
 
-        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const diasSemana = [ "lunes", "martes", "miércoles", "jueves", "viernes", "sábado","domingo"];
 
-        // Verificar si el turno es de un día anterior
-        if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) < diasSemana.indexOf(diaActual)) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno de un día anterior" }), { status: 403 });
-        }
 
-        if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === parseInt(turno.hora_inicio.split(":")[0]) && minutoActual > 0))) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 30 min antes del turno" }), { status: 403 });
-        }
-
-        if (diaActual === turno.dia_semana.toLocaleLowerCase() && horaActual > parseInt(turno.hora_inicio.split(":")[0])) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno que ya comenzó o que pasó el mismo día" }), { status: 403 });
-        }
-
-        // Verificar si es viernes después de las 20hs
-        if (diaActual === "viernes" && (horaActual > 20 || (horaActual === 20 && minutoActual > 0))) {
+        if (((diaActual === "viernes" && (horaActual > 20 || (horaActual === 20 && minutoActual > 0)))|| diaActual === "sabado" || diaActual === "domingo") ) {
             // Permitir cancelación
             const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
             if (reservaC.deletedCount === 0) {
@@ -142,6 +129,23 @@ export const DELETE = async (req: Request) => {
             await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: 1 } });
             return new NextResponse("Reserva cancelada correctamente", { status: 200 });
         }
+
+        // Verificar si el turno es de un día anterior
+        if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) < diasSemana.indexOf(diaActual)) {
+            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno de un día anterior" }), { status: 403 });
+        }
+
+        // Verificar si es el mismo día y si ya pasó la ventana de cancelacion (10 min antes)
+        if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === (parseInt(turno.hora_inicio.split(":")[0])-1) && minutoActual > 50))) {
+            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 10 min antes del turno" }), { status: 403 });
+        }
+
+        if (diaActual === turno.dia_semana.toLocaleLowerCase() && horaActual > parseInt(turno.hora_inicio.split(":")[0])) {
+            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno que ya comenzó o que pasó." }), { status: 403 });
+        }
+
+        // Verificar si es viernes después de las 20hs
+        
         
         if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) >= diasSemana.indexOf(diaActual)) {
             // Permitir cancelación
