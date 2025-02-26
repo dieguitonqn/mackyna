@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { IUser } from "@/types/user";
-import { IPago } from "@/types/pago";
+import { IFormPago } from "@/types/pago";
 
 export const FormPagos = ({ user }: { user: IUser }) => {
-  const [pago, setPago] = useState<IPago>({
+  const [pago, setPago] = useState<IFormPago>({
     userID: user._id.toString(),
+    nombre: user.nombre+" "+user.apellido,
+    email: user.email,
     fecha: new Date(),
     monto: 0,
     metodo: "",
@@ -21,6 +23,8 @@ export const FormPagos = ({ user }: { user: IUser }) => {
     try {
       const formData = new FormData();
       formData.append("userID", user._id.toString());
+      formData.append("nombre", user.nombre+" "+user.apellido);
+      formData.append("email", user.email);
       formData.append("fecha", new Date().toISOString());
       formData.append("monto", pago.monto.toString());
       formData.append("metodo", pago.metodo);

@@ -4,6 +4,8 @@ import { Schema, model, models } from "mongoose"
 const PagosSchema = new Schema(
     {
         userID:{type: String, required: true},
+        nombre: {type: String, required: true},
+        email: {type: String, required: true},
         fecha: {type: Date, required: true},
         monto: {type: Number, required: true},
         metodo: {type: String, required: true},

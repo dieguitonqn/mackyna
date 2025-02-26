@@ -25,6 +25,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Invalid userID" }, { status: 400 });
         }
 
+        let nombre = formData.get('nombre');
+        if (!isValidString(nombre, 255)) {
+            return NextResponse.json({ message: "Invalid nombre" }, { status: 400 });
+        }
+
+        let email = formData.get('email');
+        if (!isValidString(email, 255)) {
+            return NextResponse.json({ message: "Invalid email" }, { status: 400 });
+        }
+
         // Validar y sanear fecha
         let fecha = formData.get('fecha');
         if (!isValidString(fecha, 255)) {
@@ -84,7 +94,8 @@ export async function POST(req: Request) {
             }
             filePath = path.join(pagosDir, filename);
             await writeFile(filePath, Buffer.from(buffer));
-            filePath = `${process.env.UPLOAD_DIR || 'uploads'}/${filename}`; // Usar variable de entorno
+            filePath = `/uploads/${filename}`; // Ruta relativa para acceso desde el cliente
+            await writeFile(path.join(process.cwd(), 'public','uploads', filename), Buffer.from(buffer));
         }
 
         // Here you would typically save the data to your database
@@ -92,6 +103,8 @@ export async function POST(req: Request) {
         try{
             const newPago = await Pago.create({
             userID,
+            nombre,
+            email,
             fecha,
             monto: montoNumber,
             metodo,
@@ -112,6 +125,8 @@ export async function POST(req: Request) {
 
         console.log({
             userID,
+            nombre,
+            email,
             fecha,
             monto,
             metodo,

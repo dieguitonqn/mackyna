@@ -1,9 +1,10 @@
 import React from "react";
-import AutoCompleteInput from "@/components/AutocompleteUsers";
+// import AutoCompleteInput from "@/components/AutocompleteUsers";
 import Pago from "@/lib/models/pagos";
 import { IPago } from "@/types/pago";
 import connect from "@/lib/db";
 import Link from "next/link";
+import { FaRegFilePdf } from "react-icons/fa";
 
 
 
@@ -64,24 +65,41 @@ async function Pagos() {
           {pagos.map((pago) => (
         <tr key={pago.userID} className="hover:bg-gray-50">
           <td className="px-6 py-4 text-sm text-gray-500">
-            {pago.userID}
+            {pago.nombre}
             
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
             <p>{pago.fecha.toLocaleDateString()}</p>
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
-            <p>{pago.monto}</p>
+            <p>$ {pago.monto}</p>
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
-            <p>{pago.tipo}</p>
+            <p>{pago.metodo}</p>
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
-            <p><Link href={pago.comprobante? pago.comprobante:"#"} target="_blank"> Comprobante </Link></p>
+            <p>
+              <Link 
+              href={pago.comprobante ? `${pago.comprobante}` : "#"} 
+              
+              target="_blank"
+
+              className="text-blue-500 flex items-center gap-2"
+              >
+              Comprobante <FaRegFilePdf className="h-5 w-5"/>
+              </Link>
+            </p>
           </td>
-          <td className="px-6 py-4 text-sm text-gray-500">
-            <p>{pago.estado}</p>
-          </td>
+            <td className="px-6 py-4 text-sm">
+            <p className={`${
+              pago.estado === 'pendiente' ? 'bg-yellow-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
+              pago.estado === 'correcto' ? 'bg-green-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
+              pago.estado === 'rechazado' ? 'bg-red-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
+              'bg-gray-500 text-white font-semibold px-2 py-1 rounded-sm text-center'
+            }`}>
+              {pago.estado}
+            </p>
+            </td>
           <td className="px-6 py-4 text-sm text-gray-500">
             <p>{pago.descripcion}</p>
           </td>
