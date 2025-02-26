@@ -6,8 +6,8 @@ export interface IPago {
     userID: string;
     fecha: Date;
     monto: number;
-    tipo: string;
+    metodo: string;
     estado: string;
-    comprobante: string;
-    descripcion: string;
+    comprobante?: File | null;
+    descripcion?: string;
 }

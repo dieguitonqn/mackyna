@@ -37,10 +37,12 @@ function NuevoPago() {
      }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
+    <div className="bg-white p-4 rounded-lg shadow-md w-3/4 mx-auto">
       
       <AutoCompleteInput users={users} onSelect={handleSelect} />
       Formulario de pago nuevo para {selectedUser?.nombre}
+      {selectedUser && <FormPagos user={selectedUser} />}
+      
     </div>
   );
 }
