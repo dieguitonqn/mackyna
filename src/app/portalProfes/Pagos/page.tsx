@@ -15,7 +15,8 @@ async function Pagos() {
 
   try {
     await connect();
-    pagos = await Pago.find();
+    pagos = await Pago.find().populate('userID', 'nombre apellido');
+    console.log(pagos);
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.log("Error al consultar los pagos realizados: " + err.message);
@@ -62,10 +63,12 @@ async function Pagos() {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {pagos.map((pago) => (
-        <tr key={pago.userID} className="hover:bg-gray-50">
+          {pagos.map((pago, index) => (
+        <tr key={index} className="hover:bg-gray-50">
           <td className="px-6 py-4 text-sm text-gray-500">
-            {pago.nombre}
+            {typeof pago.userID === 'object' && pago.userID ? 
+              `${(pago.userID as any).nombre} ${(pago.userID as any).apellido}` : 
+              pago.userID?.toString()}
             
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">

@@ -1,9 +1,11 @@
 
-import { Schema, model, models } from "mongoose"
+import { ObjectId } from "mongodb";
+import mongoose, { Schema, model, models} from "mongoose"
 
 const PagosSchema = new Schema(
     {
-        userID:{type: String, required: true},
+        // userID:{type: String, required: true},
+        userID: {type:mongoose.Schema.Types.ObjectId, ref:'User', required: true},
         nombre: {type: String, required: true},
         email: {type: String, required: true},
         fecha: {type: Date, required: true},

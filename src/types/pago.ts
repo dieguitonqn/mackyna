@@ -3,7 +3,7 @@ import { ObjectId } from "mongoose";
 
 export interface IPago {
     
-    userID: string;
+    userID: ObjectId | string;
     nombre: string;
     email: string;
     fecha: Date;
