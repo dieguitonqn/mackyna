@@ -95,9 +95,9 @@ async function Pagos() {
           </td>
             <td className="px-6 py-4 text-sm">
             <p className={`${
-              pago.estado === 'pendiente' ? 'bg-yellow-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
-              pago.estado === 'correcto' ? 'bg-green-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
-              pago.estado === 'rechazado' ? 'bg-red-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
+              pago.estado === 'Pendiente' ? 'bg-yellow-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
+              pago.estado === 'Aprobado' ? 'bg-green-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
+              pago.estado === 'Rechazado' ? 'bg-red-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
               'bg-gray-500 text-white font-semibold px-2 py-1 rounded-sm text-center'
             }`}>
               {pago.estado}

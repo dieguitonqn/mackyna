@@ -105,7 +105,7 @@ export const FormPagos = ({ user }: { user: IUser }) => {
               id="metodo"
               className="shadow bg-white border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
-              <option value="" disabled>
+              <option value="" >
                 Seleccione un método de pago ...
               </option>
               <option value="transferencia">Transferencia</option>
