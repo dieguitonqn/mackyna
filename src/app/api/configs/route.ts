@@ -16,7 +16,7 @@ export const GET = async (req: Request) => {
         if(!configs) {
             return new NextResponse("No se encontraron configuraciones", { status: 404 });
         }
-        console.log(configs);
+        // console.log(configs);
         return new NextResponse(JSON.stringify(configs), { status: 200 });
     } catch (error) {
         console.error('Error fetching configurations:', error);
@@ -34,26 +34,30 @@ export const POST = async (req: Request) => {
         await connect();
         
         // const body = ;
-        const { valorClase, valorDia, valor4dias, valor5dias, valorLibre } = await req.json();
+        const { valorClase, valorSemana, valorQuincena, valorTresDias, valorCincoDias, valorLibre, valorDescuento } = await req.json();
 
-        const configs = await Config.findOne();
+        const configs = await Config.findOne({});
 
         if(!configs) {
             const newConfigs = new Config({
                 valorClase,
-                valorDia,
-                valor4dias,
-                valor5dias,
-                valorLibre
+                valorSemana,
+                valorQuincena,
+                valorTresDias,
+                valorCincoDias,
+                valorLibre,
+                valorDescuento,
             });
 
             await newConfigs.save();
         } else {
             configs.valorClase = valorClase;
-            configs.valorDia = valorDia;
-            configs.valor4dias = valor4dias;
-            configs.valor5dias = valor5dias;
+            configs.valorSemana = valorSemana;
+            configs.valorQuincena = valorQuincena;
+            configs.valorTresDias = valorTresDias;
+            configs.valorCincoDias = valorCincoDias;
             configs.valorLibre = valorLibre;
+            configs.valorDescuento = valorDescuento;
 
             await configs.save();
         }

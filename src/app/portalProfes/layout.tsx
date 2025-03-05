@@ -70,7 +70,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-grow p-8">
+      <main className="flex-grow p-8 bg-slate-300">
         {/* <h1 className="text-2xl font-bold text-gray-800">Portal de Profesores</h1> */}
 
         {children}

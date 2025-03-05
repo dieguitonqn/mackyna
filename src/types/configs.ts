@@ -2,8 +2,10 @@
 
 export interface IConfigs  {
     valorClase:number;
-    valorDia:number;
-    valor4dias:number;
-    valor5dias:number;
+    valorSemana:number;
+    valorQuincena:number;
+    valorTresDias:number;
+    valorCincoDias:number;
     valorLibre:number;
+    valorDescuento:number;
 }

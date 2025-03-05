@@ -6,11 +6,13 @@ import connect from "@/lib/db";
 import { IUser } from "@/types/user";
 import User from "@/lib/models/user";
 import AutoCompleteInput from '@/components/AutocompleteUsers'
+import { IConfigs } from "@/types/configs";
 
 
 function NuevoPago() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [users, setUsers] = useState<IUser[]>([]);
+  const [configs, setConfigs] = useState<IConfigs>();
   useEffect(() => {
     async function getUsers() {
       try {
@@ -21,6 +23,22 @@ function NuevoPago() {
         const users: IUser[] = await response.json();
         setUsers(users);
         console.log(users);
+        try {
+          const response = await fetch("/api/configs");
+          if (!response.ok) {
+            throw new Error("Error al obtener configuraciones");
+          }
+          const data: IConfigs = await response.json();
+          console.log(data);
+          setConfigs(data);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.log("Error al obtener configuraciones: " + error.message);
+          } else {
+            console.log("Error desconocido");
+          }
+          
+        }
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log("Error al consultar los usuarios: " + error.message);
@@ -37,11 +55,11 @@ function NuevoPago() {
      }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md w-3/4 mx-auto">
+    <div className="w-3/4 mx-auto justify-center">
       
       <AutoCompleteInput users={users} onSelect={handleSelect} />
-      Formulario de pago nuevo para {selectedUser?.nombre}
-      {selectedUser && <FormPagos user={selectedUser} />}
+      
+      {selectedUser && configs && <FormPagos user={selectedUser} configs={configs} />}
       
     </div>
   );

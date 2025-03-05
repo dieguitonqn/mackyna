@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { IUser } from "@/types/user";
 import { IFormPago } from "@/types/pago";
+import { IConfigs } from "@/types/configs";
 
-export const FormPagos = ({ user }: { user: IUser }) => {
+export const FormPagos = ({ user, configs }: { user: IUser, configs:IConfigs }) => {
   const [pago, setPago] = useState<IFormPago>({
     userID: user._id.toString(),
     nombre: user.nombre+" "+user.apellido,
@@ -72,25 +73,67 @@ export const FormPagos = ({ user }: { user: IUser }) => {
     }
   };
 
+  const handleMontoChange = (monto: number) => {
+    setPago({
+      ...pago,
+      monto: monto,
+    });
+  };
+
   return (
     <div className="container mx-auto p-4 w-full md:w-1/2">
-      <form className="mt-4 w-3/4 border border-slate-200 border-1 shadow-md rounded-sm p-5 ">
+      <form className="bg-white mt-4 w-3/4 border border-slate-200 border-1 shadow-md rounded-sm p-10 mx-auto">
         <div className="flex flex-col gap-4">
           <div className="mb-4">
             <label
-              htmlFor="monto"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
               Monto:
             </label>
-            <input
-              onChange={handleChange}
-              type="number"
-              name="monto"
-              id="monto"
-              min="0"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorClase ? 'bg-blue-500 text-white' : 'bg-white'}`}
+                onClick={() => handleMontoChange(configs.valorClase)}
+              >
+                Clase: ${configs.valorClase}
+              </button>
+              <button
+                type="button"
+                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorSemana ? 'bg-blue-500 text-white' : 'bg-white'}`}
+                onClick={() => handleMontoChange(configs.valorSemana)}
+              >
+                Semana: ${configs.valorSemana}
+              </button>
+              <button
+                type="button"
+                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorQuincena ? 'bg-blue-500 text-white' : 'bg-white'}`}
+                onClick={() => handleMontoChange(configs.valorQuincena)}
+              >
+                Quincena: ${configs.valorQuincena}
+              </button>
+                <button
+                type="button"
+                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorTresDias ? 'bg-blue-500 text-white' : 'bg-white'}`}
+                onClick={() => handleMontoChange(configs.valorTresDias)}
+                >
+                3 Días: ${(new Date().getDate() >= 1 && new Date().getDate() <= 10) ? configs.valorTresDias - configs.valorDescuento : configs.valorTresDias}
+                </button>
+              <button
+                type="button"
+                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorCincoDias ? 'bg-blue-500 text-white' : 'bg-white'}`}
+                onClick={() => handleMontoChange(configs.valorCincoDias)}
+              >
+                5 Días: ${(new Date().getDate() >= 1 && new Date().getDate() <= 10) ? configs.valorCincoDias - configs.valorDescuento : configs.valorCincoDias}
+              </button>
+              <button
+                type="button"
+                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorLibre ? 'bg-blue-500 text-white' : 'bg-white'}`}
+                onClick={() => handleMontoChange(configs.valorLibre)}
+              >
+                Libre: ${(new Date().getDate() >= 1 && new Date().getDate() <= 10) ? configs.valorLibre - configs.valorDescuento : configs.valorLibre}
+              </button>
+            </div>
           </div>
           <div className="mb-4">
             <label
@@ -113,6 +156,7 @@ export const FormPagos = ({ user }: { user: IUser }) => {
               <option value="tarjeta">Tarjeta</option>
             </select>
           </div>
+          
           <div className="mb-4">
             <label
               htmlFor="comp"
