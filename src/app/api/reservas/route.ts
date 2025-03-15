@@ -118,7 +118,7 @@ export const DELETE = async (req: Request) => {
         const diasSemana = [ "lunes", "martes", "miércoles", "jueves", "viernes", "sábado","domingo"];
 
 
-        if (((diaActual === "viernes" && (horaActual > 20 || (horaActual === 20 && minutoActual > 0)))|| diaActual === "sabado" || diaActual === "domingo") ) {
+        if (((diaActual === "viernes" && (horaActual > 20 || (horaActual === 20 && minutoActual > 0)))|| diaActual === "sábado" || diaActual === "domingo") ) {
             // Permitir cancelación
             const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
             if (reservaC.deletedCount === 0) {
@@ -204,5 +204,43 @@ export async function GET() {
             { error: 'Error al obtener las reservas: ' + error },
             { status: 500 }
         );
+    }
+}
+
+export async function PUT(req: Request) {
+    try {
+        await connect();
+        const { turnoID, userID, oldTurnoID } = await req.json();
+
+        // Verificar disponibilidad en el nuevo turno
+        const nuevoTurno = await Turno.findById(turnoID);
+        if (!nuevoTurno || nuevoTurno.cupos_disponibles === 0) {
+            return new Response(JSON.stringify({ mensaje: "No hay cupos disponibles en el turno seleccionado" }), { status: 400 });
+        }
+
+        // Actualizar la reserva
+        const reserva = await Reserva.findOneAndUpdate(
+            { "userInfo.userId": userID, "turnoInfo.turnoId": oldTurnoID },
+            { 
+                "turnoInfo.turnoId": turnoID,
+                "turnoInfo.dia_semana": nuevoTurno.dia_semana,
+                "turnoInfo.hora_inicio": nuevoTurno.hora_inicio,
+                "turnoInfo.hora_fin": nuevoTurno.hora_fin
+            },
+            { new: true }
+        );
+
+        if (!reserva) {
+            return new Response(JSON.stringify({ mensaje: "Reserva no encontrada" }), { status: 404 });
+        }
+
+        // Actualizar cupos de los turnos
+        await Turno.findByIdAndUpdate(oldTurnoID, { $inc: { cupos_disponibles: 1 } });
+        await Turno.findByIdAndUpdate(turnoID, { $inc: { cupos_disponibles: -1 } });
+
+        return new Response(JSON.stringify({ mensaje: "Reserva actualizada correctamente" }), { status: 200 });
+    } catch (error) {
+        console.error(error);
+        return new Response(JSON.stringify({ mensaje: "Error al actualizar la reserva" }), { status: 500 });
     }
 }
