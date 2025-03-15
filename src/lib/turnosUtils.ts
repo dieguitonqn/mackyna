@@ -9,9 +9,9 @@ export const fetchTurnos = async (dia: string) => {
 
   try {
     await connect();
-    let turnos;
+    
   
-    turnos = await Turno.find({
+    const turnos = await Turno.find({
       dia_semana: dia,
       cupos_disponibles: { $gt: 0 },
     }).lean();

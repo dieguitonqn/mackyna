@@ -11,7 +11,6 @@ import CancelButton from "@/components/PortalAlumnos/Reservas/cancelButton";
 import Link from "next/link";
 import { FaRegCalendarPlus } from "react-icons/fa";
 import { Condiciones } from "@/components/PortalAlumnos/Reservas/Condiciones";
-import { EditButton } from "@/components/PortalAlumnos/Reservas/editButton";
 
 async function Reservas() {
   const session = await getServerSession(authOptions);
@@ -133,9 +132,7 @@ async function Reservas() {
                     userId={reserva.userInfo.userId}
                   />
                 </div>
-                {/* <div>
-                    <EditButton turnoId={reserva.turnoInfo.turnoId} userId={reserva.userInfo.userId} />
-                </div> */}
+
               </div>
             </div>
           ))}
