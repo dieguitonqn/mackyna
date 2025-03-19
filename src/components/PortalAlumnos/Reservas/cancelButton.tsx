@@ -13,7 +13,7 @@ export default function CancelButton({
 
 
   const handleCancelarReserva = async (turnoId: string, userId: string) => {
-    if (!confirm("Para CAMBIAR tu reserva, primero hay que cancelar la actual. \nPara CANCELAR la reserva seleccionada, presione aceptar.")) {
+    if (!confirm("¿Está seguro que desea cancelar la reserva?")) {
       return;
     }
     const response = await fetch(`/api/reservas`, {
@@ -21,10 +21,10 @@ export default function CancelButton({
       body: JSON.stringify({ turnoID: turnoId, userID: userId }),
     });
     if (response.ok) {
-      if(!confirm("Reserva cancelada correctamente, ¿Desea reservar otro turno?")){
-        return;
-      }
-      router.push("/portalAlumnos/Turnos");
+      // if(!confirm("Reserva cancelada correctamente, ¿Desea reservar otro turno?")){
+      //   return;
+      // }
+      router.refresh();
     } else {
       const errorMessage = await response.json();
       alert(
@@ -39,7 +39,7 @@ export default function CancelButton({
       className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 hover:shadow-lg hover:scale-105 transition-transform duration-200"
       onClick={() => handleCancelarReserva(turnoId, userId)}
     >
-      <span className="text-white font-semibold">Cancelar</span> | Cambiar 
+      <span className="text-white font-semibold">Cancelar</span>
     </button>
   );
 }

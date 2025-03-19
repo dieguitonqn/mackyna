@@ -19,41 +19,41 @@ export const fetchTurnos = async (dia: string) => {
 
    
     const turnosConIdString: Turnos[] = turnos
-      .filter((turno) => {
-        const [horaInicio, minutosInicio] = turno.hora_inicio
-          .split(":")
-          .map(Number);
-         const horaNow = new Date().getHours();
-        const minutosNow = new Date().getMinutes();
+      // .filter((turno) => {
+      //   const [horaInicio, minutosInicio] = turno.hora_inicio
+      //     .split(":")
+      //     .map(Number);
+      //    const horaNow = new Date().getHours();
+      //   const minutosNow = new Date().getMinutes();
 
-        //--
+      //   //--
 
-        const diaNow = new Date().getDay();
-        const dias = [
-          "Domingo",
-          "Lunes",
-          "Martes",
-          "Miércoles",
-          "Jueves",
-          "Viernes",
-          "Sabado",
-        ];
+      //   const diaNow = new Date().getDay();
+      //   const dias = [
+      //     "Domingo",
+      //     "Lunes",
+      //     "Martes",
+      //     "Miércoles",
+      //     "Jueves",
+      //     "Viernes",
+      //     "Sabado",
+      //   ];
 
 
-        const diaHoy = dias[diaNow];
+      //   const diaHoy = dias[diaNow];
 
-        const diaSemanaIndex = dias.indexOf(turno.dia_semana);
+      //   const diaSemanaIndex = dias.indexOf(turno.dia_semana);
 
-        const minutosInicioTotal = horaInicio * 60 + minutosInicio;
-        const minutosNowTotal = horaNow * 60 + minutosNow;
-        return (
-          (minutosInicioTotal - minutosNowTotal > 10 && diaSemanaIndex === dias.indexOf(diaHoy)) ||
-          diaSemanaIndex > dias.indexOf(diaHoy) ||
-          dias.indexOf(diaHoy) === 0 ||
-          dias.indexOf(diaHoy) === 6 ||
-          (dias.indexOf(diaHoy) === 5 && horaNow >= 20)
-        );
-      })
+      //   const minutosInicioTotal = horaInicio * 60 + minutosInicio;
+      //   const minutosNowTotal = horaNow * 60 + minutosNow;
+      //   return (
+      //     (minutosInicioTotal - minutosNowTotal > 10 && diaSemanaIndex === dias.indexOf(diaHoy)) ||
+      //     diaSemanaIndex > dias.indexOf(diaHoy) ||
+      //     dias.indexOf(diaHoy) === 0 ||
+      //     dias.indexOf(diaHoy) === 6 ||
+      //     (dias.indexOf(diaHoy) === 5 && horaNow >= 20)
+      //   );
+      // })
 
       .map((turno) => ({
         ...turno,

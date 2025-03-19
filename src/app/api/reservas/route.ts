@@ -110,15 +110,15 @@ export const DELETE = async (req: Request) => {
             return new NextResponse("Turno no encontrado", { status: 404 });
         }
 
-        const fecha = new Date(Date.now());
-        const horaActual = fecha.getHours();
-        const minutoActual = fecha.getMinutes();
-        const diaActual = fecha.toLocaleDateString('es-AR', { weekday: 'long' }).toLocaleLowerCase();
+        // const fecha = new Date(Date.now());
+        // const horaActual = fecha.getHours();
+        // const minutoActual = fecha.getMinutes();
+        // const diaActual = fecha.toLocaleDateString('es-AR', { weekday: 'long' }).toLocaleLowerCase();
 
-        const diasSemana = [ "lunes", "martes", "miércoles", "jueves", "viernes", "sábado","domingo"];
+        // const diasSemana = [ "lunes", "martes", "miércoles", "jueves", "viernes", "sábado","domingo"];
 
 
-        if (((diaActual === "viernes" && (horaActual > 20 || (horaActual === 20 && minutoActual > 0)))|| diaActual === "sábado" || diaActual === "domingo") ) {
+        // if (((diaActual === "viernes" && (horaActual > 20 || (horaActual === 20 && minutoActual > 0)))|| diaActual === "sábado" || diaActual === "domingo") ) {
             // Permitir cancelación
             const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
             if (reservaC.deletedCount === 0) {
@@ -126,42 +126,42 @@ export const DELETE = async (req: Request) => {
             }
 
             // Incrementar cupos disponibles
-            await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: 1 } });
-            return new NextResponse("Reserva cancelada correctamente", { status: 200 });
-        }
+            // await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: 1 } });
+            // return new NextResponse("Reserva cancelada correctamente", { status: 200 });
+        // }
 
         // Verificar si el turno es de un día anterior
-        if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) < diasSemana.indexOf(diaActual)) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno de un día anterior" }), { status: 403 });
-        }
+        // if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) < diasSemana.indexOf(diaActual)) {
+        //     return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno de un día anterior" }), { status: 403 });
+        // }
 
-        // Verificar si es el mismo día y si ya pasó la ventana de cancelacion (10 min antes)
-        if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === (parseInt(turno.hora_inicio.split(":")[0])-1) && minutoActual > 50))) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 10 min antes del turno" }), { status: 403 });
-        }
+        // // Verificar si es el mismo día y si ya pasó la ventana de cancelacion (10 min antes)
+        // if (diaActual === turno.dia_semana.toLocaleLowerCase() && ((horaActual === (parseInt(turno.hora_inicio.split(":")[0])-1) && minutoActual > 50))) {
+        //     return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar menos de 10 min antes del turno" }), { status: 403 });
+        // }
 
-        if (diaActual === turno.dia_semana.toLocaleLowerCase() && horaActual > parseInt(turno.hora_inicio.split(":")[0])) {
-            return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno que ya comenzó o que pasó." }), { status: 403 });
-        }
+        // if (diaActual === turno.dia_semana.toLocaleLowerCase() && horaActual > parseInt(turno.hora_inicio.split(":")[0])) {
+        //     return new NextResponse(JSON.stringify({ mensaje: "No se puede cancelar un turno que ya comenzó o que pasó." }), { status: 403 });
+        // }
 
-        // Verificar si es viernes después de las 20hs
+        // // Verificar si es viernes después de las 20hs
         
         
-        if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) >= diasSemana.indexOf(diaActual)) {
-            // Permitir cancelación
-            const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
-            if (reservaC.deletedCount === 0) {
-                return new NextResponse(JSON.stringify({mensaje:"Reserva no encontrada"}), { status: 404 });
-            }
+        // if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) >= diasSemana.indexOf(diaActual)) {
+        //     // Permitir cancelación
+        //     const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
+        //     if (reservaC.deletedCount === 0) {
+        //         return new NextResponse(JSON.stringify({mensaje:"Reserva no encontrada"}), { status: 404 });
+        //     }
 
             // Incrementar cupos disponibles
             await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: 1 } });
             return new NextResponse("Reserva cancelada correctamente", { status: 200 });
-        }
+        // }
         
-        else {
-            return new NextResponse("No se puede cancelar el turno en este horario", { status: 403 });
-        }
+        // else {
+        //     return new NextResponse("No se puede cancelar el turno en este horario", { status: 403 });
+        // }
     } catch (error: unknown) {
         return new NextResponse("Error al cancelar la reserva: " + error, { status: 500 });
     }
