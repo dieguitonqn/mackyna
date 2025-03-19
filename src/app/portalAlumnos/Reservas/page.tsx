@@ -10,7 +10,7 @@ import { ObjectId } from "mongodb";
 import CancelButton from "@/components/PortalAlumnos/Reservas/cancelButton";
 import Link from "next/link";
 import { FaRegCalendarPlus } from "react-icons/fa";
-import { Condiciones } from "@/components/PortalAlumnos/Reservas/Condiciones";
+// import { Condiciones } from "@/components/PortalAlumnos/Reservas/Condiciones";
 
 async function Reservas() {
   const session = await getServerSession(authOptions);
