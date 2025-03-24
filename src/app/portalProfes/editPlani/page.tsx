@@ -1,15 +1,18 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { Exercise, Plani } from "@/types/plani";
 
 import ExerciseForm from "@/components/ExerciseForm";
+import { IUser } from "@/types/user";
+import { set } from "mongoose";
 
 const EditPlani = () => {
   const searchParams = useSearchParams();
   const queryPlaniID = searchParams.get("planiID");
   const [plani, setPlani] = useState<Plani>();
+  const [user, setUser] = useState<IUser>();
 
   const [editedPlani, setEditedPlani] = useState<Plani>({
     month: "",
@@ -35,8 +38,32 @@ const EditPlani = () => {
           setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
         })
         .catch((error) => console.error("Error fetching plani:", error));
+
+
+
+      
     }
   }, []);
+
+
+  useEffect(() => {
+    if (plani) {
+      fetch(`/api/usuarios?id=${plani.userId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error fetching user");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setUser(data);
+        })
+        .catch((error) => console.error("Error fetching user:", error));
+    }
+  }
+  , [plani]);
+
+
 
   if (!plani) {
     return <div>Cargando...</div>;
@@ -96,7 +123,6 @@ const EditPlani = () => {
     bloque: string,
     exercises: Exercise[]
   ) => {
-
     const dayIndex = parseInt(day.split(" ")[1]) - 1;
 
     if (dayIndex < 0 || dayIndex >= editedPlani.trainingDays.length) {
@@ -151,7 +177,7 @@ const EditPlani = () => {
     <div className="flex flex-col items-center">
       <form onSubmit={handleSubmit}>
         <h1 className="text-2xl font-bold mb-4">
-          Editar planilla {queryPlaniID}
+          Editar planilla de {user?.nombre} {user?.apellido}
         </h1>
         {/* Aquí puedes agregar un formulario para editar la planilla */}
         <div className="mb-4">
@@ -213,18 +239,18 @@ const EditPlani = () => {
           >
             <h2 className="text-2xl font-bold mb-2">{trainingDay.day}</h2>
             <div
-              key={dayIndex*10}
+              key={dayIndex * 10}
               className="my-6 flex flex-wrap gap-10 items-center"
             >
               {trainingDay.Bloque1 !== undefined && (
                 <div>
                   {trainingDay.Bloque1.length > 0 ? (
-                        <ExerciseForm
-                          day={trainingDay.day}
-                          bloque="Bloque1"
-                          onChange={handleInputChange2}
-                          initialExercises={trainingDay.Bloque1}
-                        />
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque1"
+                      onChange={handleInputChange2}
+                      initialExercises={trainingDay.Bloque1}
+                    />
                   ) : (
                     <ExerciseForm
                       day={trainingDay.day}
@@ -237,15 +263,12 @@ const EditPlani = () => {
               {trainingDay.Bloque2 !== undefined && (
                 <div>
                   {trainingDay.Bloque2.length > 0 ? (
-
-                        <ExerciseForm
-                          day={trainingDay.day}
-                          bloque="Bloque2"
-                          onChange={handleInputChange2}
-                          initialExercises={trainingDay.Bloque2}
-                        />
-                    
-                   
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque2"
+                      onChange={handleInputChange2}
+                      initialExercises={trainingDay.Bloque2}
+                    />
                   ) : (
                     <ExerciseForm
                       day={trainingDay.day}
@@ -258,14 +281,12 @@ const EditPlani = () => {
               {trainingDay.Bloque3 !== undefined && (
                 <div>
                   {trainingDay.Bloque3.length > 0 ? (
-
-                        <ExerciseForm
-                          day={trainingDay.day}
-                          bloque="Bloque3"
-                          onChange={handleInputChange2}
-                            initialExercises={trainingDay.Bloque3}
-                        />
-
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque3"
+                      onChange={handleInputChange2}
+                      initialExercises={trainingDay.Bloque3}
+                    />
                   ) : (
                     <ExerciseForm
                       day={trainingDay.day}
@@ -278,14 +299,12 @@ const EditPlani = () => {
               {trainingDay.Bloque4 !== undefined && (
                 <div>
                   {trainingDay.Bloque4.length > 0 ? (
-
-                        <ExerciseForm
-                          day={trainingDay.day}
-                          bloque="Bloque4"
-                          onChange={handleInputChange2}
-                          initialExercises={trainingDay.Bloque4}
-                        />
-
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque4"
+                      onChange={handleInputChange2}
+                      initialExercises={trainingDay.Bloque4}
+                    />
                   ) : (
                     <ExerciseForm
                       day={trainingDay.day}
