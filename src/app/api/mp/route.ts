@@ -7,12 +7,16 @@ interface ILinkPago {
   precio: number;
 }
 
+//---------------------------------------------------------------------
+// Este script es para mandar lo que queremos hacer que procese el servidor de MercadoPago.
+//---------------------------------------------------------------------
+
 export const mpClient = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN!,
 });
 
 export async function POST(req: Request) {
-    const { clase, precio } = await req.json();
+    const { clase, precio, id } = await req.json();
   console.log(clase, precio);
 
   const preference = await new Preference(mpClient).create({
@@ -27,9 +31,10 @@ export async function POST(req: Request) {
       ],
       metadata: {
         clase,
+        id,
       },
       back_urls: {
-        success: "https://refresh-dairy-adding-presently.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
+        success: "https://mph-approaches-tree-brings.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
       },
     payment_methods: {
         excluded_payment_types: [
