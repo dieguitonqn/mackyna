@@ -17,11 +17,24 @@ function PagoSuccess() {
     <div className="h-screen w-full">
       <div className="flex justify-center items-center h-full w-full">
         <div className="text-center">
+        <Confetti
+          width={1920}
+          height={1080}
+         numberOfPieces={200}
+         recycle={true}
+         gravity={0.1}
+         initialVelocityX={{ min: -10, max: 10 }}
+         initialVelocityY={{ min: 10, max: 20 }}
+         colors={["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"]}
+         opacity={1}
+         
+       />
           <h1 className="font-bold text-6xl text-slate-200">¡Pago Aprobado!</h1>
           
         </div>
-        <Confetti width={width} height={height} />
+       
       </div>
+      
     </div>
   );
 }

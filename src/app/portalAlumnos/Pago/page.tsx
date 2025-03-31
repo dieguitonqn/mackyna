@@ -2,16 +2,44 @@
 import { CardPagos } from "@/components/PortalAlumnos/Pagos/cardPagos";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
+import { IPago } from "@/types/pago";
+
+
 
 function page() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [nuevoPago, setNuevoPago] = useState(false);
+  const [pagos, setPagos] = useState<IPago[]>([]);
+
+useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/pagos/?id=${session?.user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          // console.log(data);
+          setPagos(data);
+        } else {
+          console.error("Error al cargar los pagos");
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [session?.user.id]);
+
 
   async function handlePago(texto: string, precio: number) {
-    console.log(`Pago realizado por ${texto} por un monto de ${precio}`);
-
+    
     try {
       const response = await fetch("/api/mp", {
         method: "POST",
@@ -70,15 +98,22 @@ function page() {
                   </tr>
                 ) : (
                   /* Aquí deberías mapear los pagos desde una API */
-                  [
-                    { id: 1, fecha: '2023-06-01', concepto: 'Clase Individual', monto: '$6,500', estado: 'Pagado' },
-                    { id: 2, fecha: '2023-05-01', concepto: 'Semana', monto: '$25,000', estado: 'Pagado' },
-                    { id: 3, fecha: '2023-04-01', concepto: 'Libre', monto: '$60,000', estado: 'Pagado' },
-                  ].map(pago => (
-                    <tr key={pago.id} className="border-t border-slate-600 hover:bg-slate-600">
-                      <td className="py-3 px-4">{pago.fecha}</td>
-                      <td className="py-3 px-4">{pago.concepto}</td>
-                      <td className="py-3 px-4">{pago.monto}</td>
+                  // [
+                  //   { id: 1, fecha: '2023-06-01', concepto: 'Clase Individual', monto: '$6,500', estado: 'Pagado' },
+                  //   { id: 2, fecha: '2023-05-01', concepto: 'Semana', monto: '$25,000', estado: 'Pagado' },
+                  //   { id: 3, fecha: '2023-04-01', concepto: 'Libre', monto: '$60,000', estado: 'Pagado' },
+                  // ]
+                  pagos.map(pago => (
+                    <tr key={pago.userID.toString()} className="border-t border-slate-600 hover:bg-slate-600">
+                      <td className="py-3 px-4">
+                        {pago.fecha instanceof Date 
+                          ? pago.fecha.toLocaleDateString() 
+                          : typeof pago.fecha === 'string' 
+                            ? new Date(pago.fecha).toLocaleDateString()
+                            : String(pago.fecha)}
+                      </td>
+                      <td className="py-3 px-4">{pago.descripcion}</td>
+                      <td className="py-3 px-4">$ {pago.monto}</td>
                       <td className="py-3 px-4">
                         <span className="inline-block px-2 py-1 bg-green-600 text-white text-xs rounded-full">
                           {pago.estado}
@@ -91,10 +126,7 @@ function page() {
             </table>
           </div>
         </div>
-      </div>
-
-
-      {nuevoPago && (
+        {nuevoPago && (
         <div>
           <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
             Elige tu plan
@@ -102,10 +134,8 @@ function page() {
           <h2 className="text-center text-slate-200">
             Puedes elegir entre las siguientes opciones
           </h2>
-          <h2 className="text-center text-slate-200">
-            Recuerda que el pago es mensual
-          </h2>
-          <div className="flex flex-wrap items-center justify-center h-full md:h-screen gap-5 my-2">
+          
+          <div className="flex flex-wrap items-center justify-center  gap-5 my-2">
             <CardPagos
               texto="Clase Individual"
               precio={6500}
@@ -119,6 +149,10 @@ function page() {
           </div>
         </div>
       )}
+      </div>
+
+
+      
     </div>
   );
 }

@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         id,
       },
       back_urls: {
-        success: "https://mph-approaches-tree-brings.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
+        success: "https://striking-inches-je-practitioner.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
       },
     payment_methods: {
         excluded_payment_types: [

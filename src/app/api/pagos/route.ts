@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import Pago from "@/lib/models/pagos";
@@ -140,5 +140,36 @@ export async function POST(req: Request) {
     } catch (error: unknown) {
         console.error("Error creating pago:", error);
         return NextResponse.json({ message: "Error creating pago" }, { status: 500 });
+    }
+}
+
+
+export async function GET(req: NextRequest) {
+    const id = req.nextUrl.searchParams.get('id');
+    if (!id) {
+        return NextResponse.json({ message: "Missing user ID" }, { status: 400 });
+    }
+    console.log(id);
+    try {
+        const pagos = await Pago.find({ userID: id }).lean();
+        console.log(pagos);
+        // Transformar _id a string
+        const pagosConIdString = pagos.map((pago) => ({
+            ...pago,
+            _id: pago._id!.toString(),
+            userID: pago.userID,
+            nombre: pago.nombre,
+            email: pago.email,
+            fecha: pago.fecha,
+            monto: pago.monto,
+            metodo: pago.metodo,
+            estado: pago.estado,
+            comprobante: pago.comprobante,
+            descripcion: pago.descripcion
+        }));
+        return NextResponse.json(pagosConIdString);
+    } catch (error: unknown) {
+        console.error(error);
+        return NextResponse.json({ message: "Error al obtener los pagos" }, { status: 500 });
     }
 }
