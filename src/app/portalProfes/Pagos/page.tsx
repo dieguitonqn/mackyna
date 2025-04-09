@@ -12,11 +12,18 @@ import { FaRegFilePdf } from "react-icons/fa";
 async function Pagos() {
   
   let pagos: IPago[] = [];
+  let payments: IPago[] = [];
 
   try {
     await connect();
     pagos = await Pago.find().populate('userID', 'nombre apellido');
     console.log(pagos);
+    // Transformar _id a string
+    payments = pagos.map((pago) => ({
+      ...JSON.parse(JSON.stringify(pago)),
+      estado: pago.estado === 'approved' ? 'Aprobado' : pago.estado === 'rejected' ? 'Rechazado' : pago.estado === 'pending' ? 'Pendiente' : pago.estado,
+    }));
+    console.log(payments);
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.log("Error al consultar los pagos realizados: " + err.message);
@@ -63,7 +70,7 @@ async function Pagos() {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {pagos.map((pago, index) => (
+          {payments.map((pago, index) => (
         <tr key={index} className="hover:bg-gray-50">
           <td className="px-6 py-4 text-sm text-gray-500">
             {typeof pago.userID === 'object' && pago.userID ? 
@@ -72,7 +79,7 @@ async function Pagos() {
             
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
-            <p>{pago.fecha.toLocaleDateString()}</p>
+            <p>{new Date(pago.fecha).toLocaleDateString()}</p>
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
             <p>$ {pago.monto}</p>
@@ -100,7 +107,7 @@ async function Pagos() {
               pago.estado === 'Rechazado' ? 'bg-red-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
               'bg-gray-500 text-white font-semibold px-2 py-1 rounded-sm text-center'
             }`}>
-              {pago.estado}
+              {pago.estado }
             </p>
             </td>
           <td className="px-6 py-4 text-sm text-gray-500">
