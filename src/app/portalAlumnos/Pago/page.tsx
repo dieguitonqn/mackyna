@@ -5,22 +5,19 @@ import { useSession } from "next-auth/react";
 import React, { use, useEffect, useState } from "react";
 import { IPago } from "@/types/pago";
 
-
-
 function page() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [nuevoPago, setNuevoPago] = useState(false);
   const [pagos, setPagos] = useState<IPago[]>([]);
 
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await fetch(`/api/pagos/?id=${session?.user.id}`);
         if (response.ok) {
           const data = await response.json();
-          // console.log(data);
           setPagos(data);
         } else {
           console.error("Error al cargar los pagos");
@@ -34,12 +31,32 @@ useEffect(() => {
         setLoading(false);
       }
     };
-    fetchData();
+    if (session?.user.id) {
+      fetchData();
+    }
   }, [session?.user.id]);
 
+  if (session === undefined) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
+          Cargando sesión...
+        </h1>
+      </div>
+    );
+  }
+
+  if (session === null) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
+          Debes iniciar sesión para ver esta página
+        </h1>
+      </div>
+    );
+  }
 
   async function handlePago(texto: string, precio: number) {
-    
     try {
       const response = await fetch("/api/mp", {
         method: "POST",
@@ -78,7 +95,7 @@ useEffect(() => {
               {nuevoPago ? "Ocultar opciones" : "Nuevo Pago"}
             </button>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="min-w-full bg-slate-700 text-slate-200 rounded-lg overflow-hidden">
               <thead className="bg-slate-600">
@@ -97,20 +114,17 @@ useEffect(() => {
                     </td>
                   </tr>
                 ) : (
-                  /* Aquí deberías mapear los pagos desde una API */
-                  // [
-                  //   { id: 1, fecha: '2023-06-01', concepto: 'Clase Individual', monto: '$6,500', estado: 'Pagado' },
-                  //   { id: 2, fecha: '2023-05-01', concepto: 'Semana', monto: '$25,000', estado: 'Pagado' },
-                  //   { id: 3, fecha: '2023-04-01', concepto: 'Libre', monto: '$60,000', estado: 'Pagado' },
-                  // ]
-                  pagos.map(pago => (
-                    <tr key={pago.userID.toString()} className="border-t border-slate-600 hover:bg-slate-600">
+                  pagos.map((pago) => (
+                    <tr
+                      key={pago.userID.toString()}
+                      className="border-t border-slate-600 hover:bg-slate-600"
+                    >
                       <td className="py-3 px-4">
-                        {pago.fecha instanceof Date 
-                          ? pago.fecha.toLocaleDateString() 
-                          : typeof pago.fecha === 'string' 
-                            ? new Date(pago.fecha).toLocaleDateString()
-                            : String(pago.fecha)}
+                        {pago.fecha instanceof Date
+                          ? pago.fecha.toLocaleDateString()
+                          : typeof pago.fecha === "string"
+                          ? new Date(pago.fecha).toLocaleDateString()
+                          : String(pago.fecha)}
                       </td>
                       <td className="py-3 px-4">{pago.descripcion}</td>
                       <td className="py-3 px-4">$ {pago.monto}</td>
@@ -127,32 +141,33 @@ useEffect(() => {
           </div>
         </div>
         {nuevoPago && (
-        <div>
-          <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
-            Elige tu plan
-          </h1>
-          <h2 className="text-center text-slate-200">
-            Puedes elegir entre las siguientes opciones
-          </h2>
-          
-          <div className="flex flex-wrap items-center justify-center  gap-5 my-2">
-            <CardPagos
-              texto="Clase Individual"
-              precio={6500}
-              onclick={handlePago}
-            />
-            <CardPagos texto="Semana" precio={25000} onclick={handlePago} />
-            <CardPagos texto="Quincena" precio={35000} onclick={handlePago} />
-            <CardPagos texto="3 Días" precio={45000} onclick={handlePago} />
-            <CardPagos texto="4 ó 5 Días" precio={50000} onclick={handlePago} />
-            <CardPagos texto="Libre" precio={60000} onclick={handlePago} />
+          <div>
+            <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
+              Elige tu plan
+            </h1>
+            <h2 className="text-center text-slate-200">
+              Puedes elegir entre las siguientes opciones
+            </h2>
+
+            <div className="flex flex-wrap items-center justify-center  gap-5 my-2">
+              <CardPagos
+                texto="Clase Individual"
+                precio={6500}
+                onclick={handlePago}
+              />
+              <CardPagos texto="Semana" precio={25000} onclick={handlePago} />
+              <CardPagos texto="Quincena" precio={35000} onclick={handlePago} />
+              <CardPagos texto="3 Días" precio={45000} onclick={handlePago} />
+              <CardPagos
+                texto="4 ó 5 Días"
+                precio={50000}
+                onclick={handlePago}
+              />
+              <CardPagos texto="Libre" precio={60000} onclick={handlePago} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
-
-
-      
     </div>
   );
 }

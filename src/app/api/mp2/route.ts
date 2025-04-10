@@ -38,7 +38,7 @@ async function generarComprobantePDF(payment: any, payerUser: any) {
     });
     doc.moveDown();
   }
-  doc.font('Helvetica-Bold').fontSize(20).text('Comprobante de Pago', { align: 'center' });
+  doc.fontSize(20).text('Comprobante de Pago', { align: 'center' });
   doc.moveDown();
   doc.fontSize(12).text(`Fecha: ${new Date().toLocaleDateString()}`);
   doc.text(`Cliente: ${payerUser.nombre} ${payerUser.apellido}`);

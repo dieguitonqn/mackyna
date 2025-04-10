@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         id,
       },
       back_urls: {
-        success: "https://striking-inches-je-practitioner.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
+        success: "https://editors-melbourne-trades-colours.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
       },
     payment_methods: {
         excluded_payment_types: [
