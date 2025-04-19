@@ -17,9 +17,14 @@ async function generarComprobantePDF(payment: any, payerUser: any) {
   const doc = new jsPDF();
   const fecha = new Date().toISOString().split("T")[0];
   const nombreArchivo = `comprobante-${payment.id}-${fecha}.pdf`;
+  const meses = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  const mesActual = meses[new Date().getMonth()];
 
   // Asegúrate de que el directorio existe
-  const dir = path.join(process.cwd(), "public", "Pagos");
+  const dir = path.join(process.cwd(), "uploads", "Pagos", mesActual);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -30,7 +35,7 @@ async function generarComprobantePDF(payment: any, payerUser: any) {
   const logoPath = path.join(process.cwd(), "public", "mackyna_verde.png");
   if (fs.existsSync(logoPath)) {
     const logoData = fs.readFileSync(logoPath).toString("base64");
-    doc.addImage(logoData, "PNG", 80, 10, 50, 50); // Ajusta las coordenadas y tamaño según sea necesario
+    doc.addImage(logoData, "PNG", 80, 10, 80, 50); // Ajusta las coordenadas y tamaño según sea necesario
   }
 
   doc.setFontSize(20);
@@ -40,9 +45,9 @@ async function generarComprobantePDF(payment: any, payerUser: any) {
   doc.text(`Cliente: ${payerUser.nombre} ${payerUser.apellido}`, 10, 100);
   doc.text(`Email: ${payment.payer?.email}`, 10, 110);
   doc.text(`Monto: $${payment.transaction_amount}`, 10, 120);
-  doc.text(`Método de pago: ${payment.payment_type_id}`, 10, 130);
+  doc.text(`Método de pago: ${payment.payment_type_id === "debit_card"?"Tarjeta de debito":"Saldo en cuenta"} `, 10, 130);
   doc.text(`ID de pago: ${payment.id}`, 10, 140);
-  doc.text(`Estado: ${payment.status}`, 10, 150);
+  doc.text(`Estado: ${payment.status === "approved" ? "Aprobado" : payment.status === "rejected" ? "Rechazado" : payment.status === "pending" ? "Pendiente" : payment.status}`, 10, 150);
   doc.text(`Descripción: ${payment.description}`, 10, 160);
 
   // Guardar el PDF en el servidor
@@ -50,7 +55,7 @@ async function generarComprobantePDF(payment: any, payerUser: any) {
     try {
       const pdfBuffer = doc.output("arraybuffer");
       fs.writeFileSync(rutaArchivo, Buffer.from(pdfBuffer));
-      resolve("/Pagos/" + nombreArchivo);
+      resolve(dir+"/" + nombreArchivo);
     } catch (err) {
       reject(err);
     }
@@ -78,8 +83,8 @@ export async function POST(request: Request) {
         email: payment.payer?.email || '',
         fecha: new Date(),
         monto: payment.transaction_amount,
-        metodo: payment.payment_type_id,
-        estado: payment.status,
+        metodo: payment.payment_type_id === 'debit_card'?"Tarjeta de Débito" : payment.payment_type_id === 'credit_card' ? "Tarjeta de Crédito" : payment.payment_type_id==='account_money'?"Dinero Disponible" : payment.payment_type_id,
+        estado: payment.status === "approved" ? "Aprobado" : payment.status === "rejected" ? "Rechazado" : payment.status === "pending" ? "Pendiente" : payment.status,
         comprobante: rutaPDF,
         descripcion: payment.description,
         // rutaComprobante: rutaPDF,

@@ -5,6 +5,7 @@ import { IPago } from "@/types/pago";
 import connect from "@/lib/db";
 import Link from "next/link";
 import { FaRegFilePdf } from "react-icons/fa";
+import OpenPDF from "@/components/PortalAlumnos/Pagos/openPDF";
 
 
 
@@ -88,7 +89,7 @@ async function Pagos() {
             <p>{pago.metodo}</p>
           </td>
           <td className="px-6 py-4 text-sm text-gray-500">
-            <p>
+            {/* <p>
               <Link 
               href={pago.comprobante ? `${pago.comprobante}` : "#"} 
               
@@ -98,14 +99,15 @@ async function Pagos() {
               >
               Comprobante <FaRegFilePdf className="h-5 w-5"/>
               </Link>
-            </p>
+            </p> */}
+            <OpenPDF ruta={pago.comprobante as string} />
           </td>
             <td className="px-6 py-4 text-sm">
             <p className={`${
-              pago.estado === 'Pendiente' ? 'bg-yellow-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
-              pago.estado === 'Aprobado' ? 'bg-green-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
-              pago.estado === 'Rechazado' ? 'bg-red-500 text-white font-semibold px-2 py-1 rounded-sm text-center' :
-              'bg-gray-500 text-white font-semibold px-2 py-1 rounded-sm text-center'
+              pago.estado === 'Pendiente' ? 'bg-yellow-500 text-white font-semibold px-2 py-1 rounded-full text-center' :
+              pago.estado === 'Aprobado' ? 'bg-green-500 text-white font-semibold px-2 py-1 rounded-full text-center' :
+              pago.estado === 'Rechazado' ? 'bg-red-500 text-white font-semibold px-2 py-1 rounded-full text-center' :
+              'bg-gray-500 text-white font-semibold px-2 py-1 rounded-full text-center'
             }`}>
               {pago.estado }
             </p>

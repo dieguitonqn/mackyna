@@ -4,13 +4,16 @@ import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { use, useEffect, useState } from "react";
 import { IPago } from "@/types/pago";
+import { OpenPDF } from "@/components/PortalAlumnos/Pagos/openPDF";
 
 function page() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [nuevoPago, setNuevoPago] = useState(false);
   const [pagos, setPagos] = useState<IPago[]>([]);
-
+  const [verRecibo, setVerRecibo] = useState(false);
+  const [recibo, setRecibo] = useState<string | null>(null);
+  const [reciboURL, setReciboURL] = useState<string | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -82,7 +85,7 @@ function page() {
   }
   return (
     <div>
-      <div className="mb-6 h-screen">
+      <div className="mb-6 h-full">
         <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
           Mis Pagos
         </h1>
@@ -103,6 +106,7 @@ function page() {
                   <th className="py-3 px-4 text-left">Fecha</th>
                   <th className="py-3 px-4 text-left">Concepto</th>
                   <th className="py-3 px-4 text-left">Monto</th>
+                  <th className="py-3 px-4 text-left">Comprobante</th>
                   <th className="py-3 px-4 text-left">Estado</th>
                 </tr>
               </thead>
@@ -128,6 +132,21 @@ function page() {
                       </td>
                       <td className="py-3 px-4">{pago.descripcion}</td>
                       <td className="py-3 px-4">$ {pago.monto}</td>
+                      <td className="py-3 px-4">
+                        {/* <button
+                          onClick={() => {
+                            setVerRecibo(!verRecibo);
+                            setReciboURL(pago.comprobante as string);
+                          }}
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                          Recibo
+                        </button>
+                        {/* {pago.comprobante &&  (
+                        
+                        )} */}
+                        <OpenPDF ruta={pago.comprobante as string} />
+                      </td>
                       <td className="py-3 px-4">
                         <span className="inline-block px-2 py-1 bg-green-600 text-white text-xs rounded-full">
                           {pago.estado}
@@ -157,9 +176,9 @@ function page() {
               />
               <CardPagos texto="Semana" precio={25000} onclick={handlePago} />
               <CardPagos texto="Quincena" precio={35000} onclick={handlePago} />
-              <CardPagos texto="3 Días" precio={45000} onclick={handlePago} />
+              {/* <CardPagos texto="3 Días" precio={45000} onclick={handlePago} /> */}
               <CardPagos
-                texto="4 ó 5 Días"
+                texto="3 a 5 Días"
                 precio={50000}
                 onclick={handlePago}
               />
@@ -167,6 +186,19 @@ function page() {
             </div>
           </div>
         )}
+        {/* {verRecibo && (
+          <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-lg shadow-lg p-4 max-w-3xl w-full">
+              <button
+                onClick={() => setVerRecibo(false)}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4"
+              >
+                Cerrar
+              </button>
+              <OpenPDF ruta={reciboURL as string} />
+            </div>
+          </div>
+        )} */}
       </div>
     </div>
   );
