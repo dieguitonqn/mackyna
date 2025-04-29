@@ -44,7 +44,7 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
   };
 
   return (
-    <div className="relative max-w-md mx-auto">
+    <div className="relative max-w-2xl mx-auto dark:bg-slate-800 rounded-xl shadow-lg p-1">
       <input
         type="text"
         value={query}

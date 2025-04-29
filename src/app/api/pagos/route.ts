@@ -88,14 +88,23 @@ export async function POST(req: Request) {
 
             const buffer = await file.arrayBuffer();
             const filename = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_'); // Sanear el nombre del archivo
-            const pagosDir = path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'); // Usar variable de entorno
+            const meses = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+              ];
+            const mesActual = meses[new Date().getMonth()];
+            
+              // Asegúrate de que el directorio existe        
+            
+            const pagosDir = path.join(process.cwd(),  "uploads", "Pagos", mesActual); // Usar variable de entorno
             if (!fs.existsSync(pagosDir)) {
                 fs.mkdirSync(pagosDir, { recursive: true });
             }
+            // Guardar el archivo en el servidor
             filePath = path.join(pagosDir, filename);
             await writeFile(filePath, Buffer.from(buffer));
-            filePath = `/uploads/${filename}`; // Ruta relativa para acceso desde el cliente
-            await writeFile(path.join(process.cwd(), 'public','uploads', filename), Buffer.from(buffer));
+            // filePath = `/uploads/${filename}`; // Ruta relativa para acceso desde el cliente
+            // await writeFile(path.join(process.cwd(), 'public','uploads', filename), Buffer.from(buffer));
         }
 
         // Here you would typically save the data to your database

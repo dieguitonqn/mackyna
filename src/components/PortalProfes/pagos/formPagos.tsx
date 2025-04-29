@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { IUser } from "@/types/user";
 import { IFormPago } from "@/types/pago";
 import { IConfigs } from "@/types/configs";
+import { FaRegFilePdf } from "react-icons/fa6";
 
 export const FormPagos = ({ user, configs }: { user: IUser, configs:IConfigs }) => {
   const [pago, setPago] = useState<IFormPago>({
@@ -29,7 +30,7 @@ export const FormPagos = ({ user, configs }: { user: IUser, configs:IConfigs }) 
       formData.append("fecha", new Date().toISOString());
       formData.append("monto", pago.monto.toString());
       formData.append("metodo", pago.metodo);
-      formData.append("estado", "pendiente");
+      formData.append("estado", "Aprobado");
       formData.append("descripcion", pago.descripcion || "");
       if (file) {
         formData.append("comprobante", file);
@@ -43,6 +44,7 @@ export const FormPagos = ({ user, configs }: { user: IUser, configs:IConfigs }) 
         throw new Error("Error al guardar el pago");
       }
       alert("Pago guardado correctamente");
+      window.location.href = "/portalProfes/Pagos";
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log("Error al guardar el pago: " + error.message);
@@ -81,119 +83,136 @@ export const FormPagos = ({ user, configs }: { user: IUser, configs:IConfigs }) 
   };
 
   return (
-    <div className="container mx-auto p-4 w-full md:w-1/2">
-      <form className="bg-white mt-4 w-3/4 border border-slate-200 border-1 shadow-md rounded-sm p-10 mx-auto">
-        <div className="flex flex-col gap-4">
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Monto:
-            </label>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorClase ? 'bg-blue-500 text-white' : 'bg-white'}`}
-                onClick={() => handleMontoChange(configs.valorClase)}
-              >
-                Clase: ${configs.valorClase}
-              </button>
-              <button
-                type="button"
-                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorSemana ? 'bg-blue-500 text-white' : 'bg-white'}`}
-                onClick={() => handleMontoChange(configs.valorSemana)}
-              >
-                Semana: ${configs.valorSemana}
-              </button>
-              <button
-                type="button"
-                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorQuincena ? 'bg-blue-500 text-white' : 'bg-white'}`}
-                onClick={() => handleMontoChange(configs.valorQuincena)}
-              >
-                Quincena: ${configs.valorQuincena}
-              </button>
-                <button
-                type="button"
-                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorTresDias ? 'bg-blue-500 text-white' : 'bg-white'}`}
-                onClick={() => handleMontoChange(configs.valorTresDias)}
-                >
-                3 Días: ${(new Date().getDate() >= 1 && new Date().getDate() <= 10) ? configs.valorTresDias - configs.valorDescuento : configs.valorTresDias}
-                </button>
-              <button
-                type="button"
-                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorCincoDias ? 'bg-blue-500 text-white' : 'bg-white'}`}
-                onClick={() => handleMontoChange(configs.valorCincoDias)}
-              >
-                5 Días: ${(new Date().getDate() >= 1 && new Date().getDate() <= 10) ? configs.valorCincoDias - configs.valorDescuento : configs.valorCincoDias}
-              </button>
-              <button
-                type="button"
-                className={`shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${pago.monto === configs.valorLibre ? 'bg-blue-500 text-white' : 'bg-white'}`}
-                onClick={() => handleMontoChange(configs.valorLibre)}
-              >
-                Libre: ${(new Date().getDate() >= 1 && new Date().getDate() <= 10) ? configs.valorLibre - configs.valorDescuento : configs.valorLibre}
-              </button>
+  <div className="container mx-auto p-6">
+    <form className="max-w-2xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Registrar Nuevo Pago</h2>
+      
+      {/* Sección Monto */}
+      <div className="space-y-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+          Monto
+        </label>
+        <div className="mt-1">
+          <input
+            type="number"
+            value={pago.monto}
+            onChange={(e) => handleMontoChange(Number(e.target.value))}
+            className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+            placeholder="Ingrese el monto"
+          />
+        </div>
+      </div>
+
+      {/* Sección Método de Pago */}
+      <div className="space-y-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+          Método de Pago
+        </label>
+        <select
+          onChange={handleChange}
+          name="metodo"
+          id="metodo"
+          className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+        >
+          <option value="">Seleccione un método de pago...</option>
+          <option value="transferencia">Transferencia</option>
+          <option value="efectivo">Efectivo</option>
+        </select>
+      </div>
+
+      {/* Sección Comprobante */}
+      <div className="space-y-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+          Comprobante
+        </label>
+        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg dark:border-slate-600">
+          <div className="space-y-1 text-center">
+            {/* <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg> */}
+            <FaRegFilePdf className="text-gray-500 h-11 w-11 mx-auto "/>
+            <div className="flex text-sm text-gray-600">
+              <label htmlFor="comp" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                <span>Cargar archivo (<strong>Solo PDF</strong>)</span>
+                <input
+                  id="comp"
+                  name="comp"
+                  type="file"
+                  className="sr-only"
+                  onChange={handleChange}
+                />
+              </label>
+              <p className="pl-1 text-gray-500">o arrastrar y soltar</p>
             </div>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="metodo"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Tipo:
-            </label>
-            <select
-              onChange={handleChange}
-              name="metodo"
-              id="metodo"
-              className="shadow bg-white border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <option value="" >
-                Seleccione un método de pago ...
-              </option>
-              <option value="transferencia">Transferencia</option>
-              <option value="efectivo">Efectivo</option>
-              <option value="tarjeta">Tarjeta</option>
-            </select>
-          </div>
-          
-          <div className="mb-4">
-            <label
-              htmlFor="comp"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Comprobante:
-            </label>
-            <input
-              onChange={handleChange}
-              type="file"
-              name="comp"
-              id="comp"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-black hover:file:bg-slate-500 hover:file:text-white"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="desc"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Descripción:
-            </label>
-            <textarea
-              onChange={handleChange}
-              name="desc"
-              id="desc"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            ></textarea>
+            <p className="text-xs text-gray-500"> PDF hasta 10MB</p>
           </div>
         </div>
+      </div>
+
+      {/* Sección Descripción */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+            Descripción
+          </label>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="customDesc"
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              onChange={(e) => {
+                const buttons = document.getElementById("descButtons");
+                const textarea = document.getElementById("desc");
+                if (buttons && textarea) {
+                  buttons.style.display = e.target.checked ? "none" : "flex";
+                  textarea.style.display = e.target.checked ? "block" : "none";
+                }
+              }}
+            />
+            <label htmlFor="customDesc" className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+              Descripción personalizada
+            </label>
+          </div>
+        </div>
+
+        <div id="descButtons" className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {['Clase Individual', 'Semana', 'Quincena', '3 a 5 Días', 'Libre'].map((desc) => (
+            <button
+              key={desc}
+              type="button"
+              onClick={() => setPago({ ...pago, descripcion: desc })}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                pago.descripcion === desc 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-200 dark:hover:bg-slate-600'
+              }`}
+            >
+              {desc}
+            </button>
+          ))}
+        </div>
+
+        <textarea
+          onChange={handleChange}
+          name="desc"
+          id="desc"
+          style={{ display: "none" }}
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+          placeholder="Ingrese una descripción personalizada"
+          rows={4}
+        ></textarea>
+      </div>
+
+      {/* Botón Submit */}
+      <div className="pt-4">
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
         >
-          Guardar
+          Guardar Pago
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
   );
 };

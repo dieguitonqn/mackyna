@@ -34,7 +34,9 @@ export async function POST(req: Request) {
         id,
       },
       back_urls: {
-        success: "https://notre-templates-established-reasonable.trycloudflare.com/portalAlumnos/Pago/PagoSuccess",
+        success: `${process.env.URL}/portalAlumnos/Pago/PagoSuccess`,
+        pending: `${process.env.URL}/portalAlumnos/Pago/PagoPending`,
+        failure: `${process.env.URL}/portalAlumnos/Pago/PagoFailure`,
       },
     payment_methods: {
         excluded_payment_types: [
@@ -65,7 +67,9 @@ export async function POST(req: Request) {
             ],
       
         installments: 1,
+
         },
+        auto_return: "all",
     },
   });
     

@@ -96,8 +96,8 @@ export async function POST(request: Request) {
       let diasUser = 0;
       switch (claseUser) {
         case "Clase Individual": diasUser = 1; break;
-        case "Semana": diasUser = 2; break;
-        case "Qincena": diasUser = 4; break;
+        case "Semana": diasUser = 5; break;
+        case "Quincena": diasUser = 10; break;
         case "3 Días": diasUser = 3; break;
         case "4 o 5 Días": diasUser = 5; break;
         case "Libre": diasUser = 10; break;
