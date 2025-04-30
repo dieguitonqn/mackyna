@@ -29,8 +29,8 @@ async function Pagos() {
    
     
     payments = pagos.map((pago: IPagoPopulated) => ({
-      ...JSON.parse(JSON.stringify(pago)),
-      
+      // ...JSON.parse(JSON.stringify(pago)),
+      ...pago,
       estado: pago.estado === 'approved' ? 'Aprobado' : 
               pago.estado === 'rejected' ? 'Rechazado' : 
               pago.estado === 'pending' ? 'Pendiente' : pago.estado,
