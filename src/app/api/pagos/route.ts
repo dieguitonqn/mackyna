@@ -158,10 +158,10 @@ export async function GET(req: NextRequest) {
     if (!id) {
         return NextResponse.json({ message: "Missing user ID" }, { status: 400 });
     }
-    console.log(id);
+    // console.log(id);
     try {
         const pagos = await Pago.find({ userID: id }).lean();
-        console.log(pagos);
+        // console.log(pagos);
         // Transformar _id a string
         const pagosConIdString = pagos.map((pago) => ({
             ...pago,
