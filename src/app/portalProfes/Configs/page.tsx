@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use } from "react";
+import React from "react";
 import { IConfigs } from "@/types/configs";
 import { useState, useEffect } from "react";
 

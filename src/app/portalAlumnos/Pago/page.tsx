@@ -1,15 +1,15 @@
 "use client";
-import { CardPagos } from "@/components/PortalAlumnos/Pagos/cardPagos";
+// import { CardPagos } from "@/components/PortalAlumnos/Pagos/cardPagos";
 
 import { useSession } from "next-auth/react";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IPago } from "@/types/pago";
 import { OpenPDF } from "@/components/PortalAlumnos/Pagos/openPDF";
 
-function page() {
+function Page() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
-  const [nuevoPago, setNuevoPago] = useState(false);
+  // const [nuevoPago, setNuevoPago] = useState(false);
   const [pagos, setPagos] = useState<IPago[]>([]);
 
   useEffect(() => {
@@ -57,30 +57,30 @@ function page() {
     );
   }
 
-  async function handlePago(texto: string, precio: number) {
-    try {
-      const response = await fetch("/api/mp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ clase: texto, precio, id: session?.user.id }),
-      });
+  // async function handlePago(texto: string, precio: number) {
+  //   try {
+  //     const response = await fetch("/api/mp", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ clase: texto, precio, id: session?.user.id }),
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.link);
-        window.location.href = data.link;
-      } else {
-        console.error("Error al realizar el pago");
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-      console.error(error);
-    }
-  }
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log(data.link);
+  //       window.location.href = data.link;
+  //     } else {
+  //       console.error("Error al realizar el pago");
+  //     }
+  //   } catch (error: unknown) {
+  //     if (error instanceof Error) {
+  //       console.error(error.message);
+  //     }
+  //     console.error(error);
+  //   }
+  // }
   return (
     <div>
       <div className="mb-6 h-full">
@@ -157,7 +157,7 @@ function page() {
             </table>
           </div>
         </div>
-        {nuevoPago && (
+        {/* {nuevoPago && (
           <div>
             <h1 className="text-4xl text-center font-bold text-slate-200 mt-5">
               Elige tu plan
@@ -175,15 +175,15 @@ function page() {
               <CardPagos texto="Semana" precio={25000} onclick={handlePago} />
               <CardPagos texto="Quincena" precio={35000} onclick={handlePago} />
               {/* <CardPagos texto="3 Días" precio={45000} onclick={handlePago} /> */}
-              <CardPagos
+              {/* <CardPagos
                 texto="3 a 5 Días"
                 precio={50000}
                 onclick={handlePago}
               />
               <CardPagos texto="Libre" precio={60000} onclick={handlePago} />
             </div>
-          </div>
-        )}
+          </div> */}
+        {/* )}  */}
         {/* {verRecibo && (
           <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-4 max-w-3xl w-full">
@@ -202,4 +202,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

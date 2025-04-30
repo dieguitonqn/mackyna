@@ -1,5 +1,5 @@
 import type { NextApiRequest } from "next";
-import { ReadStream } from "fs";
+// import { ReadStream } from "fs";
 
 import fs from "fs";
 import { getServerSession } from "next-auth/next"; // Si usas NextAuth.js para autenticación
@@ -51,39 +51,8 @@ export const GET = async (req: NextApiRequest) => {
     );
   } catch (error) {
     return new NextResponse(
-      JSON.stringify({ message: "Archivo no encontrado." }),
+      JSON.stringify({ message: "Archivo no encontrado." , error }),
       { status: 404 }
     );
   }
 };
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) {
-//   const { ruta } = req.query; // Recibes la ruta guardada en la base de datos
-
-//   // --- Implementa tu lógica de autenticación y autorización aquí ---
-//   const session = await getServerSession({ req, res });
-//   if (!session) {
-//     return res.status(401).json({ message: 'No autorizado.' });
-//   }
-
-//   if (!ruta || typeof ruta !== 'string') {
-//     return res.status(400).json({ message: 'Ruta de archivo inválida.' });
-//   }
-
-//   const filePath = path.join(process.cwd(), ruta); // Usa la ruta directamente desde la base de datos
-
-//   try {
-//     const fileStream = fs.createReadStream(filePath);
-//     const stat = fs.statSync(filePath);
-
-//     res.setHeader('Content-Type', 'application/pdf'); // Ajusta el Content-Type
-//     res.setHeader('Content-Disposition', 'inline'); // O 'attachment' para forzar la descarga
-//     res.setHeader('Content-Length', stat.size);
-
-//     fileStream.pipe(res);
-//   } catch (error) {
-//     return res.status(404).json({ message: 'Archivo no encontrado.' });
-//   }
-// }

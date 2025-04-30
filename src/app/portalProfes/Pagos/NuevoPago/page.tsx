@@ -1,10 +1,10 @@
 'use client';
 
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { FormPagos } from "@/components/PortalProfes/pagos/formPagos";
-import connect from "@/lib/db";
+// import connect from "@/lib/db";
 import { IUser } from "@/types/user";
-import User from "@/lib/models/user";
+// import User from "@/lib/models/user";
 import AutoCompleteInput from '@/components/AutocompleteUsers'
 import { IConfigs } from "@/types/configs";
 

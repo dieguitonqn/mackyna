@@ -1,7 +1,7 @@
 
 import React from "react";
 import Pago from "@/lib/models/pagos";
-import { IPago } from "@/types/pago";
+import { IPago, IPagoPopulated } from "@/types/pago";
 import connect from "@/lib/db";
 
 import PagosTable from "./components/PagosTable";
@@ -10,8 +10,8 @@ import PagosClient from "./components/PagosClient";
 
 
 async function Pagos() {
-  let pagos: IPago[] = [];
-  let payments: IPago[] = [];
+  let pagos: IPagoPopulated[] = [];
+  let payments: IPagoPopulated[] = [];
 
   try {
     await connect();
@@ -29,8 +29,9 @@ async function Pagos() {
     }
    
     
-    payments = pagos.map((pago: IPago) => ({
+    payments = pagos.map((pago: IPagoPopulated) => ({
       ...JSON.parse(JSON.stringify(pago)),
+      
       estado: pago.estado === 'approved' ? 'Aprobado' : 
               pago.estado === 'rejected' ? 'Rechazado' : 
               pago.estado === 'pending' ? 'Pendiente' : pago.estado,

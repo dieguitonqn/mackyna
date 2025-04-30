@@ -1,9 +1,9 @@
 "use client";
 import Confetti from "react-confetti";
 import React, { useEffect } from "react";
-import { useWindowSize } from "react-use";
+// import { useWindowSize } from "react-use";
 function PagoSuccess() {
-  const { width, height } = useWindowSize();
+  // const { width, height } = useWindowSize();
 
   useEffect(() => {
     const timer = setTimeout(() => {

@@ -1,13 +1,16 @@
 'use client';
 import { useState } from 'react';
-import { IPago } from '@/types/pago';
+import { IPago, IPagoPopulated } from '@/types/pago';
 import { BsFiletypeCsv } from "react-icons/bs";
+// import { ObjectId } from 'mongodb';
 
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  payments: IPago[];
+  payments: IPagoPopulated[];
 }
+
+
 
 export default function ExportModal({ isOpen, onClose, payments }: ExportModalProps) {
   const [weekStart, setWeekStart] = useState('');
@@ -18,7 +21,7 @@ export default function ExportModal({ isOpen, onClose, payments }: ExportModalPr
     const firstDayOfYear = new Date(year, 0, 1);
     const lastDayOfYear = new Date(year, 11, 31);
     
-    let currentDate = firstDayOfYear;
+    const currentDate = firstDayOfYear;
     while (currentDate <= lastDayOfYear) {
       const weekStart = new Date(currentDate);
       const weekEnd = new Date(currentDate);
@@ -56,8 +59,9 @@ export default function ExportModal({ isOpen, onClose, payments }: ExportModalPr
       headers.join(','),
       ...filteredPayments.map(payment => {
         const user = typeof payment.userID === 'object' && payment.userID ? 
-          `${(payment.userID as any).nombre} ${(payment.userID as any).apellido}` : 
-          payment.userID?.toString();
+          `${(payment.userID ).nombre} ${(payment.userID).apellido}`: null ;
+          // : 
+          // payment.userID?.toString();
         
         return [
           user,

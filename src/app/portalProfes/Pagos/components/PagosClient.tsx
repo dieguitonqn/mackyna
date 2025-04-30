@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { IPago } from "@/types/pago";
+import { IPagoPopulated } from "@/types/pago";
 import PagosTable from "./PagosTable";
 import ExportModal from "./ExportModal";
 import { BsFiletypeCsv } from "react-icons/bs";
 
 interface PagosClientProps {
-  initialPayments: IPago[];
+  initialPayments: IPagoPopulated[];
 }
 
 export default function PagosClient({ initialPayments }: PagosClientProps) {

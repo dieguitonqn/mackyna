@@ -26,3 +26,18 @@ export interface IFormPago {
     comprobante?: File | null;
     descripcion?: string;
 }
+
+export interface IPagoPopulated {
+    userID: {
+        nombre: string;
+        apellido: string;
+    };
+    nombre: string;
+    email: string;
+    fecha: Date;
+    monto: number;
+    metodo: string;
+    estado: string;
+    comprobante?: string;
+    descripcion?: string;
+}

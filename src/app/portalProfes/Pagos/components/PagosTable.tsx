@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { IPago } from "@/types/pago";
+import { IPagoPopulated } from "@/types/pago";
 import OpenPDF from "@/components/PortalAlumnos/Pagos/openPDF";
 import { ObjectId } from 'mongodb';
 
@@ -10,7 +10,7 @@ interface userIDType {
   apellido: string;
 }
 
-export default function PagosTable({ payments }: { payments: IPago[] }) {
+export default function PagosTable({ payments }: { payments: IPagoPopulated[] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -51,8 +51,8 @@ export default function PagosTable({ payments }: { payments: IPago[] }) {
             <tr key={index} className="border-b border-gray-100 hover:bg-gray-400 hover:text-gray-700 transition-colors duration-200 text-slate-300">
               <td className="px-6 py-4 text-sm ">
                 {typeof pago.userID === 'object' && pago.userID ? 
-                  `${(pago.userID as unknown as userIDType).nombre} ${(pago.userID as unknown as userIDType).apellido}` : 
-                  pago.userID?.toString()}
+                  `${(pago.userID ).nombre} ${(pago.userID).apellido}` : null }
+                  {/* pago.userID?.toString()} */}
               </td>
               <td className="px-6 py-4 text-sm">
                 <p>{new Date(pago.fecha).toLocaleDateString()}</p>
