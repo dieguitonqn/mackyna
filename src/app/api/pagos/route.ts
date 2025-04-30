@@ -5,12 +5,12 @@ import Pago from "@/lib/models/pagos";
 import fs from 'fs';
 
 // Función para validar strings
-function isValidString(value: any, maxLength: number): value is string {
+function isValidString(value: unknown, maxLength: number): value is string {
     return typeof value === 'string' && value.length > 0 && value.length <= maxLength;
 }
 
 // Función para validar números
-function isValidNumber(value: any): boolean {
+function isValidNumber(value: unknown): boolean {
     return typeof value === 'string' && !isNaN(Number(value));
 }
 
@@ -20,48 +20,48 @@ export async function POST(req: Request) {
         console.log("formData", formData);
 
         // Validar y sanear userID
-        let userID = formData.get('userID');
+        const userID = formData.get('userID');
         if (!isValidString(userID, 255)) {
             return NextResponse.json({ message: "Invalid userID" }, { status: 400 });
         }
 
-        let nombre = formData.get('nombre');
+        const nombre = formData.get('nombre');
         if (!isValidString(nombre, 255)) {
             return NextResponse.json({ message: "Invalid nombre" }, { status: 400 });
         }
 
-        let email = formData.get('email');
+        const email = formData.get('email');
         if (!isValidString(email, 255)) {
             return NextResponse.json({ message: "Invalid email" }, { status: 400 });
         }
 
         // Validar y sanear fecha
-        let fecha = formData.get('fecha');
+        const fecha = formData.get('fecha');
         if (!isValidString(fecha, 255)) {
             return NextResponse.json({ message: "Invalid fecha" }, { status: 400 });
         }
 
         // Validar y sanear monto
-        let monto = formData.get('monto');
+        const monto = formData.get('monto');
         if (!isValidNumber(monto)) {
             return NextResponse.json({ message: "Invalid monto" }, { status: 400 });
         }
         const montoNumber = monto ? Number(monto) : 0;
 
         // Validar y sanear metodo
-        let metodo = formData.get('metodo');
+        const metodo = formData.get('metodo');
         if (!isValidString(metodo, 255)) {
             return NextResponse.json({ message: "Invalid metodo" }, { status: 400 });
         }
 
         // Validar y sanear estado
-        let estado = formData.get('estado');
+        const estado = formData.get('estado');
         if (!isValidString(estado, 255)) {
             return NextResponse.json({ message: "Invalid estado" }, { status: 400 });
         }
 
         // Validar y sanear descripcion
-        let descripcion = formData.get('descripcion');
+        const descripcion = formData.get('descripcion');
         if (!isValidString(descripcion, 1000)) {
             return NextResponse.json({ message: "Invalid descripcion" }, { status: 400 });
         }
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
         // Here you would typically save the data to your database
         // For example:
         try{
-            const newPago = await Pago.create({
+            Pago.create({
             userID,
             nombre,
             email,

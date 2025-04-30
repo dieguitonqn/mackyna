@@ -8,7 +8,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import connect from "@/lib/db";
 import argon2 from "argon2";
 import logger from "@/lib/logger";
-import Pago from "@/lib/models/pagos";
+// import Pago from "@/lib/models/pagos";
 
 const handler = NextAuth({
   // adapter: MongoDBAdapter(client),

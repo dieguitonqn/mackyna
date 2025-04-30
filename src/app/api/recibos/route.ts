@@ -1,5 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
+import type { NextApiRequest } from "next";
+import { ReadStream } from "fs";
+
 import fs from "fs";
 import { getServerSession } from "next-auth/next"; // Si usas NextAuth.js para autenticación
 import { authOptions } from "@/lib/auth0";
@@ -33,12 +34,21 @@ export const GET = async (req: NextApiRequest) => {
     const stat = fs.statSync(filePath);
 
     const headers = new Headers({
-      "Content-Type": "application/pdf", // Ajusta el Content-Type
-      "Content-Disposition": "inline", // O 'attachment' para forzar la descarga
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "inline",
       "Content-Length": stat.size.toString(),
     });
 
-    return new NextResponse(fileStream as any, { headers });
+    return new NextResponse(
+      new ReadableStream({
+        start(controller) {
+          fileStream.on('data', (chunk) => controller.enqueue(chunk));
+          fileStream.on('end', () => controller.close());
+          fileStream.on('error', (err) => controller.error(err));
+        },
+      }),
+      { headers }
+    );
   } catch (error) {
     return new NextResponse(
       JSON.stringify({ message: "Archivo no encontrado." }),

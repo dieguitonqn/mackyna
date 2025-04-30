@@ -1,6 +1,6 @@
 "use client";
 import { CardPagos } from "@/components/PortalAlumnos/Pagos/cardPagos";
-import { getServerSession } from "next-auth";
+
 import { useSession } from "next-auth/react";
 import React, { use, useEffect, useState } from "react";
 import { IPago } from "@/types/pago";
@@ -11,9 +11,7 @@ function page() {
   const [loading, setLoading] = useState(false);
   const [nuevoPago, setNuevoPago] = useState(false);
   const [pagos, setPagos] = useState<IPago[]>([]);
-  const [verRecibo, setVerRecibo] = useState(false);
-  const [recibo, setRecibo] = useState<string | null>(null);
-  const [reciboURL, setReciboURL] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -90,14 +88,14 @@ function page() {
           Mis Pagos
         </h1>
         <div className="max-w-4xl mx-auto p-4 bg-slate-800 rounded-lg shadow-md mt-4">
-          <div className="flex justify-end mb-4">
+          {/* <div className="flex justify-end mb-4">
             <button
               onClick={() => setNuevoPago(!nuevoPago)}
               className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               {nuevoPago ? "Ocultar opciones" : "Nuevo Pago"}
             </button>
-          </div>
+          </div> */}
 
           <div className="overflow-x-auto">
             <table className="min-w-full bg-slate-700 text-slate-200 rounded-lg overflow-hidden">

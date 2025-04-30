@@ -3,7 +3,7 @@ import connect  from '@/lib/db';
 import Config from '@/lib/models/config';
 import { NextResponse } from 'next/server';
 
-export const GET = async (req: Request) => {
+export const GET = async () => {
     // if (req.method !== 'GET') {
     //     return res.status(405).json({ success: false, error: 'Method not allowed' });
     // }

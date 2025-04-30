@@ -1,11 +1,8 @@
-import { stat } from "fs";
+
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import { NextResponse } from "next/server";
 
-interface ILinkPago {
-  clase: string;
-  precio: number;
-}
+
 
 //---------------------------------------------------------------------
 // Este script es para mandar lo que queremos hacer que procese el servidor de MercadoPago.
