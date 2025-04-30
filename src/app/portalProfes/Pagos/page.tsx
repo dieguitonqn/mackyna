@@ -1,10 +1,9 @@
 
 import React from "react";
 import Pago from "@/lib/models/pagos";
-import { IPago, IPagoPopulated } from "@/types/pago";
+import {  IPagoPopulated } from "@/types/pago";
 import connect from "@/lib/db";
 
-import PagosTable from "./components/PagosTable";
 import PagosClient from "./components/PagosClient";
 
 

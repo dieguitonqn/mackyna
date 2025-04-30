@@ -2,13 +2,9 @@
 import { useState } from 'react';
 import { IPagoPopulated } from "@/types/pago";
 import OpenPDF from "@/components/PortalAlumnos/Pagos/openPDF";
-import { ObjectId } from 'mongodb';
+// import { ObjectId } from 'mongodb';
 
-interface userIDType {
-  _id: ObjectId;
-  nombre: string;
-  apellido: string;
-}
+
 
 export default function PagosTable({ payments }: { payments: IPagoPopulated[] }) {
   const [currentPage, setCurrentPage] = useState(1);

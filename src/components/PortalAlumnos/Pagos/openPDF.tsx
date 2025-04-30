@@ -8,6 +8,10 @@ export const OpenPDF = ({ ruta }: { ruta: string }) => {
   const [urlRecibo, setUrlRecibo] = useState<string | null>(null);
   const [verRecibo, setVerRecibo] = useState(false);
 
+  const user = session?.user;
+  
+
+
   useEffect(() => {
     if (status === "authenticated" && ruta) {
       setUrlRecibo(`/api/recibos?ruta=${ruta}`);
@@ -21,7 +25,9 @@ export const OpenPDF = ({ ruta }: { ruta: string }) => {
   if (status === "unauthenticated") {
     return <p>No autorizado para ver este recibo.</p>;
   }
-
+  if (!user) {
+    return <p>No autorizado para ver este recibo.</p>;
+  }
   if (urlRecibo) {
     return <div>
 

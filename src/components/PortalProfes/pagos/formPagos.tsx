@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IUser } from "@/types/user";
 import { IFormPago } from "@/types/pago";
-import { IConfigs } from "@/types/configs";
+// import { IConfigs } from "@/types/configs";
 import { FaRegFilePdf } from "react-icons/fa6";
 
-export const FormPagos = ({ user, configs }: { user: IUser, configs:IConfigs }) => {
+export const FormPagos = ({ user }: { user: IUser}) => {
   const [pago, setPago] = useState<IFormPago>({
     userID: user._id.toString(),
     nombre: user.nombre+" "+user.apellido,

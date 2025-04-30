@@ -1,4 +1,4 @@
-import type { NextApiRequest } from "next";
+// import type { NextApiRequest } from "next";
 // import { ReadStream } from "fs";
 
 import fs from "fs";
@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/auth0";
 import logger from "@/lib/logger";
 import { NextResponse } from "next/server";
 
-export const GET = async (req: NextApiRequest) => {
+export const GET = async (req: Request) => {
   // --- Implementa tu lógica de autenticación y autorización aquí ---
   const session = await getServerSession({ req, ...authOptions });
   if (!session) {

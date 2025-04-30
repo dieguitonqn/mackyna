@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { IPago, IPagoPopulated } from '@/types/pago';
+import { IPagoPopulated } from '@/types/pago';
 import { BsFiletypeCsv } from "react-icons/bs";
 // import { ObjectId } from 'mongodb';
 

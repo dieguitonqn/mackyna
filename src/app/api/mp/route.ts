@@ -1,16 +1,13 @@
 
-import { MercadoPagoConfig, Preference } from "mercadopago";
+import { Preference } from "mercadopago";
 import { NextResponse } from "next/server";
-
+import {mpClient} from "@/lib/mp";
 
 
 //---------------------------------------------------------------------
 // Este script es para mandar lo que queremos hacer que procese el servidor de MercadoPago.
 //---------------------------------------------------------------------
 
-export const mpClient = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-});
 
 export async function POST(req: Request) {
     const { clase, precio, id } = await req.json();

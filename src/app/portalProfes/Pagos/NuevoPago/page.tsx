@@ -59,7 +59,7 @@ function NuevoPago() {
       
       <AutoCompleteInput users={users} onSelect={handleSelect}/>
       
-      {selectedUser && configs && <FormPagos user={selectedUser} configs={configs} />}
+      {selectedUser && configs && <FormPagos user={selectedUser} />}
       
     </div>
   );

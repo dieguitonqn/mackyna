@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Plani, TrainingDay } from "@/types/plani";
 // import ExerciseForm from '@/components/ExerciseForm';
 import AutoCompleteInput from "@/components/AutocompleteUsers";
-import { ObjectId } from "mongodb";
+// import { ObjectId } from "mongodb";
 import TrainingDayForm from "@/components/trainingDayForm";
 import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
 import { IUser } from "@/types/user";
