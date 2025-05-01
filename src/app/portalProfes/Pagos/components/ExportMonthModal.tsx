@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { IPagoPopulated } from '@/types/pago';
 import { BsFiletypeCsv } from "react-icons/bs";
+import { createCSVContent, downloadCSV } from '@/utils/exportUtils';
 
 interface ExportMonthModalProps {
   isOpen: boolean;
@@ -37,41 +38,14 @@ export default function ExportMonthModal({ isOpen, onClose, payments }: ExportMo
     const startDate = new Date(`${year}-${selectedMonth}-01`);
     const endDate = new Date(parseInt(year), parseInt(selectedMonth), 0);
 
-    // Filtrar pagos por mes
     const filteredPayments = payments.filter(payment => {
       const paymentDate = new Date(payment.fecha);
       return paymentDate >= startDate && paymentDate <= endDate;
     });
 
-    // Crear contenido CSV
-    const headers = ['Usuario', 'Fecha', 'Monto', 'Método', 'Estado', 'Descripción'];
-    const csvContent = [
-      headers.join(','),
-      ...filteredPayments.map(payment => {
-        const user = typeof payment.userID === 'object' && payment.userID ? 
-          `${payment.userID.nombre} ${payment.userID.apellido}` : null;
-        
-        return [
-          user,
-          new Date(payment.fecha).toLocaleDateString(),
-          payment.monto,
-          payment.metodo,
-          payment.estado,
-          payment.descripcion
-        ].join(',');
-      })
-    ].join('\n');
-
-    // Crear y descargar archivo
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
+    const csvContent = createCSVContent(filteredPayments);
     const fileName = `pagos_${year}_${selectedMonth}.csv`;
-    link.setAttribute('download', fileName);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadCSV(csvContent, fileName);
     onClose();
   };
 

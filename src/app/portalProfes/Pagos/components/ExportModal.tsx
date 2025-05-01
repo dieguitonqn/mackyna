@@ -2,15 +2,13 @@
 import { useState } from 'react';
 import { IPagoPopulated } from '@/types/pago';
 import { BsFiletypeCsv } from "react-icons/bs";
-// import { ObjectId } from 'mongodb';
+import { createCSVContent, downloadCSV } from '@/utils/exportUtils';
 
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
   payments: IPagoPopulated[];
 }
-
-
 
 export default function ExportModal({ isOpen, onClose, payments }: ExportModalProps) {
   const [weekStart, setWeekStart] = useState('');
@@ -47,43 +45,14 @@ export default function ExportModal({ isOpen, onClose, payments }: ExportModalPr
     const selectedWeekEnd = new Date(weekStart);
     selectedWeekEnd.setDate(selectedWeekEnd.getDate() + 6);
 
-    // Filtrar pagos por semana
     const filteredPayments = payments.filter(payment => {
       const paymentDate = new Date(payment.fecha);
       return paymentDate >= selectedWeekStart && paymentDate <= selectedWeekEnd;
     });
 
-    // Crear contenido CSV
-    const headers = ['Usuario', 'Fecha', 'Monto', 'Método', 'Estado', 'Descripción'];
-    const csvContent = [
-      headers.join(','),
-      ...filteredPayments.map(payment => {
-        const user = typeof payment.userID === 'object' && payment.userID ? 
-          `${(payment.userID ).nombre} ${(payment.userID).apellido}`: null ;
-          // : 
-          // payment.userID?.toString();
-        
-        return [
-          user,
-          new Date(payment.fecha).toLocaleDateString(),
-          payment.monto,
-          payment.metodo,
-          payment.estado,
-          payment.descripcion
-        ].join(',');
-      })
-    ].join('\n');
-
-    // Crear y descargar archivo
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
+    const csvContent = createCSVContent(filteredPayments);
     const fileName = `pagos_${selectedWeekStart.toISOString().split('T')[0]}_${selectedWeekEnd.toISOString().split('T')[0]}.csv`;
-    link.setAttribute('download', fileName);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadCSV(csvContent, fileName);
     onClose();
   };
 
