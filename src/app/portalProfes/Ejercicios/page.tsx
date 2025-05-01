@@ -130,9 +130,9 @@ const Ejercicios: React.FC = () => {
             </div>
             <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
                 <thead>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-gray-800 text-slate-300">
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left"
                         >
                             Nombre
                             <input
@@ -171,7 +171,7 @@ const Ejercicios: React.FC = () => {
 
                         </th> */}
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left "
                         >
                             Músculo Específico
                             <input
@@ -190,7 +190,7 @@ const Ejercicios: React.FC = () => {
 
                         </th>
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left "
                         >
                             Descripción
                             <input
@@ -208,7 +208,7 @@ const Ejercicios: React.FC = () => {
 
                         </th>
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left "
                         >
                             Video
                             <input
@@ -226,7 +226,7 @@ const Ejercicios: React.FC = () => {
 
                         </th>
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left "
                         >
                             Acciones
                         </th>
@@ -237,7 +237,7 @@ const Ejercicios: React.FC = () => {
                     {filteredEjercicios.map((ejercicio, index) => (
                         <tr
                             key={index}
-                            className="hover:bg-gray-200 border "
+                            className="hover:bg-gray-300 hover:text-gray-800 text-slate-300 bg-gray-800 border "
                         >
                             <td className="px-2 py-2 border">{ejercicio.nombre}</td>
                             {/* <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td> */}
