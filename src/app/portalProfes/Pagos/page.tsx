@@ -27,10 +27,9 @@ async function Pagos() {
       throw new Error('No hay pagos realizados');
     }
    
-    
     payments = pagos.map((pago: IPagoPopulated) => ({
-      // ...JSON.parse(JSON.stringify(pago)),
-      ...pago,
+      ...JSON.parse(JSON.stringify(pago)),
+      // ...pago,
       estado: pago.estado === 'approved' ? 'Aprobado' : 
               pago.estado === 'rejected' ? 'Rechazado' : 
               pago.estado === 'pending' ? 'Pendiente' : pago.estado,

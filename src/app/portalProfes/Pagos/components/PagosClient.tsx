@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { IPagoPopulated } from "@/types/pago";
 import PagosTable from "./PagosTable";
 import ExportModal from "./ExportModal";
+import ExportMonthModal from "./ExportMonthModal";
 import { BsFiletypeCsv } from "react-icons/bs";
 
 interface PagosClientProps {
@@ -11,6 +12,7 @@ interface PagosClientProps {
 
 export default function PagosClient({ initialPayments }: PagosClientProps) {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isExportMonthModalOpen, setIsExportMonthModalOpen] = useState(false);
 
   return (
     <>
@@ -19,8 +21,15 @@ export default function PagosClient({ initialPayments }: PagosClientProps) {
           onClick={() => setIsExportModalOpen(true)}
           className="bg-green-800 px-2 py-1 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
         >
-            <BsFiletypeCsv />
-          Exportar Datos
+          <BsFiletypeCsv />
+          Exportar por Semana
+        </button>
+        <button
+          onClick={() => setIsExportMonthModalOpen(true)}
+          className="bg-green-800 px-2 py-1 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
+        >
+          <BsFiletypeCsv />
+          Exportar por Mes
         </button>
         <a
           href="/portalProfes/Pagos/NuevoPago"
@@ -33,6 +42,11 @@ export default function PagosClient({ initialPayments }: PagosClientProps) {
       <ExportModal 
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
+        payments={initialPayments}
+      />
+      <ExportMonthModal 
+        isOpen={isExportMonthModalOpen}
+        onClose={() => setIsExportMonthModalOpen(false)}
         payments={initialPayments}
       />
     </>
