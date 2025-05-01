@@ -6,13 +6,13 @@ import { FormPagos } from "@/components/PortalProfes/pagos/formPagos";
 import { IUser } from "@/types/user";
 // import User from "@/lib/models/user";
 import AutoCompleteInput from '@/components/AutocompleteUsers'
-import { IConfigs } from "@/types/configs";
+// import { IConfigs } from "@/types/configs";
 
 
 function NuevoPago() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [users, setUsers] = useState<IUser[]>([]);
-  const [configs, setConfigs] = useState<IConfigs>();
+  // const [configs, setConfigs] = useState<IConfigs>();
   useEffect(() => {
     async function getUsers() {
       try {
@@ -23,22 +23,22 @@ function NuevoPago() {
         const users: IUser[] = await response.json();
         setUsers(users);
         console.log(users);
-        try {
-          const response = await fetch("/api/configs");
-          if (!response.ok) {
-            throw new Error("Error al obtener configuraciones");
-          }
-          const data: IConfigs = await response.json();
-          console.log(data);
-          setConfigs(data);
-        } catch (error: unknown) {
-          if (error instanceof Error) {
-            console.log("Error al obtener configuraciones: " + error.message);
-          } else {
-            console.log("Error desconocido");
-          }
+        // try {
+        //   const response = await fetch("/api/configs");
+        //   if (!response.ok) {
+        //     throw new Error("Error al obtener configuraciones");
+        //   }
+        //   const data: IConfigs = await response.json();
+        //   console.log(data);
+        //   setConfigs(data);
+        // } catch (error: unknown) {
+        //   if (error instanceof Error) {
+        //     console.log("Error al obtener configuraciones: " + error.message);
+        //   } else {
+        //     console.log("Error desconocido");
+        //   }
           
-        }
+        // }
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log("Error al consultar los usuarios: " + error.message);
