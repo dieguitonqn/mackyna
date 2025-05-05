@@ -55,7 +55,7 @@ function NuevoPago() {
      }
 
   return (
-    <div className="w-3/4 mx-auto justify-center">
+    <div className="bg-red w-full md:w-3/4 mx-auto justify-center">
       
       <AutoCompleteInput users={users} onSelect={handleSelect}/>
       

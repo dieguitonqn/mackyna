@@ -19,14 +19,14 @@ export default function PagosClient({ initialPayments }: PagosClientProps) {
       <div className="flex justify-end right-2 mb-10 gap-2">
         <button
           onClick={() => setIsExportModalOpen(true)}
-          className="bg-green-800 px-2 py-1 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
+          className="bg-green-800 px-2 py-1 shadow-lg shadow-gray-800 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
         >
           <BsFiletypeCsv />
           Exportar por Semana
         </button>
         <button
           onClick={() => setIsExportMonthModalOpen(true)}
-          className="bg-green-800 px-2 py-1 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
+          className="bg-green-800 px-2 py-1 shadow-lg shadow-gray-800 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
         >
           <BsFiletypeCsv />
           Exportar por Mes

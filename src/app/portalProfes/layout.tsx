@@ -70,7 +70,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-grow p-8 antialiased bg-gradient-to-r from-black via-green-700 to-black">
+      <main className="flex-grow p-2 md:p-8 antialiased bg-gradient-to-r from-black via-green-700 to-black">
         {/* <h1 className="text-2xl font-bold text-gray-800">Portal de Profesores</h1> */}
 
         {children}

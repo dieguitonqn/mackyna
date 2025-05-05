@@ -48,7 +48,7 @@ async function generarComprobantePDF(payment: PaymentResponse , payerUser: IUser
   doc.text(`Cliente: ${payerUser.nombre} ${payerUser.apellido}`, 10, 100);
   doc.text(`Email: ${payment.payer?.email}`, 10, 110);
   doc.text(`Monto: $${payment.transaction_amount}`, 10, 120);
-  doc.text(`Método de pago: ${payment.payment_type_id === "debit_card"?"Tarjeta de debito":"Saldo en cuenta"} `, 10, 130);
+  doc.text(`Método de pago: ${payment.payment_type_id === "debit_card"?"Tarjeta de débito":"Saldo en cuenta"} `, 10, 130);
   doc.text(`ID de pago: ${payment.id}`, 10, 140);
   doc.text(`Estado: ${payment.status === "approved" ? "Aprobado" : payment.status === "rejected" ? "Rechazado" : payment.status === "pending" ? "Pendiente" : payment.status}`, 10, 150);
   doc.text(`Descripción: ${payment.description}`, 10, 160);

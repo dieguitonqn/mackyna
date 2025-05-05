@@ -83,8 +83,8 @@ export const FormPagos = ({ user }: { user: IUser}) => {
   };
 
   return (
-  <div className="container mx-auto p-6">
-    <form className="max-w-2xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 space-y-6">
+  <div className="container mx-auto p-1">
+    <form className=" w-full md:max-w-2xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 space-y-6">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Registrar Nuevo Pago</h2>
       
       {/* Sección Monto */}
@@ -127,9 +127,7 @@ export const FormPagos = ({ user }: { user: IUser}) => {
         </label>
         <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg dark:border-slate-600">
           <div className="space-y-1 text-center">
-            {/* <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg> */}
+           
             <FaRegFilePdf className="text-gray-500 h-11 w-11 mx-auto "/>
             <div className="flex text-sm text-gray-600">
               <label htmlFor="comp" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
@@ -176,7 +174,7 @@ export const FormPagos = ({ user }: { user: IUser}) => {
         </div>
 
         <div id="descButtons" className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {['Clase Individual', 'Semana', 'Quincena', '3 a 5 Días', 'Libre'].map((desc) => (
+          {['Clase Individual', 'Semana', 'Quincena', 'Hasta 3 Días', 'Libre'].map((desc) => (
             <button
               key={desc}
               type="button"
