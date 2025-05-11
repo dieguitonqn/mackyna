@@ -33,11 +33,11 @@ function Page() {
                         desc='Días y horarios en que asistirá. También podrá agendar nuevos turnos o editar los que ya tenga.'
                         link='/portalAlumnos/Reservas'
                     />
-                    {/* <CardInit 
+                    <CardInit 
                     imagen='/pagos.png'
                     titulo='Pagos'
-                    desc="Realizar pagos de cuotas"
-                    link='/portalAlumnos/Pago'/> */}
+                    desc="Realizar pagos de cuotas (Solo Mercado Pago)"
+                    link='/portalAlumnos/Pago'/>
                 </div>
 
             </div>

@@ -128,16 +128,16 @@ const Ejercicios: React.FC = () => {
                     <MdOutlineAddChart className='w-6 h-6' /> Agregar Ejercicio
                 </button>
             </div>
-            <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
+            <table className="table-auto w-full border-collapse border border-gray-400 text-sm">
                 <thead>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-gray-800 text-slate-300">
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-400 px-2 py-2 text-left"
                         >
                             Nombre
                             <input
                                 type="text"
-                                className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                                className="mt-1 block w-full px-2 py-1 border border-gray-400 rounded text-sm"
                                 placeholder={`Filtrar por Nombre`}
                                 value={filters.nombre}
                                 onChange={(e) =>
@@ -171,7 +171,7 @@ const Ejercicios: React.FC = () => {
 
                         </th> */}
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-400 px-2 py-2 text-left "
                         >
                             Músculo Específico
                             <input
@@ -190,7 +190,7 @@ const Ejercicios: React.FC = () => {
 
                         </th>
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-400 px-2 py-2 text-left "
                         >
                             Descripción
                             <input
@@ -208,7 +208,7 @@ const Ejercicios: React.FC = () => {
 
                         </th>
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left "
                         >
                             Video
                             <input
@@ -226,7 +226,7 @@ const Ejercicios: React.FC = () => {
 
                         </th>
                         <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                            className="border border-gray-300 px-2 py-2 text-left "
                         >
                             Acciones
                         </th>
@@ -237,13 +237,13 @@ const Ejercicios: React.FC = () => {
                     {filteredEjercicios.map((ejercicio, index) => (
                         <tr
                             key={index}
-                            className="hover:bg-gray-200 border "
+                            className="hover:bg-gray-300 hover:text-gray-800 text-slate-300 border-gray-400 bg-gray-800 border "
                         >
-                            <td className="px-2 py-2 border">{ejercicio.nombre}</td>
+                            <td className="px-2 py-2 border border-gray-400">{ejercicio.nombre}</td>
                             {/* <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td> */}
-                            <td className="px-2 py-2 border">{ejercicio.specificMusc}</td>
-                            <td className="px-2 py-2 border">{ejercicio.description}</td>
-                            <td className="px-2 py-2 border">
+                            <td className="px-2 py-2 border border-gray-400">{ejercicio.specificMusc}</td>
+                            <td className="px-2 py-2 border border-gray-400">{ejercicio.description}</td>
+                            <td className="px-2 py-2 border border-gray-400">
                                 {ejercicio.video ? (
                                     <a href={ejercicio.video} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                         Ver Video

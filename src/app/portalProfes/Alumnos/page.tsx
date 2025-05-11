@@ -143,18 +143,19 @@ const Usuarios: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
-      <div className="flex justify-center gap-8 mb-6 py-3 px-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg shadow-sm">
+      {/* <div className="flex justify-center gap-8 mb-6 py-3 px-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg shadow-sm"> */}
+      <div className="flex justify-center gap-8 mb-1 py-3 px-4 bg-gray-800 rounded-md shadow-sm">
         <div className="text-center">
-          <span className="text-gray-500 text-sm">Total alumnos</span>
+          <span className="text-gray-300 text-sm">Total alumnos</span>
           <p className="text-lg font-semibold text-indigo-600">{users.length}</p>
         </div>
         <div className="text-center">
-          <span className="text-gray-500 text-sm">Alumnos activos</span>
+          <span className="text-gray-300 text-sm">Alumnos activos</span>
           <p className="text-lg font-semibold text-green-600">{users.filter(user => user.habilitado).length}</p>
         </div>
         {users.length !== filteredUsers.length && (
           <div className="text-center">
-        <span className="text-gray-500 text-sm">Filtrados</span>
+        <span className="text-gray-300 text-sm">Filtrados</span>
         <p className="text-lg font-semibold text-blue-600">{filteredUsers.length}</p>
           </div>
         )}
@@ -165,20 +166,20 @@ const Usuarios: React.FC = () => {
 
       {!loading && !error && (
         <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
+          <table className="table-auto w-full border-collapse border  bg-gray-800 border-gray-500 text-sm rounded-md">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="text-gray-200">
                 {['Nombre', 'Apellido', 'Email', 'Última Planilla', 'Última medición', 'Acciones'].map(
                   (heading, idx) => (
                     <th
                       key={idx}
-                      className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                      className="border border-gray-500 px-2 py-2 text-center"
                     >
                       {heading}
                       {idx < 3 && (
                         <input
                           type="text"
-                          className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          className="mt-1 block w-full px-2 py-1 border border-gray-500 rounded text-black text-sm"
                           placeholder={`Filtrar por ${heading.toLowerCase()}`}
                           value={
                             filters[heading.toLowerCase() as keyof FilteredUser] || ''
@@ -200,7 +201,7 @@ const Usuarios: React.FC = () => {
               {filteredUsers.map((user, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-200 border-b last:border-b-0"
+                  className="hover:bg-gray-400 hover:text-black text-gray-300 border-b border-gray-500 last:border-b-0"
                 >
                   <td className="px-2 py-2">{user.nombre}</td>
                   <td className="px-2 py-2">{user.apellido || ''}</td>
