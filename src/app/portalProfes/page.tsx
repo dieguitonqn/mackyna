@@ -1,58 +1,83 @@
-import connect from '@/lib/db';
+'use client'
+// import connect from '@/lib/db';
 
 import React from 'react';
+import { useEffect, useState } from 'react';
 
-import User from "@/lib/models/user";
+import  { IUser } from "@/lib/models/user";
 import { ConfettiComponent } from '@/components/PortalProfes/Confetti';
 
-const PaginaProfes = async () => {
+const PaginaProfes = () => {
 
 
-    await connect();
-    const users = await User.find();
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [today, setToday] = useState(new Date());
 
-    const today = new Date();
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch('/api/usuarios');
+                const data = await response.json();
+                setUsers(data);
+                setToday(new Date());
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
     
     
     const todayBirthdays = users.filter(user => {
         if (!user || !user.fecha_nacimiento) return false; // Validación
-        const fecha = new Date(user.fecha_nacimiento);
-        const todayString = `${today.getMonth() + 1}`.padStart(2, '0') + '-' + `${today.getDate()}`.padStart(2, '0');
+        const fecha = new Date(user.fecha_nacimiento); // Convertir a Date
+        if (isNaN(fecha.getTime())) return false; // Validar que sea una fecha válida
 
+        const todayString = `${today.getMonth() + 1}`.padStart(2, '0') + '-' + `${today.getDate()}`.padStart(2, '0');
 
         const day = fecha.getUTCDate().toString().padStart(2, '0'); // Día (en formato 2 dígitos)
         const month = (fecha.getUTCMonth() + 1).toString().padStart(2, '0'); // Mes (0-indexado, por eso +1)
-    
+
         return `${month}-${day}` === todayString;
     });
+
     const upcomingBirthdays = users
         .filter(user => {
             if (!user || !user.fecha_nacimiento) return false; // Validación
-            const birthdayThisYear = new Date(today.getFullYear(), user.fecha_nacimiento.getMonth(), user.fecha_nacimiento.getDate()+1);
+
+            const fecha = new Date(user.fecha_nacimiento); // Convertir a Date
+            if (isNaN(fecha.getTime())) return false; // Validar que sea una fecha válida
+
+            const birthdayThisYear = new Date(today.getFullYear(), fecha.getMonth(), fecha.getDate() + 1);
             const todayWithoutTimeUp = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             return birthdayThisYear > todayWithoutTimeUp;
         })
         .sort((a, b) => {
-            const aDate = new Date(today.getFullYear(), a.fecha_nacimiento.getMonth(), a.fecha_nacimiento.getDate());
-            const bDate = new Date(today.getFullYear(), b.fecha_nacimiento.getMonth(), b.fecha_nacimiento.getDate());
+            const aDate = new Date(today.getFullYear(), new Date(a.fecha_nacimiento).getMonth(), new Date(a.fecha_nacimiento).getDate());
+            const bDate = new Date(today.getFullYear(), new Date(b.fecha_nacimiento).getMonth(), new Date(b.fecha_nacimiento).getDate());
             return aDate.getTime() - bDate.getTime();
         })
         .slice(0, 5);
 
-        const pastBirthdays = users
+    const pastBirthdays = users
         .filter(user => {
             if (!user || !user.fecha_nacimiento) return false; // Validación
-            const birthdayThisYear = new Date(today.getFullYear(), user.fecha_nacimiento.getMonth(), user.fecha_nacimiento.getDate()+1);
+            const fecha = new Date(user.fecha_nacimiento); // Convertir a Date
+            if (isNaN(fecha.getTime())) return false; // Validar que sea una fecha válida
+
+            const birthdayThisYear = new Date(today.getFullYear(), fecha.getMonth(), fecha.getDate() + 1);
             const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
             return birthdayThisYear < todayWithoutTime;
         })
         .sort((a, b) => {
-            const aDate = new Date(today.getFullYear(), a.fecha_nacimiento.getMonth(), a.fecha_nacimiento.getDate());
-            const bDate = new Date(today.getFullYear(), b.fecha_nacimiento.getMonth(), b.fecha_nacimiento.getDate());
-            return  bDate.getTime()- aDate.getTime();
+            const aDate = new Date(today.getFullYear(), new Date(a.fecha_nacimiento).getMonth(), new Date(a.fecha_nacimiento).getDate());
+            const bDate = new Date(today.getFullYear(), new Date(b.fecha_nacimiento).getMonth(), new Date(b.fecha_nacimiento).getDate());
+            return bDate.getTime() - aDate.getTime();
         })
         .slice(0, 5);
+
     return (
         <div className='w-full md:w-3/4 lg:w-2/3 mx-auto p-4'>
             <h1 className=" text-2xl font-bold mb-4">Página principal de los profesores</h1>
@@ -78,6 +103,7 @@ const PaginaProfes = async () => {
 
             {/* Próximos cumpleaños */}
             <div className="p-4rounded shadow">
+                <h2 className="text-xl  bg-blue-100  font-semibold mb-2">Fecha: {today.getUTCDate()}-{ today.getUTCMonth()}</h2>
                 <h2 className="text-xl  bg-blue-100  font-semibold mb-2">🎈 Próximos 5 cumpleaños</h2>
                 <table className="table-auto w-full border-collapse border bg-blue-100  border-gray-300">
                     <thead>
@@ -91,14 +117,14 @@ const PaginaProfes = async () => {
                         {upcomingBirthdays.map((user, index) => (
                             <tr key={index} className="hover:bg-gray-100">
                                 <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
-                                <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
-                                <td className="border border-gray-300 px-4 py-2">
-                                    {new Date(user.fecha_nacimiento.getTime() + user.fecha_nacimiento.getTimezoneOffset() * 60000).toLocaleDateString('es-ES', {
+                                 <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
+                                 <td className="border border-gray-300 px-4 py-2">
+                                     {user.fecha_nacimiento && new Date(user.fecha_nacimiento).toLocaleDateString('es-ES', {
                                         day: '2-digit',
                                         month: 'long',
-                                    })}
-                                </td>
-                            </tr>
+                                     })}
+                                 </td>
+                             </tr>
                         ))}
                         
                     </tbody>
@@ -119,7 +145,7 @@ const PaginaProfes = async () => {
                                 <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
                                 <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
                                 <td className="border border-gray-300 px-4 py-2">
-                                    {new Date(user.fecha_nacimiento.getTime() + user.fecha_nacimiento.getTimezoneOffset() * 60000).toLocaleDateString('es-ES', {
+                                    {new Date(new Date(user.fecha_nacimiento).getTime() + new Date(user.fecha_nacimiento).getTimezoneOffset() * 60000).toLocaleDateString('es-ES', {
                                         day: '2-digit',
                                         month: 'long',
                                     })}
