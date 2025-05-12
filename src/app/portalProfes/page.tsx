@@ -1,33 +1,37 @@
-'use client'
+// 'use client'
 // import connect from '@/lib/db';
 
 import React from 'react';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
-import  { IUser } from "@/lib/models/user";
+// import  { IUser } from "@/lib/models/user";
+import User from "@/lib/models/user";
 import { ConfettiComponent } from '@/components/PortalProfes/Confetti';
+import connect from '@/lib/db';
+const PaginaProfes = async() => {
 
-const PaginaProfes = () => {
 
+    // const [users, setUsers] = useState<IUser[]>([]);
+    // const [today, setToday] = useState(new Date());
 
-    const [users, setUsers] = useState<IUser[]>([]);
-    const [today, setToday] = useState(new Date());
+    // useEffect(() => {
+    //     const fetchUsers = async () => {
+    //         try {
+    //             const response = await fetch('/api/usuarios');
+    //             const data = await response.json();
+    //             setUsers(data);
+    //             setToday(new Date());
+    //         } catch (error) {
+    //             console.error('Error fetching users:', error);
+    //         }
+    //     };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch('/api/usuarios');
-                const data = await response.json();
-                setUsers(data);
-                setToday(new Date());
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-
-        fetchUsers();
-    }, []);
+    //     fetchUsers();
+    // }, []);
     
+    connect();
+    const users = await User.find().lean();
+    const today = new Date();
     
     const todayBirthdays = users.filter(user => {
         if (!user || !user.fecha_nacimiento) return false; // Validación
@@ -103,7 +107,7 @@ const PaginaProfes = () => {
 
             {/* Próximos cumpleaños */}
             <div className="p-4rounded shadow">
-                <h2 className="text-xl  bg-blue-100  font-semibold mb-2">Fecha: {today.getUTCDate()}-{ today.getUTCMonth()}</h2>
+                {/* <h2 className="text-xl  bg-blue-100  font-semibold mb-2">Fecha: {today.getUTCDate()}-{ today.getUTCMonth()}</h2> */}
                 <h2 className="text-xl  bg-blue-100  font-semibold mb-2">🎈 Próximos 5 cumpleaños</h2>
                 <table className="table-auto w-full border-collapse border bg-blue-100  border-gray-300">
                     <thead>
@@ -119,7 +123,7 @@ const PaginaProfes = () => {
                                 <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
                                  <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
                                  <td className="border border-gray-300 px-4 py-2">
-                                     {user.fecha_nacimiento && new Date(user.fecha_nacimiento).toLocaleDateString('es-ES', {
+                                     {user.fecha_nacimiento && new Date(new Date(user.fecha_nacimiento).getTime() + new Date(user.fecha_nacimiento).getTimezoneOffset() * 60000).toLocaleDateString('es-ES', {
                                         day: '2-digit',
                                         month: 'long',
                                      })}
