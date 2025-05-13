@@ -131,18 +131,32 @@ export const FormPagos = ({ user }: { user: IUser}) => {
             <FaRegFilePdf className="text-gray-500 h-11 w-11 mx-auto "/>
             <div className="flex text-sm text-gray-600">
               <label htmlFor="comp" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                <span>Cargar archivo (<strong>Solo PDF</strong>)</span>
+                <span>
+                  {file ? (
+                    <span className="text-green-600">
+                      <strong>{file.name}</strong>
+                    </span>
+                  ) : (
+                    <>Cargar archivo (<strong>Solo PDF</strong>)
+                    <br />
+                    <p className="pl-1 text-gray-500">o arrastrar y soltar</p>
+                    <br />
+                    <p className="text-xs text-gray-500"> PDF hasta 10MB</p>
+                    </>
+                  )}
+                </span>
                 <input
                   id="comp"
                   name="comp"
                   type="file"
                   className="sr-only"
+                  accept="application/pdf"
                   onChange={handleChange}
                 />
               </label>
-              <p className="pl-1 text-gray-500">o arrastrar y soltar</p>
+              
             </div>
-            <p className="text-xs text-gray-500"> PDF hasta 10MB</p>
+            
           </div>
         </div>
       </div>

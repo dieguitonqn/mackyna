@@ -7,7 +7,7 @@ import connect from "@/lib/db";
 import PagosClient from "./components/PagosClient";
 
 
-
+export const dynamic = 'force-dynamic'; // Añade esto al principio del archivo
 async function Pagos() {
   let pagos: IPagoPopulated[] = [];
   let payments: IPagoPopulated[] = [];
