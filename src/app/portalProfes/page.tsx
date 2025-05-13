@@ -8,6 +8,8 @@ import React from 'react';
 import User from "@/lib/models/user";
 import { ConfettiComponent } from '@/components/PortalProfes/Confetti';
 import connect from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
 const PaginaProfes = async() => {
 
 
