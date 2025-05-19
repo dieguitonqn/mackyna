@@ -55,6 +55,17 @@ const NewPlan: React.FC = () => {
     };
     fetchUsers();
   }, []);
+  
+  useEffect(() => {
+    if (plan.startDate) {
+      const startDate = new Date(plan.startDate);
+      const rawMonth = startDate.toLocaleString("default", { month: "long" });
+      const month = rawMonth.charAt(0).toUpperCase() + rawMonth.slice(1);
+      const year = startDate.getFullYear().toString();
+      console.log(month, year);
+      setPlan((prevPlan) => ({ ...prevPlan, month: month, year: year }));
+    }
+  }, [plan.startDate]);
 
   const handleDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // const newDays = Math.min(5, Math.max(1, parseInt(e.target.value) || 1)); // Límite entre 1 y 5
@@ -159,7 +170,7 @@ const NewPlan: React.FC = () => {
           {users && (
             <AutoCompleteInput users={users} onSelect={handleSelectUser} />
           )}
-          <select
+          {/* <select
             value={plan.month}
             onChange={(e) =>
               setPlan((prevPlan) => ({ ...prevPlan, month: e.target.value }))
@@ -200,11 +211,11 @@ const NewPlan: React.FC = () => {
             <option value="2028">2028</option>
             <option value="2029">2029</option>
             <option value="2030">2030</option>
-          </select>
+          </select> */}
         </div>
         <div className="flex justify-center items-center gap-5">
-          <div className="flex flex-col">
-            <label htmlFor="startDate">Fecha de comienzo</label>
+          <div className="flex flex-col text-slate-300">
+            <label htmlFor="startDate" >Fecha de comienzo</label>
 
             <input
               id="startDate"
@@ -217,11 +228,11 @@ const NewPlan: React.FC = () => {
                   startDate: e.target.value,
                 }))
               }
-              className="border p-2 rounded-md"
+              className="border p-2 rounded-md bg-slate-900/80"
               required
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-slate-300">
             <label htmlFor="endDate">Fecha de Finalización</label>
 
             <input
@@ -235,19 +246,19 @@ const NewPlan: React.FC = () => {
                   endDate: e.target.value,
                 }))
               }
-              className="border p-2 rounded-md"
+              className="border p-2 rounded-md  bg-slate-900/80"
               required
             />
           </div>
         </div>
-        <div className="flex justify-center items-center gap-5 my-10">
+        <div className="flex justify-center items-center gap-5 my-10 text-slate-300">
           <label htmlFor="dias">Días de entrenamiento</label>
           <input
             id="dias"
             type="number"
             value={days}
             onChange={handleDaysChange}
-            className="border p-2 rounded-md"
+            className="border p-2 rounded-md  bg-slate-900/80"
             min={1}
             max={5}
           />

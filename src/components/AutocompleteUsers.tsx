@@ -50,7 +50,7 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
         value={query}
         onChange={handleInputChange}
         placeholder="Buscar usuario..."
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 border border-gray-300 bg-slate-900/80 text-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         required
       />
       {showDropdown && (
