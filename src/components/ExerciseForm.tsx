@@ -49,7 +49,6 @@ const ExerciseForm: React.FC<Props> = ({
         );
 
         setEjercicios(ejerciciosWithStringId);
-        // console.log(ejerciciosWithStringId);
       } catch (err) {
         console.error("Error al obtener ejercicios:", err);
       }
