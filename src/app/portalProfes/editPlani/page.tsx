@@ -176,30 +176,30 @@ const EditPlani = () => {
   return (
     <div className="flex flex-col items-center">
       <form onSubmit={handleSubmit}>
-        <h1 className="text-2xl font-bold mb-4">
+        <h1 className="text-3xl font-bold mb-4 text-slate-300 text-center">
           Editar planilla de {user?.nombre} {user?.apellido}
         </h1>
         {/* Aquí puedes agregar un formulario para editar la planilla */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
+          <label className="block text-gray-300 text-sm font-bold mb-2">
             Mes
           </label>
           <input
             type="text"
             value={editedPlani.month}
             onChange={(e) => handlePlaniChange("month", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
+          <label className="block text-gray-300 text-sm font-bold mb-2">
             Año
           </label>
           <input
             type="text"
             value={editedPlani.year}
             onChange={(e) => handlePlaniChange("year", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
           />
         </div>
         {/* <div className='mb-4'>
@@ -211,30 +211,30 @@ const EditPlani = () => {
                     <input type="text" value={editedPlani.email} onChange={(e) => handlePlaniChange('email', e.target.value)} className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
                 </div> */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
+          <label className="block text-gray-300 text-sm font-bold mb-2">
             Fecha de Inicio
           </label>
           <input
             type="date"
             value={new Date(editedPlani.startDate).toISOString().split("T")[0]}
             onChange={(e) => handlePlaniChange("startDate", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
+          <label className="block text-gray-300 text-sm font-bold mb-2">
             Fecha de Fin
           </label>
           <input
             type="date"
             value={new Date(editedPlani.endDate).toISOString().split("T")[0]}
             onChange={(e) => handlePlaniChange("endDate", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
           />
         </div>
         {editedPlani.trainingDays.map((trainingDay, dayIndex) => (
           <div
-            className="flex flex-col items-center  bg-slate-200 my-5 p-2"
+            className="flex flex-col items-center  bg-slate-500/30 my-5 p-2"
             key={dayIndex}
           >
             <h2 className="text-2xl font-bold mb-2">{trainingDay.day}</h2>
