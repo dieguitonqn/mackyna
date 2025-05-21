@@ -1,11 +1,10 @@
-
-
 // import { useSession, getSession } from 'next-auth/react';
 // import { useRouter } from 'next/navigation';
 // import { useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { Wap } from "@/components/wap";
+import { Galeria } from "@/components/Galeria";
 
 export default function Page() {
 
@@ -59,6 +58,7 @@ export default function Page() {
               <p className="mt-2 text-gray-400">Equipos de última tecnología.</p>
             </div>
           </div>
+          <Galeria />
         </section>
 
         <section>
