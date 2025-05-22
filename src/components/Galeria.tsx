@@ -20,28 +20,30 @@ const images = [
 
 export function Galeria() {
     return (
-        <div className="w-full max-w-7xl mx-auto my-12">
+        <div className="w-full max-w-5xl mx-auto my-12">
             <Swiper
                 effect={"coverflow"}
                 grabCursor={true}
                 centeredSlides={true}
                 slidesPerView={"auto"}
-                spaceBetween={30}
+                spaceBetween={60}
                 loop={true}
                 autoplay={{ delay: 2500, disableOnInteraction: false }}
                 coverflowEffect={{
                     rotate: 30,
                     stretch: 0,
-                    depth: 200,
+                    depth: 500,
                     modifier: 1,
                     slideShadows: true,
+                    scale: 1,
+
                 }}
                 pagination={{ clickable: true }}
                 modules={[EffectCoverflow, Pagination, Autoplay]}
                 className="mySwiper"
             >
                 {images.map((src, idx) => (
-                    <SwiperSlide key={idx} className="flex justify-center items-center !w-80 !h-80 md:!w-[600px] md:!h-[600px] bg-black rounded-xl overflow-hidden">
+                    <SwiperSlide key={idx} className="flex justify-center items-center !w-80 !h-80 md:!w-[400px] md:!h-[400px] bg-black rounded-xl overflow-hidden">
                         <Image 
                             src={src} 
                             alt={`Foto ${idx + 1}`} 

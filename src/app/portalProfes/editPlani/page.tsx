@@ -1,12 +1,12 @@
 "use client";
-import React, { Suspense, use, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { Exercise, Plani } from "@/types/plani";
 
 import ExerciseForm from "@/components/ExerciseForm";
 import { IUser } from "@/types/user";
-import { set } from "mongoose";
+
 
 const EditPlani = () => {
   const searchParams = useSearchParams();
