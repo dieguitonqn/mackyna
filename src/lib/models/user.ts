@@ -2,8 +2,8 @@ import { ObjectId, Schema, model, models } from "mongoose"
 
 
 
-interface IUser {
-    _id:ObjectId;
+export interface IUser {
+    _id:ObjectId | string;
     nombre: string;
     apellido:string;
     genero: string;

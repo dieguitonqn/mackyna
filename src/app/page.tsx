@@ -1,11 +1,10 @@
-
-
 // import { useSession, getSession } from 'next-auth/react';
 // import { useRouter } from 'next/navigation';
 // import { useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { Wap } from "@/components/wap";
+import { Galeria } from "@/components/Galeria";
 
 export default function Page() {
 
@@ -21,7 +20,7 @@ export default function Page() {
             width={300}
             height={300}
             className="mb-4" />
-          <h1 className="text-4xl font-extrabold text-green-500 md:text-6xl">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-green-500" style={{ fontSize: '2.25rem' }}>
             Transforma tu cuerpo, transforma tu vida
           </h1>
           <p className="mt-4 text-lg md:text-xl">
@@ -59,11 +58,12 @@ export default function Page() {
               <p className="mt-2 text-gray-400">Equipos de última tecnología.</p>
             </div>
           </div>
+          <Galeria />
         </section>
 
         <section>
           <Image 
-          src={"/precios.jpeg"}
+          src={"/PagosMayo.jpeg"}
           alt="precios de enero"
           width={1920}
           height={1080}
