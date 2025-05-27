@@ -47,6 +47,6 @@ next-env.d.ts
 
 *.log
 
-*/uploads/*
+*uploads/*
 
 .unlighthouse/*

@@ -7,12 +7,15 @@ import { Exercise, Plani } from "@/types/plani";
 import ExerciseForm from "@/components/ExerciseForm";
 import { IUser } from "@/types/user";
 
-
 const EditPlani = () => {
   const searchParams = useSearchParams();
   const queryPlaniID = searchParams.get("planiID");
+  const queryPlantillaID = searchParams.get("plantillaID");
   const [plani, setPlani] = useState<Plani>();
   const [user, setUser] = useState<IUser>();
+  const queryPlantillaUserID = searchParams.get("userID");
+  const queryFechaInitial = searchParams.get("fechaInicial");
+  const queryFechaFinal = searchParams.get("fechaFinal");
 
   const [editedPlani, setEditedPlani] = useState<Plani>({
     month: "",
@@ -38,13 +41,31 @@ const EditPlani = () => {
           setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
         })
         .catch((error) => console.error("Error fetching plani:", error));
+      if (queryPlantillaID && queryPlantillaUserID && queryFechaInitial && queryFechaFinal) {
+        fetch(`/api/plantillas?plantillaID=${queryPlantillaID}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error fetching plantilla");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // console.log('data:', data);
 
-
-
-      
+            setEditedPlani({
+              month: data.month,
+              year: data.year,
+              userId: queryPlantillaUserID || "",
+              email: data.email,
+              trainingDays: data.trainingDays,
+              startDate: queryFechaInitial || "",
+              endDate: queryFechaFinal || "",
+            });
+          })
+          .catch((error) => console.error("Error fetching plantilla:", error));
+      }
     }
   }, []);
-
 
   useEffect(() => {
     if (plani) {
@@ -60,10 +81,7 @@ const EditPlani = () => {
         })
         .catch((error) => console.error("Error fetching user:", error));
     }
-  }
-  , [plani]);
-
-
+  }, [plani]);
 
   if (!plani) {
     return <div>Cargando...</div>;
