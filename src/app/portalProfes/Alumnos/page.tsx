@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { IUser } from '@/types/user';
 import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa';
 import Tooltip from '@/components/PortalProfes/Tooltip';
 
@@ -219,26 +220,33 @@ const Usuarios: React.FC = () => {
                   </td>
                   <td className="px-2 py-2 flex flex-row justify-center gap-3 items-center">
                     <Tooltip text="Ver Planillas">
-                      <a
+                      <Link
                         href={`../portalAlumnos/Planilla?id=${user._id}`}
                         className="text-green-600 hover:text-green-800 transition-colors"
                       >
                         <FaClipboardList className="h-5 w-5" />
-                      </a>
+                      </Link>
                     </Tooltip>
 
                     <Tooltip text="Ver Métricas">
-                      <a
+                      <Link
                         href={`../portalAlumnos/Metricas?id=${user._id}`}
                         className="text-blue-600 hover:text-blue-800 transition-colors"
                       >
                         <FaChartBar className="h-5 w-5" />
-                      </a>
+                      </Link>
                     </Tooltip>
 
                     <Tooltip text="Resetear Contraseña">
                       <button
-                        onClick={() => handleResetPwd(user._id.toString())}
+                        onClick={() =>{
+                          const confirmar = window.confirm(
+                            '¿Estás seguro que deseas resetear la contraseña de este usuario?'
+                          );
+                          if (confirmar) {
+                            handleResetPwd(user._id.toString());
+                          }
+                        } }
                         className="text-red-600 hover:text-red-800 transition-colors"
                       >
                         <FaKey className="h-5 w-5" />

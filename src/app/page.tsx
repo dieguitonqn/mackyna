@@ -20,7 +20,7 @@ export default function Page() {
             width={300}
             height={300}
             className="mb-4" />
-          <h1 className="text-4xl font-extrabold text-green-500 md:text-6xl">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-green-500" style={{ fontSize: '2.25rem' }}>
             Transforma tu cuerpo, transforma tu vida
           </h1>
           <p className="mt-4 text-lg md:text-xl">
