@@ -14,8 +14,7 @@ const EditPlani = () => {
   const [plani, setPlani] = useState<Plani>();
   const [user, setUser] = useState<IUser>();
   const queryPlantillaUserID = searchParams.get("userID");
-  const queryFechaInitial = searchParams.get("fechaInicial");
-  const queryFechaFinal = searchParams.get("fechaFinal");
+
 
   const [editedPlani, setEditedPlani] = useState<Plani>({
     month: "",
@@ -41,7 +40,7 @@ const EditPlani = () => {
           setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
         })
         .catch((error) => console.error("Error fetching plani:", error));
-      if (queryPlantillaID && queryPlantillaUserID && queryFechaInitial && queryFechaFinal) {
+      if (queryPlantillaID && queryPlantillaUserID) {
         fetch(`/api/plantillas?plantillaID=${queryPlantillaID}`)
           .then((response) => {
             if (!response.ok) {
@@ -53,13 +52,13 @@ const EditPlani = () => {
             // console.log('data:', data);
 
             setEditedPlani({
-              month: data.month,
-              year: data.year,
+              month: "",
+              year: "",
               userId: queryPlantillaUserID || "",
-              email: data.email,
+              email: "",
               trainingDays: data.trainingDays,
-              startDate: queryFechaInitial || "",
-              endDate: queryFechaFinal || "",
+              startDate: "",
+              endDate:"",
             });
           })
           .catch((error) => console.error("Error fetching plantilla:", error));
