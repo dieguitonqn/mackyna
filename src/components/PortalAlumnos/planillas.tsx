@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { Exercise, Plani, TrainingDay } from '@/types/plani';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaSave, FaPrint } from "react-icons/fa";
+import { FaSave, FaPrint, FaSearchPlus, FaSearchMinus } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { ImYoutube2 } from "react-icons/im";
 
@@ -18,6 +18,7 @@ const Planillas: React.FC = () => {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [isTeach, setIsTeach] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>('');
+    const [zoomLevel, setZoomLevel] = useState<number>(1);
     const router = useRouter();
 
 
@@ -152,6 +153,14 @@ const Planillas: React.FC = () => {
         window.print();
     };
 
+    const handleZoomIn = () => {
+        setZoomLevel((prev) => Math.min(prev + 0.1, 2));
+    };
+
+    const handleZoomOut = () => {
+        setZoomLevel((prev) => Math.max(prev - 0.1, 1));
+    };
+
     return (
         <div className="min-h-screen p-4">
             <div className="flex justify-center">
@@ -201,14 +210,28 @@ const Planillas: React.FC = () => {
 
             {selectedPlani && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-auto print:overflow-visible print:static print:bg-white print:bg-opacity-100">
-                    <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-4xl print:shadow-none print:w-full print:max-w-none" id="printable-content">
-                        <div className='flex justify-between items-center mb-4 print:hidden'>
-                            <button
-                                onClick={handlePrint}
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-600"
-                            >
-                                <FaPrint /> Imprimir
-                            </button>
+                    <div className="bg-white p-1 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-4xl print:shadow-none print:w-full print:max-w-none" id="printable-content">
+                        <div className='flex justify-between items-center gap-4 mb-4 print:hidden'>
+                            <div className='flex gap-2'>
+                                <button
+                                    onClick={handlePrint}
+                                    className="bg-blue-500 text-white px-6 py-3 rounded-md flex items-center gap-2 hover:bg-blue-600"
+                                >
+                                    <FaPrint /> Imprimir
+                                </button>
+                                <button
+                                    className="bg-green-600 text-white px-6 py-3 rounded-md flex items-center gap-2 hover:bg-green-700"
+                                    onClick={() => setZoomLevel(z => Math.min(z + 0.1, 2))}
+                                >
+                                    <FaSearchPlus className='h-7 w-7' /> 
+                                </button>
+                                <button
+                                    className="bg-green-600 text-white px-6 py-3 rounded-md flex items-center gap-2 hover:bg-green-700"
+                                    onClick={() => setZoomLevel(z => Math.max(z - 0.1, 0.7))}
+                                >
+                                    <FaSearchMinus  className='h-7 w-7'/>
+                                </button>
+                            </div>
                             <button
                                 className="text-white bg-red-500 rounded-md p-1 font-bold text-xl"
                                 onClick={closeModal}
@@ -217,7 +240,7 @@ const Planillas: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="print-content">
+                        <div className="print-content" style={{ zoom: zoomLevel, transition: 'zoom 0.2s' }}>
                             <h2 className="text-xl font-bold mb-4">Planilla: {selectedPlani.month} {selectedPlani.year}</h2>
                             <div className='flex justify-between'>
                                 <h2 className="text-md font-bold mb-4">
@@ -229,7 +252,7 @@ const Planillas: React.FC = () => {
                             </div>
 
                             {selectedPlani.trainingDays.map((day, dayIndex) => (
-                                <div key={dayIndex} className="mt-4 bg-slate-100 rounded-md p-5 border">
+                                <div key={dayIndex} className="mt-4 bg-slate-100 rounded-md p-1 border">
                                     <h3 className="text-2xl font-bold text-center">{day.day}</h3>
                                     {Object.entries(day).map(([bloque, ejercicios]) => (
                                         bloque.startsWith('Bloque') && ejercicios.length > 0 && (
@@ -244,19 +267,31 @@ const Planillas: React.FC = () => {
                                                             <div className='flex flex-row items-center  my-2'>
                                                                 <strong>Notas:</strong>
                                                                 <div>
-                                                                    <input
-                                                                        type="text"
-                                                                        className="flex shadow-sm rounded-sm p-1 w-full border border-slate-200"
+                                                                    <textarea
+                                                                        className="flex shadow-sm rounded-sm p-2 w-full border border-slate-200 resize-none"
                                                                         value={exercise.notas || ''}
                                                                         onChange={(e) =>
                                                                             handleInputChange(dayIndex, bloque, exerciseIndex, e.target.value)
                                                                         }
+                                                                        rows={1}
+                                                                        style={{ minHeight: '28px' }}
+                                                                        onInput={(e) => {
+                                                                            const target = e.target as HTMLTextAreaElement;
+                                                                            target.style.height = 'auto';
+                                                                            target.style.height = target.scrollHeight + 'px';
+                                                                        }}
+                                                                        ref={(textarea) => {
+                                                                            if (textarea) {
+                                                                                textarea.style.height = 'auto';
+                                                                                textarea.style.height = textarea.scrollHeight + 'px';
+                                                                            }
+                                                                        }}
                                                                     />
                                                                 </div>
 
                                                                 <button
                                                                     onClick={() => handleSaveNote()}
-                                                                    className='flex border border-slate-300 bg-green-200 rounded-sm hover:border-2 hover:bg-green-500'
+                                                                    className='flex border border-slate-300 bg-green-200 rounded-sm hover:border-2 hover:bg-green-500 px-6 py-1'
                                                                 >
                                                                     <FaSave
                                                                         className='h-8 w-8 p-1' />
