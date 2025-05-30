@@ -46,7 +46,7 @@ async function Reservas() {
         if (reservas.length === 0) {
             return (
                 <div className='h-screen flex flex-col justify-center items-center'>
-                     {/* <Condiciones /> */}
+                    {/* <Condiciones /> */}
                     <div className='text-2xl font-bold text-slate-300'>No existen reservas para este usuario</div>
                     <div className='flex justify-end m-5 md:m-10'>
                         <Link
