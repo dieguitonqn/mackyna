@@ -10,7 +10,7 @@ import { ObjectId } from 'mongodb';
 import CancelButton from '@/components/PortalAlumnos/Reservas/cancelButton';
 import Link from 'next/link';
 import { FaRegCalendarPlus } from "react-icons/fa";
-import { Condiciones } from '@/components/PortalAlumnos/Reservas/Condiciones';
+// import { Condiciones } from '@/components/PortalAlumnos/Reservas/Condiciones';
 
 
 
@@ -46,7 +46,7 @@ async function Reservas() {
         if (reservas.length === 0) {
             return (
                 <div className='h-screen flex flex-col justify-center items-center'>
-                    <Condiciones />
+                     {/* <Condiciones /> */}
                     <div className='text-2xl font-bold text-slate-300'>No existen reservas para este usuario</div>
                     <div className='flex justify-end m-5 md:m-10'>
                         <Link
@@ -77,7 +77,7 @@ async function Reservas() {
                 <div className='flex justify-center items-center text-slate-300 text-5xl font-bold'>
                     Mis reservas
                 </div>
-                <Condiciones /> 
+                {/* <Condiciones />  */}
                 <div className='flex justify-end m-5 md:m-10'>
                     <Link
                         className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:font-bold flex flex-row items-center gap-2 '
