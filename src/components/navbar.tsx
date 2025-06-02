@@ -72,7 +72,7 @@ function Navbar() {
           {(isAdmin || isUser) && (
             <Link
               href="/portalAlumnos"
-              className="hidden md:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
             >
               <FaChalkboardTeacher />
               Portal Alumnos
@@ -83,7 +83,7 @@ function Navbar() {
           {(isAdmin || isUser) && (
             <Link
               href="/portalAlumnos/Metricas"
-              className="hidden md:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
             >
               <TbRulerMeasure />
               Mis Métricas
@@ -94,7 +94,7 @@ function Navbar() {
           {(isAdmin || isTeach) && (
             <Link
               href="/portalProfes"
-              className="hidden md:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
             >
               <FaChalkboardTeacher />
               Portal Profes
@@ -103,7 +103,7 @@ function Navbar() {
           {isAdmin && (
             <Link
               href="/dashboard"
-              className="hidden md:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
             >
               <TfiDashboard />
               Admin Dashboard
@@ -111,7 +111,7 @@ function Navbar() {
           )}
 
           {/* Menú hamburguesa para pantallas pequeñas */}
-          {isAdmin && <div className="block md:hidden"><HamburguesaAdmin /></div>}
+          {isAdmin && <div className="block lg:hidden"><HamburguesaAdmin /></div>}
           {isTeach && <div className="block md:hidden"><HamburguesaTeach /></div>}
           {isUser && <div className="block md:hidden"><HamburguesaUsers /></div>}
 

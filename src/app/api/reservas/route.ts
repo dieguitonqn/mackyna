@@ -11,12 +11,13 @@ import logger from "@/lib/logger";
 
 export const POST = async (req: Request) => {
     const body = await req.json();
-
+    console.log("UserID: "+body.userID, "Turno Id: "+body.turnoID);
     try {
         await connect()
         const user: IUser | null = await User.findOne({ _id: new ObjectId(body.userID as string) });
         if (!user) {
             logger.error(`Usuario no encontrado: ${body.userID}`);
+            console.error(`Usuario no encontrado: ${body.userID}`);
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
 
@@ -26,6 +27,7 @@ export const POST = async (req: Request) => {
 
             if (!turno) {
                 logger.error(`Turno no encontrado: ${body.turnoID}`);
+                console.error(`Turno no encontrado: ${body.turnoID}`);
                 return new NextResponse("Turno no encontrado", { status: 404 });
             }
 

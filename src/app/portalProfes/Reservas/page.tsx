@@ -84,6 +84,8 @@ export default function Reservas() {
                                             key={`${dia}-${hora}`}
                                             reservas={reservasFiltradas}
                                             getColorClass={getColorByReservas}
+                                            dia={dia}
+                                            hora={hora}
                                         />
                                     );
                                 })}
