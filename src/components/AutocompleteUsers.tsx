@@ -54,7 +54,7 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
         required
       />
       {showDropdown && (
-        <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-white rounded-lg shadow-lg z-10 mt-1">
+        <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-gray-800 text-gray-300 rounded-lg shadow-lg z-10 mt-1">
           {filteredUsers.map((user) => (
             <li
             key={typeof user._id === "object" ? user._id.toString() : user._id} // Convierte el ObjectId si es un objeto

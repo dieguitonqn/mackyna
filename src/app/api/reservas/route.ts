@@ -166,6 +166,7 @@ export const DELETE = async (req: Request) => {
         // }
         
         // if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) >= diasSemana.indexOf(diaActual)) {
+        // if (diasSemana.indexOf(turno.dia_semana.toLocaleLowerCase()) >= diasSemana.indexOf(diaActual)) {
             // Permitir cancelación
             const reservaC = await Reserva.deleteOne({ "turnoInfo.turnoId": body.turnoID, "userInfo.userId": body.userID });
             if (reservaC.deletedCount === 0) {
@@ -176,7 +177,11 @@ export const DELETE = async (req: Request) => {
             await Turno.findByIdAndUpdate(body.turnoID, { $inc: { cupos_disponibles: 1 } });
             return new NextResponse("Reserva cancelada correctamente", { status: 200 });
         // }
+        // }
         
+        // else {
+        //     return new NextResponse("No se puede cancelar el turno en este horario", { status: 403 });
+        // }
         // else {
         //     return new NextResponse("No se puede cancelar el turno en este horario", { status: 403 });
         // }
