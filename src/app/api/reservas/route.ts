@@ -9,6 +9,7 @@ import { Turnos } from "@/types/turnos";
 import logger from "@/lib/logger";
 
 
+
 export const POST = async (req: Request) => {
     const body = await req.json();
     try {
@@ -162,7 +163,49 @@ export const DELETE = async (req: Request) => {
 }
 
 
-export async function GET() {
+export async function GET(req: Request) {
+     const { searchParams } = new URL(req.url);
+        const userID = searchParams.get("userID");
+        console.log("Obteniendo reservas en server para el usuario:", userID);
+    if (userID) {
+        
+        try {
+            await connect();
+            const reservasData = await Reserva.find({ "userInfo.userId": userID }).lean();
+            console.log("Reservas encontradas para el usuario:", reservasData.length);
+            const reservas = await Promise.all(reservasData.map(async doc => {
+                const userHab = await User.findOne({ _id: new ObjectId(doc.userInfo.userId.toString() as string), habilitado: true });
+                if (userHab) {
+                    return {
+                        userInfo: {
+                            userId: doc.userInfo.userId.toString(),
+                            nombre: doc.userInfo.nombre,
+                            apellido: doc.userInfo.apellido
+                        },
+                        turnoInfo: {
+                            turnoId: doc.turnoInfo.turnoId.toString(),
+                            dia_semana: doc.turnoInfo.dia_semana,
+                            hora_inicio: doc.turnoInfo.hora_inicio,
+                            hora_fin: doc.turnoInfo.hora_fin,
+                        },
+                        fecha: doc.fecha,
+                        estado: doc.estado,
+                        observaciones: doc.observaciones
+                    };
+                }
+                return null;
+            }));
+            const reservasFiltradas = reservas.filter(reserva => reserva !== null);
+            console.log("Reservas filtradas:", reservasFiltradas.length);
+            return NextResponse.json(reservasFiltradas);
+        }catch (error:unknown)   {
+            return NextResponse.json(
+                { error: 'Error al obtener las reservas: ' + error },
+                { status: 500 }
+            );
+        }
+    }
+    
     try {
         await connect();
         const reservasData = await Reserva.find().lean();

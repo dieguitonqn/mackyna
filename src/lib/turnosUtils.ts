@@ -6,11 +6,11 @@ import { Turnos } from "@/types/turnos";
 
 
 export const fetchTurnos= async (dia:string) =>{
-    console.log(dia);
+    // console.log(dia);
     try {
         await connect();
         const turnos = await  Turno.find({dia_semana:dia, cupos_disponibles:{$gt:0}}).lean();
-        console.log(turnos)
+        // console.log(turnos)
          // Transformar _id a string
          const turnosConIdString:Turnos[] = turnos.map((turno) => ({
             ...turno,
