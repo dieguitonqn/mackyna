@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { Exercise, Plani, TrainingDay } from '@/types/plani';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaSave, FaPrint, FaSearchPlus, FaSearchMinus, FaEdit, FaTrashAlt, FaCalendarAlt } from "react-icons/fa";
+import { FaSave, FaPrint, FaSearchPlus, FaSearchMinus, FaEdit, FaTrashAlt, FaCalendarAlt, FaDumbbell, FaListOl, FaLayerGroup } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { ImYoutube2 } from "react-icons/im";
 
@@ -256,11 +256,11 @@ const Planillas: React.FC = () => {
                                 </div>
                             </div>
                             <button
-                                className="p-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                                className="p-1 text-red-500 hover:text-red-700 transition-colors duration-200"
                                 onClick={closeModal}
                                 aria-label="Cerrar planilla"
                             >
-                                <IoCloseCircleSharp className="h-6 w-6" />
+                                <IoCloseCircleSharp className="h-9 w-9" />
                             </button>
                         </div>
 
@@ -280,27 +280,42 @@ const Planillas: React.FC = () => {
 
                                 {selectedPlani.trainingDays.map((day, dayIndex) => (
                                     <div key={dayIndex} className="mb-6 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                                        <h3 className="text-xl font-bold text-center py-3 bg-gray-100 border-b">
+                                        <h3 className="text-xl font-bold text-center py-3 bg-gray-100 border-b text-gray-800">
                                             {day.day}
                                         </h3>
                                         <div className="p-4 space-y-4">
                                             {Object.entries(day).map(([bloque, ejercicios]) => (
                                                 bloque.startsWith('Bloque') && ejercicios.length > 0 && (
                                                     <div key={bloque} className="bg-white rounded-lg p-4 shadow-sm">
-                                                        <h4 className="text-lg font-semibold text-gray-700 mb-3">{bloque}</h4>
+                                                        <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                                            <FaLayerGroup className="text-blue-600" />
+                                                            {bloque}
+                                                        </h4>
                                                         <ul className="space-y-4">
                                                             {ejercicios.map((exercise: Exercise, exerciseIndex: number) => (
                                                                 <li key={exerciseIndex} className="pb-4 border-b border-gray-100 last:border-0">
-                                                                    <div className="grid gap-2 text-gray-600">
-                                                                        <p className="font-medium">Ejercicio: <span className="font-normal">{exercise.name}</span></p>
-                                                                        <p className="font-medium">Repeticiones: <span className="font-normal">{exercise.reps}</span></p>
-                                                                        <p className="font-medium">Series: <span className="font-normal">{exercise.sets}</span></p>
+                                                                    <div className="grid gap-2 text-gray-800">
+                                                                        <p className="flex items-center gap-2 text-sm">
+                                                                            <FaDumbbell className="text-blue-600" />
+                                                                            <span className="text-gray-600">Ejercicio:</span> 
+                                                                            <span className="font-bold text-base text-gray-900">{exercise.name}</span>
+                                                                        </p>
+                                                                        <p className="flex items-center gap-2 text-sm">
+                                                                            <FaListOl className="text-blue-600" />
+                                                                            <span className="text-gray-600">Repeticiones:</span>
+                                                                            <span className="font-bold text-base text-gray-900">{exercise.reps}</span>
+                                                                        </p>
+                                                                        <p className="flex items-center gap-2 text-sm">
+                                                                            <FaLayerGroup className="text-blue-600" />
+                                                                            <span className="text-gray-600">Series:</span>
+                                                                            <span className="font-bold text-base text-gray-900">{exercise.sets}</span>
+                                                                        </p>
                                                                         
                                                                         <div className="flex items-start gap-3 mt-2">
-                                                                            <span className="font-medium pt-2">Notas:</span>
+                                                                            <span className="font-medium pt-2 text-gray-800">Notas:</span>
                                                                             <div className="flex-1">
                                                                                 <textarea
-                                                                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all duration-200"
+                                                                                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all duration-200 text-gray-800"
                                                                                     value={exercise.notas || ''}
                                                                                     onChange={(e) => handleInputChange(dayIndex, bloque, exerciseIndex, e.target.value)}
                                                                                     rows={1}
@@ -320,7 +335,7 @@ const Planillas: React.FC = () => {
                                                                             </div>
                                                                             <button
                                                                                 onClick={() => handleSaveNote()}
-                                                                                className="inline-flex items-center px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition-colors duration-200"
+                                                                                className="inline-flex items-center px-3 py-2 bg-emerald-100 text-emerald-800 rounded-lg hover:bg-emerald-200 transition-colors duration-200 font-medium"
                                                                                 aria-label="Guardar notas"
                                                                             >
                                                                                 <FaSave className="h-5 w-5" />
@@ -329,10 +344,10 @@ const Planillas: React.FC = () => {
                                                                         
                                                                         {exercise.videoLink && (
                                                                             <div className="flex items-center gap-2 mt-2">
-                                                                                <span className="font-medium">Video:</span>
+                                                                                <span className="font-medium text-gray-800">Video:</span>
                                                                                 <a 
                                                                                     href={exercise.videoLink}
-                                                                                    className="inline-flex items-center text-red-600 hover:text-red-700 transition-colors duration-200"
+                                                                                    className="inline-flex items-center text-red-700 hover:text-red-800 transition-colors duration-200"
                                                                                     target="_blank"
                                                                                     rel="noopener noreferrer"
                                                                                     aria-label="Ver video del ejercicio"
