@@ -227,36 +227,36 @@ const Planillas: React.FC = () => {
             )}
 
             {selectedPlani && (
-                <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 overflow-y-auto print:overflow-visible print:static print:bg-white print:bg-opacity-100" role="dialog" aria-modal="true" aria-labelledby="planilla-title">
-                    <div className="bg-white rounded-lg shadow-xl w-full  md:w-3/4 max-w-5xl  print:shadow-none print:w-full print:max-w-none" id="printable-content">
-                        <div className="sticky top-0 bg-white p-4 border-b flex justify-between items-center gap-4 print:hidden">
+                <div className="fixed inset-0 bg-black/80 flex items-start justify-center z-50 overflow-y-auto print:overflow-visible print:static print:bg-white print:bg-opacity-100" role="dialog" aria-modal="true" aria-labelledby="planilla-title">
+                    <div className="bg-gray-900 rounded-lg shadow-xl w-full md:w-3/4 max-w-5xl print:shadow-none print:w-full print:max-w-none" id="printable-content">
+                        <div className="sticky top-0 bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center gap-4 print:hidden">
                             <div className="flex gap-3">
                                 <button
                                     onClick={handlePrint}
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                                     aria-label="Imprimir planilla"
                                 >
                                     <FaPrint className="h-5 w-5" /> Imprimir
                                 </button>
-                                <div className="flex rounded-lg overflow-hidden border border-gray-200">
+                                <div className="flex rounded-lg overflow-hidden border border-gray-600">
                                     <button
-                                        className="p-2 bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                                        className="p-2 bg-gray-700 hover:bg-gray-600 transition-colors duration-200"
                                         onClick={() => setZoomLevel(z => Math.min(z + 0.1, 2))}
                                         aria-label="Aumentar zoom"
                                     >
-                                        <FaSearchPlus className="h-5 w-5 text-gray-700" />
+                                        <FaSearchPlus className="h-5 w-5 text-gray-200" />
                                     </button>
                                     <button
-                                        className="p-2 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 border-l"
+                                        className="p-2 bg-gray-700 hover:bg-gray-600 transition-colors duration-200 border-l border-gray-600"
                                         onClick={() => setZoomLevel(z => Math.max(z - 0.1, 0.7))}
                                         aria-label="Reducir zoom"
                                     >
-                                        <FaSearchMinus className="h-5 w-5 text-gray-700" />
+                                        <FaSearchMinus className="h-5 w-5 text-gray-200" />
                                     </button>
                                 </div>
                             </div>
                             <button
-                                className="p-1 text-red-500 hover:text-red-700 transition-colors duration-200"
+                                className="p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                                 onClick={closeModal}
                                 aria-label="Cerrar planilla"
                             >
@@ -266,10 +266,10 @@ const Planillas: React.FC = () => {
 
                         <div className="p-6 print-content" style={{ zoom: zoomLevel, transition: 'all 0.2s' }}>
                             <div className="max-w-4xl mx-auto">
-                                <h2 id="planilla-title" className="text-2xl font-bold mb-6 text-gray-800">
+                                <h2 id="planilla-title" className="text-2xl font-bold mb-6 text-gray-100">
                                     Planilla: {selectedPlani.month} {selectedPlani.year}
                                 </h2>
-                                <div className="flex justify-between mb-6 text-gray-600">
+                                <div className="flex justify-between mb-6 text-gray-300">
                                     <h3 className="font-medium">
                                         Desde: {formatDate(selectedPlani.startDate)}
                                     </h3>
@@ -279,43 +279,43 @@ const Planillas: React.FC = () => {
                                 </div>
 
                                 {selectedPlani.trainingDays.map((day, dayIndex) => (
-                                    <div key={dayIndex} className="mb-6 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                                        <h3 className="text-xl font-bold text-center py-3 bg-gray-100 border-b text-gray-800">
+                                    <div key={dayIndex} className="mb-6 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                                        <h3 className="text-xl font-bold text-center py-3 bg-gray-700 border-b border-gray-600 text-gray-100">
                                             {day.day}
                                         </h3>
                                         <div className="p-4 space-y-4">
                                             {Object.entries(day).map(([bloque, ejercicios]) => (
                                                 bloque.startsWith('Bloque') && ejercicios.length > 0 && (
-                                                    <div key={bloque} className="bg-white rounded-lg p-4 shadow-sm">
-                                                        <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                                                            <FaLayerGroup className="text-blue-600" />
+                                                    <div key={bloque} className="bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-700">
+                                                        <h4 className="text-lg font-semibold text-gray-100 mb-3 flex items-center gap-2">
+                                                            <FaLayerGroup className="text-emerald-400" />
                                                             {bloque}
                                                         </h4>
                                                         <ul className="space-y-4">
                                                             {ejercicios.map((exercise: Exercise, exerciseIndex: number) => (
-                                                                <li key={exerciseIndex} className="pb-4 border-b border-gray-100 last:border-0">
-                                                                    <div className="grid gap-2 text-gray-800">
+                                                                <li key={exerciseIndex} className="pb-4 border-b border-gray-700 last:border-0">
+                                                                    <div className="grid gap-2 text-gray-100">
                                                                         <p className="flex items-center gap-2 text-sm">
-                                                                            <FaDumbbell className="text-blue-600" />
-                                                                            <span className="text-gray-600">Ejercicio:</span> 
-                                                                            <span className="font-bold text-base text-gray-900">{exercise.name}</span>
+                                                                            <FaDumbbell className="text-emerald-400" />
+                                                                            <span className="text-gray-400">Ejercicio:</span> 
+                                                                            <span className="font-bold text-base text-gray-100">{exercise.name}</span>
                                                                         </p>
                                                                         <p className="flex items-center gap-2 text-sm">
-                                                                            <FaListOl className="text-blue-600" />
-                                                                            <span className="text-gray-600">Repeticiones:</span>
-                                                                            <span className="font-bold text-base text-gray-900">{exercise.reps}</span>
+                                                                            <FaListOl className="text-emerald-400" />
+                                                                            <span className="text-gray-400">Repeticiones:</span>
+                                                                            <span className="font-bold text-base text-gray-100">{exercise.reps}</span>
                                                                         </p>
                                                                         <p className="flex items-center gap-2 text-sm">
-                                                                            <FaLayerGroup className="text-blue-600" />
-                                                                            <span className="text-gray-600">Series:</span>
-                                                                            <span className="font-bold text-base text-gray-900">{exercise.sets}</span>
+                                                                            <FaLayerGroup className="text-emerald-400" />
+                                                                            <span className="text-gray-400">Series:</span>
+                                                                            <span className="font-bold text-base text-gray-100">{exercise.sets}</span>
                                                                         </p>
                                                                         
                                                                         <div className="flex items-start gap-3 mt-2">
-                                                                            <span className="font-medium pt-2 text-gray-800">Notas:</span>
+                                                                            <span className="font-medium pt-2 text-gray-300">Notas:</span>
                                                                             <div className="flex-1">
                                                                                 <textarea
-                                                                                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all duration-200 text-gray-800"
+                                                                                    className="w-full px-3 py-2 rounded-lg border border-gray-600 bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-400 transition-all duration-200 text-gray-100 placeholder-gray-400"
                                                                                     value={exercise.notas || ''}
                                                                                     onChange={(e) => handleInputChange(dayIndex, bloque, exerciseIndex, e.target.value)}
                                                                                     rows={1}
@@ -335,7 +335,7 @@ const Planillas: React.FC = () => {
                                                                             </div>
                                                                             <button
                                                                                 onClick={() => handleSaveNote()}
-                                                                                className="inline-flex items-center px-3 py-2 bg-emerald-100 text-emerald-800 rounded-lg hover:bg-emerald-200 transition-colors duration-200 font-medium"
+                                                                                className="inline-flex items-center px-3 py-2 bg-emerald-900 text-emerald-100 rounded-lg hover:bg-emerald-800 transition-colors duration-200 font-medium"
                                                                                 aria-label="Guardar notas"
                                                                             >
                                                                                 <FaSave className="h-5 w-5" />
@@ -344,10 +344,10 @@ const Planillas: React.FC = () => {
                                                                         
                                                                         {exercise.videoLink && (
                                                                             <div className="flex items-center gap-2 mt-2">
-                                                                                <span className="font-medium text-gray-800">Video:</span>
+                                                                                <span className="font-medium text-gray-300">Video:</span>
                                                                                 <a 
                                                                                     href={exercise.videoLink}
-                                                                                    className="inline-flex items-center text-red-700 hover:text-red-800 transition-colors duration-200"
+                                                                                    className="inline-flex items-center text-red-400 hover:text-red-300 transition-colors duration-200"
                                                                                     target="_blank"
                                                                                     rel="noopener noreferrer"
                                                                                     aria-label="Ver video del ejercicio"
