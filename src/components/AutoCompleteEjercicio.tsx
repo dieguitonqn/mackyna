@@ -20,6 +20,7 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
   const [query, setQuery] = useState<string>(initialValue || "");
   const [filtered, setFiltered] = useState<Ejercicio[]>([]); // Usuarios filtrados
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // Control del desplegable
+  const [isValidSelection, setIsValidSelection] = useState<boolean>(true); // Control de selección válida
   
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,10 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
       .toLowerCase();
 
     setQuery(value);
+
+    // Validar si el valor ingresado corresponde a un ejercicio seleccionado
+    const isExactMatch = ejercicios.some(ejercicio => ejercicio.nombre === value);
+    setIsValidSelection(isExactMatch || value === "" || value === initialValue);
 
     // Filtrar usuarios que coincidan con el texto ingresado
     const filtered = ejercicios.filter((ejercicio) => {
@@ -50,6 +55,7 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
   const handleSelect = (ejercicio: Ejercicio) => {
     setQuery(ejercicio.nombre); // Colocar el nombre seleccionado en el campo
     setShowDropdown(false); // Cerrar el desplegable
+    setIsValidSelection(true); // Marcar como selección válida
     onSelect(ejercicio); // Notificar al padre
 
   };
@@ -61,7 +67,11 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
         value={query}
         onChange={handleInputChange}
         placeholder="Buscar ejercicio..."
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-900/80 text-slate-300 shadow-sm transition-all duration-150"
+        className={`w-full px-4 py-2 ${
+          !isValidSelection ? 'border-4 border-red-500 animate-pulse' : 'border border-gray-300'
+        } rounded-lg focus:outline-none focus:ring-2 ${
+          !isValidSelection ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+        } bg-slate-900/80 text-slate-300 shadow-sm transition-all duration-150`}
         
       />
       {showDropdown && (
