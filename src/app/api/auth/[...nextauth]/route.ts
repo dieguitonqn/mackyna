@@ -26,6 +26,7 @@ const handler = NextAuth({
         try {
           if (!credentials?.email || !credentials?.password) {
             console.error("Email o contraseña no proporcionados.");
+            logger.warn("Intento de acceso con credenciales incompletas.");
             return null;
           }
 
@@ -38,6 +39,9 @@ const handler = NextAuth({
           const isUser = await User.findOne({ email: credentials.email });
           if (!isUser) {
             console.error("Usuario no encontrado.");
+            logger.warn(
+              `Intento de acceso con usuario no registrado: ${credentials.email}`
+            );
             return null;
           }
 
@@ -50,6 +54,9 @@ const handler = NextAuth({
           );
           if (!isPasswordValid) {
             console.error("Contraseña incorrecta.");
+            logger.warn(
+              `Intento de acceso fallido para el usuario: ${credentials.email}`
+            );
             return null;
           }
 
@@ -62,6 +69,7 @@ const handler = NextAuth({
           return user;
         } catch (error) {
           console.error("Error en la autorización:", error);
+          logger.error(`Error en la autorización: ${error}`);
           return null;
         }
       },
