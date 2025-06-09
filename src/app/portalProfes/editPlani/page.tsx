@@ -7,12 +7,14 @@ import { Exercise, Plani } from "@/types/plani";
 import ExerciseForm from "@/components/ExerciseForm";
 import { IUser } from "@/types/user";
 
-
 const EditPlani = () => {
   const searchParams = useSearchParams();
   const queryPlaniID = searchParams.get("planiID");
+  const queryPlantillaID = searchParams.get("plantillaID");
   const [plani, setPlani] = useState<Plani>();
   const [user, setUser] = useState<IUser>();
+  const queryPlantillaUserID = searchParams.get("userID");
+
 
   const [editedPlani, setEditedPlani] = useState<Plani>({
     month: "",
@@ -38,13 +40,31 @@ const EditPlani = () => {
           setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
         })
         .catch((error) => console.error("Error fetching plani:", error));
+      if (queryPlantillaID && queryPlantillaUserID) {
+        fetch(`/api/plantillas?plantillaID=${queryPlantillaID}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error fetching plantilla");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // console.log('data:', data);
 
-
-
-      
+            setEditedPlani({
+              month: "",
+              year: "",
+              userId: queryPlantillaUserID || "",
+              email: "",
+              trainingDays: data.trainingDays,
+              startDate: "",
+              endDate:"",
+            });
+          })
+          .catch((error) => console.error("Error fetching plantilla:", error));
+      }
     }
   }, []);
-
 
   useEffect(() => {
     if (plani) {
@@ -60,10 +80,7 @@ const EditPlani = () => {
         })
         .catch((error) => console.error("Error fetching user:", error));
     }
-  }
-  , [plani]);
-
-
+  }, [plani]);
 
   if (!plani) {
     return <div>Cargando...</div>;
