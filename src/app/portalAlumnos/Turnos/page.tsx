@@ -216,7 +216,7 @@ function Page() {
   };
 
   return (
-    <div className="h-full md:h-screen">
+    <div className="h-full md:h-full my-10 p-5">
       <div className="flex justify-center items-center text-slate-300 text-5xl font-bold mt-10">
         Mis reservas
       </div>
