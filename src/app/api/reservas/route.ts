@@ -19,12 +19,20 @@ export const POST = async (req: Request) => {
             logger.error(`Usuario no encontrado: ${body.userID}`);
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
-
+        //Limpiar las reservas previas
+        if (user.habilitado === false) {
+            logger.error(`Usuario inhabilitado: ${user._id}`);
+            return new NextResponse("Usuario inhabilitado", { status: 403 });
+        }
+        const limpiarReservasPrevias = await Reserva.deleteMany({ "userInfo.userId": body.userID });
+        if (limpiarReservasPrevias.deletedCount === 0) {
+            logger.warn(`No se encontraron reservas previas para el usuario: ${body.userID}`);
+        }
         // Soporte para reservas múltiples
         const turnoIDs: string[] = Array.isArray(body.turnoIDs) ? body.turnoIDs : (body.turnoID ? [body.turnoID] : []);
-        if (turnoIDs.length === 0) {
-            return new NextResponse("No se especificaron turnos para reservar", { status: 400 });
-        }
+        // if (turnoIDs.length === 0) {
+        //     return new NextResponse("No se especificaron turnos para reservar", { status: 400 });
+        // }
 
         let userReservas: number = await Reserva.countDocuments({ "userInfo.userId": body.userID });
         const resultados: any[] = [];

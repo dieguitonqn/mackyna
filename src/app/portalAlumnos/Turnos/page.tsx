@@ -6,7 +6,7 @@ import { Turnos } from "@/types/turnos";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types/user";
-import { set } from "mongoose";
+import { IReserva } from "@/types/reserva";
 
 function Page() {
   const { data: session } = useSession();
@@ -19,7 +19,8 @@ function Page() {
     null
   );
   const [user, setUser] = useState<IUser | null>(null);
-  const [userReservas, setUserReservas] = useState<number>(0);
+  const [userReservasCount, setUserReservasCount] = useState<number>(0);
+  const [userReservas, setUserReservas] = useState<IReserva[]>([]);
   const router = useRouter();
 
   const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -46,7 +47,7 @@ function Page() {
 
   // Obtener cupos disponibles del usuario al cargar la página
   useEffect(() => {
-    const fetchUserCupos = async () => {
+    const fetchUserDiasPermitidos = async () => {
       if (!session?.user?.id) return;
       try {
         const res = await fetch(`/api/usuarios?id=${session.user.id}`);
@@ -55,16 +56,18 @@ function Page() {
           setUser(user);
 
           setUserDiasPermitidos(user.dias_permitidos as number);
+          console.log("Cupos disponibles del usuario: ", user.dias_permitidos);
         }
       } catch (e: unknown) {
         console.error("Error al obtener usuario:", e);
         setUserCupos(null);
       }
     };
-    fetchUserCupos();
+    fetchUserDiasPermitidos();
 
     // useEffect(() => {
-    const userReservas = async () => {
+    // Obtener reservas del usuario al cargar la página
+    const userReservs = async () => {
       if (!session?.user?.id) return;
       console.log("Obteniendo reservas del usuario:", session.user.id);
       try {
@@ -73,7 +76,29 @@ function Page() {
           const reservas = await res.json();
           const reservasCount = reservas.length;
 
-          setUserReservas(reservasCount);
+          if (reservasCount > 0) {
+            setSelectedTurnos(
+              reservas.reduce(
+                (acc: { [dia: string]: string }, reserva: IReserva) => {
+                  acc[reserva.turnoInfo.dia_semana] = reserva.turnoInfo.turnoId;
+                  return acc;
+                },
+                {}
+              )
+            );
+            console.log("Turnos seleccionados:", selectedTurnos);
+            console.log("Reservas del usuario:", reservas);
+          }
+          setUserReservasCount(reservasCount);
+          setUserReservas(reservas);
+          setUserCupos(
+            userDiasPermitidos ? userDiasPermitidos - reservasCount : null
+          );
+          console.log(
+            "Reservas del usuario obtenidas: ",
+            reservasCount,
+            reservas
+          );
         } else {
           console.error(
             "Error al obtener reservas del usuario:",
@@ -86,9 +111,18 @@ function Page() {
       }
     };
 
-    userReservas();
+    userReservs();
+    console.log("Reservas del usuario obtenidas: ", userReservasCount);
   }, [session?.user?.id]);
 
+  useEffect(() => {
+    // Actualizar los cupos disponibles al cambiar las reservas del usuario
+    if (userDiasPermitidos !== null) {
+      setUserCupos(userDiasPermitidos - userReservasCount);
+    } else {
+      setUserCupos(null);
+    }
+  }, [userDiasPermitidos, userReservasCount]);
   // Agrupar turnos por día
   const turnosPorDia: { [dia: string]: Turnos[] } = turnos.reduce(
     (acc, turno) => {
@@ -101,26 +135,33 @@ function Page() {
 
   // Manejar selección de turnos (uno por día, sin superar cupos)
   const handleTurnoButton = (dia: string, turnoId: string) => {
+    console.log("Turno seleccionado:", dia, turnoId);
+
     const seleccionados = Object.values(selectedTurnos).filter(Boolean).length;
-    console.log(userDiasPermitidos, userReservas);
+    
     const userCupos = userDiasPermitidos
-      ? userDiasPermitidos - userReservas - seleccionados
+      ? userDiasPermitidos - seleccionados
       : null;
-    console.log(userCupos, selectedTurnos);
+    console.log("Cupos disponibles del usuario:", userCupos);
+    console.log("Seleccionados:", seleccionados);
+    console.log("selectedTurnos:", selectedTurnos);
     setUserCupos(userCupos);
     // Si ya está seleccionado, deselecciona
     if (selectedTurnos[dia] === turnoId) {
       setSelectedTurnos((prev) => ({ ...prev, [dia]: "" }));
-       // Aumentar cupo al deseleccionar
-      userCupos? setUserCupos(userCupos +1):null;
+      // Aumentar cupo al deseleccionar
+      setUserCupos((prev) => (prev !== null ? prev + 1 : null));
       return;
     }
-    // No permitir seleccionar más turnos que el cupo
-
-    if (userCupos !== null && seleccionados >= userCupos) {
+    if (userCupos !== null && userDiasPermitidos !==null && seleccionados > userDiasPermitidos - 1) {
       alert("No puedes seleccionar más turnos de los permitidos.");
       return;
     }
+    console.log("Selected turnos:", selectedTurnos);
+    // Restar cupo al seleccionar
+    setUserCupos((prev) => (prev !== null ? prev - 1 : null));
+    // No permitir seleccionar más turnos que el cupo
+
     setSelectedTurnos((prev) => ({ ...prev, [dia]: turnoId }));
   };
 
@@ -128,8 +169,8 @@ function Page() {
   const handleReservaMultiple = async () => {
     const turnosAReservar = Object.values(selectedTurnos).filter(Boolean);
     if (turnosAReservar.length === 0) {
-      alert("Selecciona al menos un turno para reservar.");
-      return;
+      const confirmed = confirm("Debe seleccionar al menos un turno, de lo contrario se eliminarán sus reservas.¿Estás seguro que deseas eliminar todas tus reservas?");
+      if (!confirmed) return;
     }
     try {
       const reserva = await fetch("/api/reservas", {
@@ -147,9 +188,9 @@ function Page() {
         const data = await reserva.json();
         const dias_disp = data.dias_disp;
         alert(
-          `Reservas creadas exitosamente. Te quedan ${dias_disp} días disponibles.`
+          `Reservas guardadas exitosamente. Te quedan ${dias_disp} días disponibles.`
         );
-        setSelectedTurnos({});
+        // setSelectedTurnos({});
       } else if (reserva.status === 401) {
         alert(
           "Ocurrió un error al crear la reserva. Usted no tiene más cupo disponible."
@@ -176,7 +217,9 @@ function Page() {
 
   return (
     <div className="h-full md:h-screen">
-      <h2 className="text-2xl font-bold mb-4">Turnos</h2>
+      <div className="flex justify-center items-center text-slate-300 text-5xl font-bold mt-10">
+        Mis reservas
+      </div>
       <div className="flex flex-col items-center justify-center">
         <div className="w-full max-w-7xl">
           <div className="mb-2 text-right text-sm text-gray-600">
@@ -216,7 +259,9 @@ function Page() {
                       >
                         <span>
                           {turno.hora_inicio} - {turno.hora_fin}{" "}
-                          <span className="text-xs text-gray-500">
+                          <span className={`text-xs text-gray-500
+                            ${seleccionado? "text-white":""}
+                            `}>
                             ({turno.cupos_disponibles} cupos)
                           </span>
                         </span>
@@ -236,11 +281,12 @@ function Page() {
           </div>
           <div className="flex justify-center mt-6">
             <button
-              className="bg-green-700/80 text-white px-6 py-2 rounded-md text-lg shadow-md hover:bg-green-800 disabled:bg-gray-400"
+              className="bg-green-700/20 text-white px-6 py-2 border-gray-200 border rounded-md text-lg shadow-md hover:bg-green-800 disabled:bg-gray-400"
               onClick={handleReservaMultiple}
-              disabled={
-                Object.values(selectedTurnos).filter(Boolean).length === 0
-              }
+              // disabled={
+              //   // Object.values(selectedTurnos).filter(Boolean).length === 0
+               
+              // }
             >
               Reservar
             </button>
