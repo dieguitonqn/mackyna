@@ -18,11 +18,11 @@ function Page() {
   const [userDiasPermitidos, setUserDiasPermitidos] = useState<number | null>(
     null
   );
-  const [user, setUser] = useState<IUser | null>(null);
+  
   const [userReservasCount, setUserReservasCount] = useState<number>(0);
-  const [userReservas, setUserReservas] = useState<IReserva[]>([]);
+  
   const [showFloating, setShowFloating] = useState(false);
-  const router = useRouter();
+  
 
   const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
@@ -67,14 +67,14 @@ function Page() {
         ]);
 
         // Actualizar estados inmediatamente
-        setUser(userData);
+        
         const diasPermitidos = userData.dias_permitidos as number;
         const reservasCount = reservas.length;
         
         // Actualizar todos los estados de una vez
         setUserDiasPermitidos(diasPermitidos);
         setUserReservasCount(reservasCount);
-        setUserReservas(reservas);
+        
         setUserCupos(diasPermitidos - reservasCount);
         
         // Actualizar turnos seleccionados si hay reservas
