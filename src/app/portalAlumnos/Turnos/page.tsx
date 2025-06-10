@@ -4,8 +4,6 @@ import React, { useState, useEffect, use } from "react";
 import { Turnos } from "@/types/turnos";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { IUser } from "@/types/user";
 import { IReserva } from "@/types/reserva";
 
 function Page() {
