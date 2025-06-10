@@ -21,6 +21,7 @@ function Page() {
   const [user, setUser] = useState<IUser | null>(null);
   const [userReservasCount, setUserReservasCount] = useState<number>(0);
   const [userReservas, setUserReservas] = useState<IReserva[]>([]);
+  const [showFloating, setShowFloating] = useState(false);
   const router = useRouter();
 
   const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
@@ -206,7 +207,7 @@ function Page() {
           "Ya tienes una reserva en uno de estos turnos. Por favor, selecciona otros turnos."
         );
       }
-      router.refresh();
+      window.location.reload();
     } catch (error: unknown) {
       console.error("Error:", error);
       alert(
@@ -215,6 +216,19 @@ function Page() {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const counterElement = document.getElementById('cupos-counter');
+      if (counterElement) {
+        const rect = counterElement.getBoundingClientRect();
+        setShowFloating(rect.top < 0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="h-full md:h-full my-10 p-5">
       <div className="flex justify-center items-center text-slate-300 text-5xl font-bold mt-10">
@@ -222,13 +236,22 @@ function Page() {
       </div>
       <div className="flex flex-col items-center justify-center">
         <div className="w-full max-w-7xl">
-          <div className="mb-2 text-right text-sm text-gray-600">
-            {userCupos !== null
-              ? `Cupos disponibles: ${
-                  userCupos
-                  // Object.values(selectedTurnos).filter(Boolean).length
-                }`
-              : "Cupos disponibles: ..."}
+          {/* Contador principal */}
+          <div id="cupos-counter" className="mb-4 p-4 bg-green-100 rounded-lg shadow-md">
+            <div className="text-xl font-semibold text-green-800 text-center">
+              {userCupos !== null
+                ? `Cupos disponibles: ${userCupos}`
+                : "Calculando cupos disponibles..."}
+            </div>
+          </div>
+
+          {/* Contador flotante para móviles */}
+          <div 
+            className={`fixed top-4 right-4 bg-green-800 text-white px-4 py-2 rounded-full shadow-lg md:hidden transition-opacity duration-300 ${
+              showFloating ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            {userCupos !== null ? `${userCupos} cupos` : "..."}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {diasSemana.map((dia) => (

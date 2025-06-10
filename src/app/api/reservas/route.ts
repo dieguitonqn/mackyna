@@ -20,11 +20,23 @@ export const POST = async (req: Request) => {
             console.error(`Usuario no encontrado: ${body.userID}`);
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
+
+
         //Limpiar las reservas previas
         if (user.habilitado === false) {
             logger.error(`Usuario inhabilitado: ${user._id}`);
             return new NextResponse("Usuario inhabilitado", { status: 403 });
         }
+        
+        // Verificar si el usuario ya tiene reservas previas y eliminarlas e incrementar los cupos disponibles del turno
+        const reservasPrevias = await Reserva.find({ "userInfo.userId": body.userID });
+        if (reservasPrevias.length > 0) {
+            logger.warn(`El usuario ${body.userID} ya tiene reservas previas. Se eliminarán antes de crear nuevas reservas.`);
+            for (const reserva of reservasPrevias) {
+                await Turno.findByIdAndUpdate(reserva.turnoInfo.turnoId, { $inc: { cupos_disponibles: 1 } });
+            }
+        }
+        // Eliminar reservas previas del usuario
         const limpiarReservasPrevias = await Reserva.deleteMany({ "userInfo.userId": body.userID });
         if (limpiarReservasPrevias.deletedCount === 0) {
             logger.warn(`No se encontraron reservas previas para el usuario: ${body.userID}`);
