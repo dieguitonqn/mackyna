@@ -48,72 +48,53 @@ function Page() {
 
   // Obtener cupos disponibles del usuario al cargar la página
   useEffect(() => {
-    const fetchUserDiasPermitidos = async () => {
+    const fetchUserData = async () => {
       if (!session?.user?.id) return;
+      
       try {
-        const res = await fetch(`/api/usuarios?id=${session.user.id}`);
-        if (res.ok) {
-          const user = await res.json();
-          setUser(user);
+        // Obtener datos del usuario y reservas en paralelo
+        const [userRes, reservasRes] = await Promise.all([
+          fetch(`/api/usuarios?id=${session.user.id}`),
+          fetch(`/api/reservas?userID=${session.user.id}`)
+        ]);
 
-          setUserDiasPermitidos(user.dias_permitidos as number);
-          console.log("Cupos disponibles del usuario: ", user.dias_permitidos);
+        if (!userRes.ok) throw new Error('Error al obtener usuario');
+        if (!reservasRes.ok) throw new Error('Error al obtener reservas');
+        
+        const [userData, reservas] = await Promise.all([
+          userRes.json(),
+          reservasRes.json()
+        ]);
+
+        // Actualizar estados inmediatamente
+        setUser(userData);
+        const diasPermitidos = userData.dias_permitidos as number;
+        const reservasCount = reservas.length;
+        
+        // Actualizar todos los estados de una vez
+        setUserDiasPermitidos(diasPermitidos);
+        setUserReservasCount(reservasCount);
+        setUserReservas(reservas);
+        setUserCupos(diasPermitidos - reservasCount);
+        
+        // Actualizar turnos seleccionados si hay reservas
+        if (reservasCount > 0) {
+          const turnosActuales = reservas.reduce(
+            (acc: { [dia: string]: string }, reserva: IReserva) => {
+              acc[reserva.turnoInfo.dia_semana] = reserva.turnoInfo.turnoId;
+              return acc;
+            },
+            {}
+          );
+          setSelectedTurnos(turnosActuales);
         }
-      } catch (e: unknown) {
-        console.error("Error al obtener usuario:", e);
-        setUserCupos(null);
-      }
-    };
-    fetchUserDiasPermitidos();
-
-    // useEffect(() => {
-    // Obtener reservas del usuario al cargar la página
-    const userReservs = async () => {
-      if (!session?.user?.id) return;
-      console.log("Obteniendo reservas del usuario:", session.user.id);
-      try {
-        const res = await fetch(`/api/reservas?userID=${session.user.id}`);
-        if (res.ok) {
-          const reservas = await res.json();
-          const reservasCount = reservas.length;
-
-          if (reservasCount > 0) {
-            setSelectedTurnos(
-              reservas.reduce(
-                (acc: { [dia: string]: string }, reserva: IReserva) => {
-                  acc[reserva.turnoInfo.dia_semana] = reserva.turnoInfo.turnoId;
-                  return acc;
-                },
-                {}
-              )
-            );
-            console.log("Turnos seleccionados:", selectedTurnos);
-            console.log("Reservas del usuario:", reservas);
-          }
-          setUserReservasCount(reservasCount);
-          setUserReservas(reservas);
-          setUserCupos(
-            userDiasPermitidos ? userDiasPermitidos - reservasCount : null
-          );
-          console.log(
-            "Reservas del usuario obtenidas: ",
-            reservasCount,
-            reservas
-          );
-        } else {
-          console.error(
-            "Error al obtener reservas del usuario:",
-            res.statusText
-          );
-        }
-      } catch (e) {
-        console.error("Error al obtener reservas del usuario:", e);
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
         setUserCupos(null);
       }
     };
 
-    userReservs();
-    console.log("Reservas del usuario obtenidas: ", userReservasCount);
+    fetchUserData();
   }, [session?.user?.id]);
 
   useEffect(() => {
@@ -149,17 +130,29 @@ function Page() {
     setUserCupos(userCupos);
     // Si ya está seleccionado, deselecciona
     if (selectedTurnos[dia] === turnoId) {
+      // Si deselecciona un turno
       setSelectedTurnos((prev) => ({ ...prev, [dia]: "" }));
-      // Aumentar cupo al deseleccionar
-      setUserCupos((prev) => (prev !== null ? prev + 1 : null));
+      // Solo aumentar cupo si no hay otro turno seleccionado en el mismo día
+      const tieneTurnoEnMismoDia = Object.entries(selectedTurnos).some(([d, id]) => d === dia && id !== "" && id !== turnoId);
+      if (!tieneTurnoEnMismoDia) {
+        setUserCupos((prev) => (prev !== null ? prev + 1 : null));
+      }
       return;
     }
+
+    // Si ya hay un turno seleccionado en este día, solo actualizar el horario sin modificar cupos
+    if (selectedTurnos[dia] && selectedTurnos[dia] !== "") {
+      setSelectedTurnos((prev) => ({ ...prev, [dia]: turnoId }));
+      return;
+    }
+
     if (userCupos !== null && userDiasPermitidos !==null && seleccionados > userDiasPermitidos - 1) {
       alert("No puedes seleccionar más turnos de los permitidos.");
       return;
     }
+
     console.log("Selected turnos:", selectedTurnos);
-    // Restar cupo al seleccionar
+    // Restar cupo solo si es un nuevo día
     setUserCupos((prev) => (prev !== null ? prev - 1 : null));
     // No permitir seleccionar más turnos que el cupo
 
@@ -237,13 +230,22 @@ function Page() {
       <div className="flex flex-col items-center justify-center">
         <div className="w-full max-w-7xl">
           {/* Contador principal */}
-          <div id="cupos-counter" className="mb-4 p-4 bg-green-100 rounded-lg shadow-md">
-            <div className="text-xl font-semibold text-green-800 text-center">
-              {userCupos !== null
-                ? `Cupos disponibles: ${userCupos}`
-                : "Calculando cupos disponibles..."}
+            <div id="cupos-counter" className={`mb-4 p-4 rounded-lg shadow-md ${
+            userCupos === 0 ? 'bg-red-100' : 
+            userCupos === null ? 'bg-gray-100' : 
+            userCupos <= 2 ? 'bg-yellow-100' : 'bg-green-100'
+            }`}>
+            <div className={`text-xl font-semibold text-center ${
+              userCupos === 0 ? 'text-red-800' : 
+              userCupos === null ? 'text-gray-800' :
+              userCupos <= 2 ? 'text-yellow-800' : 'text-green-800'
+            }`}>
+              {userCupos === null ? "Calculando cupos disponibles..." :
+               userCupos === 0 ? "¡No te quedan cupos disponibles!" :
+               userCupos === 1 ? "¡Te queda 1 último cupo!" :
+               `Cupos disponibles: ${userCupos}`}
             </div>
-          </div>
+            </div>
 
           {/* Contador flotante para móviles */}
           <div 
