@@ -1,0 +1,66 @@
+import { NextResponse } from "next/server";
+import Plantilla from "@/lib/models/plantilla";
+import { IPlantilla } from "@/types/plantilla";
+
+export const POST = async (req: Request) => {
+  const plantilla: IPlantilla = await req.json();
+  if (!plantilla || typeof plantilla !== "object") {
+    console.error("No request body found");
+  }
+  console.log("Request body:", plantilla);
+
+  // Aquí puedes agregar la lógica para guardar la plantilla en la base de datos
+  try {
+    const newPlantilla = new Plantilla(plantilla);
+    await newPlantilla.save();
+    console.log("Plantilla guardada:", newPlantilla);
+  } catch (error) {
+    console.error("Error al guardar la plantilla:", error);
+    new NextResponse(
+      JSON.stringify({ message: "Error al guardar la plantilla." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+    return;
+  }
+  return new NextResponse(
+    JSON.stringify({
+      message: "POST request received",
+      //   data: req.body,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+
+export const GET = async () => {
+  try {
+    const plantillas = await Plantilla.find();
+    console.log("Plantillas encontradas:", plantillas);
+    const plantillasWithStringIds = plantillas.map((plantilla) => {
+      return {
+        ...plantilla.toObject(),
+        _id: plantilla._id.toString(), // Convertir ObjectId a string
+      };
+    });
+    return new NextResponse(
+      JSON.stringify(plantillasWithStringIds),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error al obtener las plantillas:", error);
+    return new NextResponse(
+      JSON.stringify({ message: "Error al obtener las plantillas." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+};

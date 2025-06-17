@@ -3,12 +3,16 @@
 import React, { useEffect, useState } from "react";
 // import { createPlan } from '@/services/api';
 import { Plani, TrainingDay } from "@/types/plani";
+import Plantilla from "@/lib/models/plantilla";
 // import ExerciseForm from '@/components/ExerciseForm';
 import AutoCompleteInput from "@/components/AutocompleteUsers";
 // import { ObjectId } from "mongodb";
 import TrainingDayForm from "@/components/trainingDayForm";
 import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
 import { IUser } from "@/types/user";
+import { set } from "mongoose";
+import { IPlantilla } from "@/types/plantilla";
+import AutoCompletePlantillas from "./components/AutoCompletePlantillas";
 
 // interface IUser {
 //   _id: ObjectId | string;
@@ -26,6 +30,10 @@ import { IUser } from "@/types/user";
 const NewPlan: React.FC = () => {
   const [users, setUsers] = useState<IUser[] | null>(null);
   const [userInfo, setUserInfo] = useState(false);
+  const [plantillaModal, setPlantillaModal] = useState(false);
+  const [plantillas, setPlantillas] = useState<IPlantilla[] | null>(null);
+  const [plantillaName, setPlantillaName] = useState("");
+  const [plantillaDescription, setPlantillaDescription] = useState("");
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [days, setDays] = useState<number>(1); // Cantidad de días seleccionados
   const [plan, setPlan] = useState<Plani>({
@@ -49,13 +57,35 @@ const NewPlan: React.FC = () => {
         }));
 
         setUsers(usersWithStringId);
-      } catch (err) {
+      } catch (err:unknown) {
         console.error("Error al obtener usuarios:", err);
       }
     };
+
+    const fetchPlantillas = async () => {
+      console.log("Fetching plantillas...");
+      try {
+        const response = await fetch("/portalProfes/Plantillas/api/plantillas");
+        const plantillasDB = await response.json();
+        // const plantillasWithStringId = plantillasDB.map(
+        //   (plantilla: IPlantilla) => ({
+        //     ...plantilla,
+        //     _id: plantilla._id?.toString(),
+        //   })
+        // );
+        setPlantillas(plantillasDB);
+
+        console.log("Plantillas obtenidas:", plantillasDB);
+      } catch (err:unknown) {
+        console.error("Error al obtener plantillas:", err);
+      }
+    };
+
     fetchUsers();
+    fetchPlantillas();
   }, []);
-  
+
+
   useEffect(() => {
     if (plan.startDate) {
       const startDate = new Date(plan.startDate);
@@ -121,6 +151,39 @@ const NewPlan: React.FC = () => {
     // console.log('Usuario seleccionado:', user);
   };
 
+  const handleSelectPlantilla = (plantilla: IPlantilla) => {
+    // Primero reseteamos los training days actuales
+    setPlan(prevPlan => ({
+      ...prevPlan,
+      trainingDays: []
+    }));
+
+    // Luego actualizamos los días para forzar el re-render de los componentes
+    setDays(0);
+    
+    // Después de un pequeño delay, actualizamos con los nuevos datos
+    setTimeout(() => {
+      // Hacemos una copia profunda de los training days
+      const newTrainingDays = plantilla.trainingDays.map((day, index) => ({
+        ...day,
+        day: `Día ${index + 1}`, // Aseguramos que el día tenga el formato correcto
+        Bloque1: day.Bloque1 ? [...day.Bloque1] : [],
+        Bloque2: day.Bloque2 ? [...day.Bloque2] : [],
+        Bloque3: day.Bloque3 ? [...day.Bloque3] : [],
+        Bloque4: day.Bloque4 ? [...day.Bloque4] : []
+      }));
+
+      // Actualizamos el plan con los nuevos días
+      setPlan(prevPlan => ({
+        ...prevPlan,
+        trainingDays: newTrainingDays,
+      }));
+
+      // Finalmente actualizamos la cantidad de días
+      setDays(plantilla.trainingDays.length);
+    }, 0);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser) {
@@ -143,6 +206,29 @@ const NewPlan: React.FC = () => {
     } catch (error) {
       console.error(error);
       alert("Error al crear la planilla");
+    }
+  };
+
+  const handleSavePlantilla = async () => {
+    try {
+      const response = await fetch("/api/plantillas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: plantillaName,
+          descripcion: plantillaDescription,
+          trainingDays: plan.trainingDays,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Error al guardar la plantilla");
+      alert("Plantilla guardada exitosamente");
+      setPlantillaModal(false);
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar la plantilla");
     }
   };
 
@@ -170,52 +256,10 @@ const NewPlan: React.FC = () => {
           {users && (
             <AutoCompleteInput users={users} onSelect={handleSelectUser} />
           )}
-          {/* <select
-            value={plan.month}
-            onChange={(e) =>
-              setPlan((prevPlan) => ({ ...prevPlan, month: e.target.value }))
-            }
-            className="border p-2 rounded-md"
-            required
-          >
-            <option value="" disabled>
-              Selecciona un mes
-            </option>
-            <option value="Enero">Enero</option>
-            <option value="Febrero">Febrero</option>
-            <option value="Marzo">Marzo</option>
-            <option value="Abril">Abril</option>
-            <option value="Mayo">Mayo</option>
-            <option value="Junio">Junio</option>
-            <option value="Julio">Julio</option>
-            <option value="Agosto">Agosto</option>
-            <option value="Septiembre">Septiembre</option>
-            <option value="Octubre">Octubre</option>
-            <option value="Noviembre">Noviembre</option>
-            <option value="Diciembre">Diciembre</option>
-          </select>
-          <select
-            value={plan.year}
-            onChange={(e) =>
-              setPlan((prevPlan) => ({ ...prevPlan, year: e.target.value }))
-            }
-            className="border p-2 rounded-md"
-            required
-          >
-            <option value="" disabled>
-              Selecciona el año
-            </option>
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-            <option value="2028">2028</option>
-            <option value="2029">2029</option>
-            <option value="2030">2030</option>
-          </select> */}
         </div>
         <div className="flex justify-center items-center gap-5">
           <div className="flex flex-col text-slate-300">
-            <label htmlFor="startDate" >Fecha de comienzo</label>
+            <label htmlFor="startDate">Fecha de comienzo</label>
 
             <input
               id="startDate"
@@ -263,23 +307,41 @@ const NewPlan: React.FC = () => {
             max={5}
           />
         </div>
-
-        <div className="flex flex-wrap justify-center items-start gap-4">
+        <div>
+          <div className="flex justify-center items-center mb-5">
+            {plantillas && (
+              <AutoCompletePlantillas
+                plantillas={plantillas}
+                onSelect={handleSelectPlantilla}
+              />
+            )}
+          </div>
+        </div>
+        <div>
           <div className="flex flex-wrap justify-center items-start gap-4">
             {Array(days)
               .fill(null)
-              .map((_, index) => (
-                <div key={index} className="w-full">
-                  <h2 className="text-xl mb-2 flex justify-center">
-                    {`Día ${index + 1}`}
-                  </h2>
+              .map((_, index) => {
+                const currentDay = `Día ${index + 1}`;
+                const existingTrainingDay = plan.trainingDays.find(
+                  (day) => day.day === currentDay
+                );
+                
+                return (
+                  <div key={`${currentDay}-${plan.trainingDays.length}`} className="w-full">
+                    <h2 className="text-xl mb-2 flex justify-center">
+                      {currentDay}
+                    </h2>
 
-                  <TrainingDayForm
-                    day={`Día ${index + 1}`} // Pass formatted day for clarity
-                    onChange={handleTrainingDayChange}
-                  />
-                </div>
-              ))}
+                    <TrainingDayForm
+                      key={`form-${currentDay}-${JSON.stringify(existingTrainingDay)}`}
+                      day={currentDay}
+                      onChange={handleTrainingDayChange}
+                      initialTrainingDay={existingTrainingDay}
+                    />
+                  </div>
+                );
+              })}
           </div>
         </div>
 
@@ -291,7 +353,75 @@ const NewPlan: React.FC = () => {
             Guardar
           </button>
         </div>
+        <div className="flex justify-center mt-5">
+          <button
+            className="bg-black/70 py-2 px-4 text-slate-300 rounded-md shadow-md shadow-gray-300 hover:bg-emerald-500 hover:text-white transition-colors"
+            onClick={() => setPlantillaModal(true)}
+          >
+            Guardar Plantilla
+          </button>
+        </div>
       </form>
+      {plantillaModal && (
+        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50">
+          <div className="bg-slate-800/95 p-8 rounded-xl shadow-2xl backdrop-blur-sm w-96 border border-slate-700">
+            <h2 className="text-2xl mb-6 text-slate-200 font-bold tracking-tight">
+              Guardar Plantilla
+            </h2>
+
+            <div className="space-y-6">
+              <div className="relative">
+                <label className="block mb-2 text-sm font-medium text-slate-300">
+                  Nombre de la Plantilla
+                </label>
+                <input
+                  type="text"
+                  value={plantillaName}
+                  onChange={(e) => setPlantillaName(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-lg 
+                  text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/50 
+                  focus:border-transparent transition-all duration-200"
+                  placeholder="Ej: Rutina de fuerza"
+                  required
+                />
+              </div>
+
+              <div className="relative">
+                <label className="block mb-2 text-sm font-medium text-slate-300">
+                  Descripción
+                </label>
+                <textarea
+                  value={plantillaDescription}
+                  onChange={(e) => setPlantillaDescription(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-lg 
+                  text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/50 
+                  focus:border-transparent transition-all duration-200 min-h-[100px] resize-none"
+                  placeholder="Describe los detalles de la plantilla..."
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  onClick={() => setPlantillaModal(false)}
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-300 
+                  bg-slate-700/50 hover:bg-slate-700 transition-all duration-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSavePlantilla}
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium text-white
+                  bg-emerald-600 hover:bg-emerald-500 transition-all duration-200
+                  shadow-lg shadow-emerald-500/20"
+                >
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Exercise } from "@/types/plani";
-import AutoCompleteInputEj from "./AutoCompleteEjercicio";
+import AutoCompleteInputEj from "@/components/AutoCompleteEjercicio";
 
 interface Props {
   day: string;
-
   bloque: string;
   onChange: (day: string, bloque: string, exercises: Exercise[]) => void;
   initialExercises?: Exercise[];
@@ -18,15 +17,16 @@ type Ejercicio = {
   description: string;
   video: string;
 };
+
 const ExerciseForm: React.FC<Props> = ({
   day,
   bloque,
   onChange,
   initialExercises,
 }) => {
-  const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
-  const [exercises, setExercises] = useState<Exercise[]>([
-    ...(initialExercises || [
+  const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>(() =>
+    initialExercises || [
       {
         name: "",
         reps: "",
@@ -34,8 +34,15 @@ const ExerciseForm: React.FC<Props> = ({
         notas: "",
         videoLink: "",
       },
-    ]),
-  ]);
+    ]
+  );
+
+  // Referencia para evitar la primera notificación
+  const isInitialMount = useRef(true);
+  // Timer para debounce
+  const updateTimer = useRef<NodeJS.Timeout>();
+
+  // Efecto para cargar ejercicios solo una vez al montar
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
@@ -44,66 +51,100 @@ const ExerciseForm: React.FC<Props> = ({
         const ejerciciosWithStringId = ejerciciosDB.map(
           (ejercicio: Ejercicio) => ({
             ...ejercicio,
-            id: ejercicio._id.toString(), // Convertir ObjectId a string
+            id: ejercicio._id.toString(),
           })
         );
-
         setEjercicios(ejerciciosWithStringId);
-        // console.log(ejerciciosWithStringId);
       } catch (err) {
         console.error("Error al obtener ejercicios:", err);
       }
     };
     fetchEjercicios();
-  }, [exercises]);
+  }, []); // Solo al montar el componente
 
-  const handleAddExercise = () => {
+  // Efecto para actualizar ejercicios cuando cambian las props iniciales
+  useEffect(() => {
+    if (initialExercises) {
+      setExercises(initialExercises);
+      // No notificamos al padre aquí ya que estos son los valores iniciales
+    }
+  }, [initialExercises]);
+
+  // Función para notificar cambios al padre con debounce
+  const notifyParent = useCallback(() => {
+    if (updateTimer.current) {
+      clearTimeout(updateTimer.current);
+    }
+    updateTimer.current = setTimeout(() => {
+      onChange(day, bloque, exercises);
+    }, 300);
+  }, [onChange, day, bloque, exercises]);
+
+  // Efecto para notificar cambios al padre
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    notifyParent();
+    // Cleanup
+    return () => {
+      if (updateTimer.current) {
+        clearTimeout(updateTimer.current);
+      }
+    };
+  }, [exercises, notifyParent]);
+
+  const handleAddExercise = useCallback(() => {
     const newExercise: Exercise = {
       name: "",
-      reps: "", // Permitir string vacío inicial
-      sets: 1, // valor por defecto
+      reps: "",
+      sets: 1,
       notas: "",
       videoLink: "",
     };
-    const updatedExercises = [...exercises, newExercise];
-    setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
-  };
+    setExercises((prev) => [...prev, newExercise]);
+  }, []);
 
-  const handleRemoveExercise = (index: number) => {
-    const updatedExercises = exercises.filter((_, i) => i !== index);
-    setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
-  };
+  const handleRemoveExercise = useCallback(
+    (index: number) => {
+      setExercises((prev) => {
+        const updated = prev.filter((_, i) => i !== index);
+        return updated;
+      });
+    },
+    []
+  );
 
-  const handleInputChange = (
-    index: number,
-    field: keyof Exercise,
-    value: string | number
-  ) => {
-    
-    const updatedExercises = [...exercises];
+  const handleInputChange = useCallback(
+    (index: number, field: keyof Exercise, value: string | number) => {
+      setExercises((prev) => {
+        const updated = [...prev];
+        // Validaciones específicas por campo
+        if (field === "sets" && typeof value === "number" && value < 1) {
+          value = 1; // Mínimo 1 serie
+        }
+        updated[index] = { ...updated[index], [field]: value };
+        return updated;
+      });
+    },
+    []
+  );
 
-    // Validaciones específicas por campo
-    if (field === "sets" && typeof value === "number" && value < 1) {
-      value = 1; // Mínimo 1 serie
-    }
-
-    updatedExercises[index] = { ...updatedExercises[index], [field]: value };
-    setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
-  };
-
-  const handleSelectEjercicio = (index: number, ejercicio: Ejercicio) => {
-    const updatedExercises = [...exercises];
-    updatedExercises[index] = {
-      ...updatedExercises[index],
-      name: ejercicio.nombre,
-      videoLink: ejercicio.video,
-    };
-    setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
-  };
+  const handleSelectEjercicio = useCallback(
+    (index: number, ejercicio: Ejercicio) => {
+      setExercises((prev) => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          name: ejercicio.nombre,
+          videoLink: ejercicio.video,
+        };
+        return updated;
+      });
+    },
+    []
+  );
 
   return (
     <div className="flex flex-col justify-center text-center border-2 border-slate-700 p-5 m-5 shadow-lg rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700/80">
@@ -112,10 +153,13 @@ const ExerciseForm: React.FC<Props> = ({
       </h2>
       {exercises.map((exercise, index) => (
         <div
-          key={`exercise-${index}`}
+          key={`exercise-${index}-${exercise.name}`}
           className="flex flex-col gap-2 border border-slate-600 shadow-md shadow-slate-900 p-4 mb-6 rounded-lg bg-slate-800/80 transition-colors duration-200 hover:border-blue-400 text-left"
         >
-          <label htmlFor={`name-${index}`} className="block mb-1 text-slate-200 font-semibold">
+          <label
+            htmlFor={`name-${index}`}
+            className="block mb-1 text-slate-200 font-semibold"
+          >
             Nombre del ejercicio
           </label>
           <AutoCompleteInputEj
@@ -123,7 +167,10 @@ const ExerciseForm: React.FC<Props> = ({
             onSelect={(ejercicio) => handleSelectEjercicio(index, ejercicio)}
             initialValue={exercise.name as string}
           />
-          <label htmlFor={`reps-${index}`} className="block mb-1 text-slate-300 font-semibold">
+          <label
+            htmlFor={`reps-${index}`}
+            className="block mb-1 text-slate-300 font-semibold"
+          >
             Repeticiones
           </label>
           <input
@@ -133,18 +180,26 @@ const ExerciseForm: React.FC<Props> = ({
             onChange={(e) => handleInputChange(index, "reps", e.target.value)}
             className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
           />
-          <label htmlFor={`sets-${index}`} className="block mb-1 text-slate-300 font-semibold">
+          <label
+            htmlFor={`sets-${index}`}
+            className="block mb-1 text-slate-300 font-semibold"
+          >
             Series
           </label>
           <input
             id={`sets-${index}`}
             type="number"
             value={exercise.sets}
-            onChange={(e) => handleInputChange(index, "sets", parseInt(e.target.value))}
+            onChange={(e) =>
+              handleInputChange(index, "sets", parseInt(e.target.value))
+            }
             className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
             min={1}
           />
-          <label htmlFor={`videoLink-${index}`} className="block mb-1 text-slate-300 font-semibold">
+          <label
+            htmlFor={`videoLink-${index}`}
+            className="block mb-1 text-slate-300 font-semibold"
+          >
             Enlace al video
           </label>
           <input

@@ -1,6 +1,6 @@
 import { Schema, model, models, Document } from "mongoose";
 
-interface Exercise {
+export interface Exercise {
   name: string; // Nombre del ejercicio
   reps: string; // Repeticiones
   sets: number; // Series
@@ -8,7 +8,7 @@ interface Exercise {
   videoLink?: string; // Enlace al video demostrativo
 }
 
-const ExerciseSchema = new Schema<Exercise>(
+export const ExerciseSchema = new Schema<Exercise>(
   {
     name: { type: String, required: true },
     reps: { type: String, required: true },
@@ -19,7 +19,7 @@ const ExerciseSchema = new Schema<Exercise>(
   { _id: false }
 );
 
-interface TrainingDay {
+export interface TrainingDay {
   day: string; // Nombre del día (e.g., "Lunes")
   Bloque1?: Exercise[];
   Bloque2?: Exercise[];
@@ -27,7 +27,7 @@ interface TrainingDay {
   Bloque4?: Exercise[];
 }
 
-const TrainingDaySchema = new Schema<TrainingDay>(
+export const TrainingDaySchema = new Schema<TrainingDay>(
   {
     day: { type: String, required: true },
     Bloque1: { type: [ExerciseSchema], required: false },
