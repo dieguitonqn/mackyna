@@ -14,15 +14,7 @@ export const POST = async (req: Request) => {
     const newPlantilla = new Plantilla(plantilla);
     await newPlantilla.save();
     console.log("Plantilla guardada:", newPlantilla);
-  } catch (error) {
-    console.error("Error al guardar la plantilla:", error);
-    new NextResponse(
-      JSON.stringify({ message: "Error al guardar la plantilla." }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-    return;
-  }
-  return new NextResponse(
+    return new NextResponse(
     JSON.stringify({
       message: "POST request received",
       //   data: req.body,
@@ -34,6 +26,15 @@ export const POST = async (req: Request) => {
       },
     }
   );
+  } catch (error) {
+    console.error("Error al guardar la plantilla:", error);
+    
+    return new NextResponse(
+      JSON.stringify({ message: "Error al guardar la plantilla." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+  
 };
 
 

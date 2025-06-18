@@ -13,6 +13,7 @@ import { IUser } from "@/types/user";
 import { set } from "mongoose";
 import { IPlantilla } from "@/types/plantilla";
 import AutoCompletePlantillas from "./components/AutoCompletePlantillas";
+import { useSession } from "next-auth/react";
 
 // interface IUser {
 //   _id: ObjectId | string;
@@ -29,6 +30,7 @@ import AutoCompletePlantillas from "./components/AutoCompletePlantillas";
 
 const NewPlan: React.FC = () => {
   const [users, setUsers] = useState<IUser[] | null>(null);
+  const {data:session}=useSession();
   const [userInfo, setUserInfo] = useState(false);
   const [plantillaModal, setPlantillaModal] = useState(false);
   const [plantillas, setPlantillas] = useState<IPlantilla[] | null>(null);
@@ -211,13 +213,14 @@ const NewPlan: React.FC = () => {
 
   const handleSavePlantilla = async () => {
     try {
-      const response = await fetch("/api/plantillas", {
+      const response = await fetch("/portalProfes/Plantillas/api/plantillas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           nombre: plantillaName,
+          nombreUser: session?.user?.name || "Usuario Desconocido",
           descripcion: plantillaDescription,
           trainingDays: plan.trainingDays,
         }),

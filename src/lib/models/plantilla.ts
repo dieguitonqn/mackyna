@@ -46,6 +46,7 @@ import { Exercise, TrainingDay, TrainingDaySchema } from "@/lib/models/planillas
 const PlantillaSchema = new Schema<IPlantilla>(
     {
         nombre: { type: String, unique:true ,required: true },
+        nombreUser: { type: String, required: true },
         descripcion: { type: String, required: true },
         trainingDays: {type: [TrainingDaySchema],required: true},
     },
