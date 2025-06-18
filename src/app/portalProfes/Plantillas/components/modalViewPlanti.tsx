@@ -1,7 +1,7 @@
 "use client";
 import { IPlantillaSId } from "@/types/plantilla";
 import React, { useState } from "react";
-import { FaDumbbell, FaListOl, FaLayerGroup } from "react-icons/fa";
+import { FaDumbbell, FaListOl, FaLayerGroup, FaRegEye } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { Exercise } from "@/types/plani";
 
@@ -17,10 +17,10 @@ export const ModalViewPlanti = ({ plantilla }: { plantilla: IPlantillaSId }) => 
     <div>
       <button
         title="Ver Plantilla"
-        className="p-2 text-gray-400 hover:text-gray-300 transition-colors duration-200"
+        className="py-2 text-gray-400 hover:text-gray-300 hover:shadow-[0_2px_2px_-1px_rgba(255,255,255,0.5)] transition-all duration-400"
         onClick={toggleModal}
       >
-        <FaLayerGroup className="h-6 w-6" />
+        <FaRegEye className="h-6 w-6" />
         <span className="sr-only">Ver Plantilla</span>
       </button>
 

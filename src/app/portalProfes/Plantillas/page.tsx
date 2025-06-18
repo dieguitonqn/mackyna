@@ -2,10 +2,14 @@
 import connect from "@/lib/db";
 import React from "react";
 import Plantilla from "@/lib/models/plantilla";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import { IPlantilla, IPlantillaSId } from "@/types/plantilla";
+import { revalidatePath } from 'next/cache';
 
 import { ModalViewPlanti } from "./components/modalViewPlanti";
+import { DeleteButton } from "./components/deleteButton";
+import { ObjectId } from "mongodb";
+import { EditButton } from "./components/editButton";
 
 async function Plantillas() {
   await connect();
@@ -22,19 +26,18 @@ async function Plantillas() {
   }));
   console.log("Plantillas:", plantillasWithStringIds);
 
-
-
+  
   return (
     <div>
       <section>
-        <h1 className="text-6xl flex mx-auto text-slate-300 justify-center">
+        <h1 className="text-6xl flex mx-auto text-slate-300 justify-center my-10">
           Listado de Plantillas
         </h1>
-        <div className="flex justify-center mt-8">
+        {/* <div className="flex justify-center mt-8">
           <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 my-10">
             Crear Nueva Plantilla
           </button>
-        </div>
+        </div> */}
       </section>
 
       <main>
@@ -71,18 +74,8 @@ async function Plantillas() {
                             : "Usuario Desconocido"}
                         </td>
                         <td className="py-2 px-4 flex justify-center gap-3">
-                          <button
-                            title="Editar plantilla"
-                            className="text-blue-400 hover:text-blue-300 transition-colors"
-                          >
-                            <FiEdit size={18} />
-                          </button>
-                          <button
-                            title="Eliminar plantilla"
-                            className="text-red-400 hover:text-red-300 transition-colors"
-                          >
-                            <FiTrash2 size={18} />
-                          </button>
+                          <EditButton id={plantilla._id!} />
+                          <DeleteButton id={plantilla._id!}/>
                           <ModalViewPlanti plantilla={plantilla} />
                         </td>
                       </tr>

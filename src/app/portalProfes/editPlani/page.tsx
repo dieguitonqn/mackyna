@@ -40,8 +40,8 @@ const EditPlani = () => {
           setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
         })
         .catch((error) => console.error("Error fetching plani:", error));
-      if (queryPlantillaID && queryPlantillaUserID) {
-        fetch(`/api/plantillas?plantillaID=${queryPlantillaID}`)
+      if (queryPlantillaID ) {
+        fetch(`/portalProfes/Plantillas/api/plantillas?plantillaID=${queryPlantillaID}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Error fetching plantilla");
@@ -49,7 +49,7 @@ const EditPlani = () => {
             return response.json();
           })
           .then((data) => {
-            // console.log('data:', data);
+            console.log('data:', data);
 
             setEditedPlani({
               month: "",
@@ -181,14 +181,7 @@ const EditPlani = () => {
         alert("Error al actualizar planilla");
       }
     }
-    // try {
-    //     const response = await axios.put(`/api/planillas?planiID=${queryPlaniID}`, editedPlani);
-    //     console.log('response:', response);
-    //     alert('Planilla actualizada correctamente');
-    // } catch (error) {
-    //     console.error('Error al actualizar planilla:', error);
-    //     alert('Error al actualizar planilla');
-    // }
+
   };
   return (
     <div className="flex flex-col items-center">
@@ -219,14 +212,6 @@ const EditPlani = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
           />
         </div>
-        {/* <div className='mb-4'>
-                    <label className='block text-gray-700 text-sm font-bold mb-2'>ID de Usuario</label>
-                    <input type="text" value={editedPlani.userId} onChange={(e) => handlePlaniChange('userId', e.target.value)} className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
-                </div>
-                <div className='mb-4'>
-                    <label className='block text-gray-700 text-sm font-bold mb-2'>Email</label>
-                    <input type="text" value={editedPlani.email} onChange={(e) => handlePlaniChange('email', e.target.value)} className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
-                </div> */}
         <div className="mb-4">
           <label className="block text-gray-300 text-sm font-bold mb-2">
             Fecha de Inicio
