@@ -47,16 +47,23 @@ export default function DashboardLayout({
               </Link>
             </li>
             <li>
-                            <Link href="/portalProfes/Pagos">
-                                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                                    Pagos
-                                </div>
-                            </Link>
-                        </li>
+              <Link href="/portalProfes/Pagos">
+                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                  Pagos
+                </div>
+              </Link>
+            </li>
             <li>
               <Link href="/portalProfes/newPlani">
                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                  Nueva Rutina
+                  Nueva Rutina/Plantilla
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link href="/portalProfes/Plantillas">
+                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                  Plantillas
                 </div>
               </Link>
             </li>

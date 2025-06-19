@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Plantilla from "@/lib/models/plantilla";
-import { IPlantilla } from "@/types/plantilla";
+import { IPlantilla, IPlantillaSId } from "@/types/plantilla";
 
 export const POST = async (req: Request) => {
   const plantilla: IPlantilla = await req.json();
@@ -96,3 +96,42 @@ export const GET = async (req: Request) => {
     }
   }
 };
+
+export const PUT = async (req: Request) => {
+  const plantilla: IPlantillaSId = await req.json();
+  console.log("PUT request received with body:", plantilla);
+  if (!plantilla || typeof plantilla !== "object") {
+    console.error("No request body found");
+  }
+  console.log("Request body:", plantilla);
+
+  try {
+    const updatedPlantilla = await Plantilla.findByIdAndUpdate(
+      plantilla._id,
+      plantilla,
+      { new: true }
+    );
+    if (!updatedPlantilla) {
+      return new NextResponse(
+        JSON.stringify({ message: "Plantilla no encontrada." }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    console.log("Plantilla actualizada:", updatedPlantilla);
+    return new NextResponse(
+      JSON.stringify(updatedPlantilla.toObject()),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error al actualizar la plantilla:", error);
+    return new NextResponse(
+      JSON.stringify({ message: "Error al actualizar la plantilla." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}

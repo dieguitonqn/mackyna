@@ -73,7 +73,7 @@ async function Plantillas() {
                             ? plantilla.nombreUser
                             : "Usuario Desconocido"}
                         </td>
-                        <td className="py-2 px-4 flex justify-center gap-3">
+                        <td className="py-2 px-4 flex justify-center items-center gap-3">
                           <EditButton id={plantilla._id!} />
                           <DeleteButton id={plantilla._id!}/>
                           <ModalViewPlanti plantilla={plantilla} />
