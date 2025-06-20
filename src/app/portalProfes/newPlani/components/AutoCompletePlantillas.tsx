@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from "react";
-import { Exercise, TrainingDay } from "@/types/plani";
 import {IPlantilla} from "@/types/plantilla";
 
 interface AutoCompleteProps {
@@ -9,6 +8,7 @@ interface AutoCompleteProps {
 }
 
 const AutoCompletePlantillas: React.FC<AutoCompleteProps> = ({ plantillas, onSelect }) => {
+  // console.log("AutoCompletePlantillas rendering with plantillas:", plantillas);
   const [query, setQuery] = useState<string>(""); 
   const [filteredPlantillas, setFilteredPlantillas] = useState<IPlantilla[]>([]); 
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -55,7 +55,7 @@ const AutoCompletePlantillas: React.FC<AutoCompleteProps> = ({ plantillas, onSel
         } bg-slate-900/80 text-slate-300 rounded-lg focus:outline-none focus:ring-2 ${
           !isValidSelection ? 'focus:ring-red-500' : 'focus:ring-blue-500'
         }`}
-        required
+        
       />
       {showDropdown && (
         <ul className="absolute top-full left-0 right-0 border-2 border-gray-300 bg-gray-800 text-gray-300 rounded-lg shadow-lg z-10 mt-1">

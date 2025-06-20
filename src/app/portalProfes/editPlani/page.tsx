@@ -49,7 +49,7 @@ const EditPlani = () => {
           return response.json();
         })
         .then((data) => {
-          console.log("Plani data:", data);
+          // console.log("Plani data:", data);
           setPlani(data);
           setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
         })
@@ -67,14 +67,14 @@ const EditPlani = () => {
           return response.json();
         })
         .then((data) => {
-          console.log("Plantilla data:", data);
+          // console.log("Plantilla data:", data);
           if (data && data.trainingDays) {
             setEditedPlani((prev) => ({
               ...prev,
               trainingDays: data.trainingDays,
             }));
             setEditedPlanti(data);
-            console.log(editedPlani);
+            // console.log(editedPlani);
           }
         })
         .catch((error) => console.error("Error fetching plantilla:", error));
@@ -181,7 +181,7 @@ const EditPlani = () => {
     
     if (queryPlaniID && plani) {
       try {
-        console.log("Enviando datos de plani:", editedPlani);
+        // console.log("Enviando datos de plani:", editedPlani);
         const response = await fetch(`/api/planillas?planiID=${queryPlaniID}`, {
           method: "PUT",
           headers: {
@@ -241,14 +241,25 @@ const EditPlani = () => {
           </h1>
         )}
         {queryPlantillaID && (
-          <div>
-
-          
-          <h1 className="text-3xl font-bold mb-4 text-slate-300 text-center">
-            Editar plantilla {editedPlanti.nombre}
-          </h1>
-          <p className="text-lg  text-slate-300 text-center   ">{editedPlanti.descripcion}</p>
-          </div>
+            <div className="bg-slate-500/30 p-6 rounded-lg shadow-lg mb-8">
+            <h1 className="text-3xl font-bold mb-6 text-slate-200 text-center">
+              Editar plantilla de <span className="text-emerald-400">{editedPlanti.nombreUser}</span>
+            </h1>
+            <div className="space-y-4">
+              <div className="flex flex-col items-center">
+              <p className="text-lg text-slate-300 font-semibold">
+                Nombre de la plantilla:
+              </p>
+              <p className="text-xl text-emerald-400">{editedPlanti.nombre}</p>
+              </div>
+              <div className="flex flex-col items-center">
+              <p className="text-lg text-slate-300 font-semibold">
+                Descripción:
+              </p>
+              <p className="text-xl text-emerald-400">{editedPlanti.descripcion}</p>
+              </div>
+            </div>
+            </div>
         )}
         {/* Aquí puedes agregar un formulario para editar la planilla */}
         {!queryPlantillaID && (
@@ -314,79 +325,79 @@ const EditPlani = () => {
             <h2 className="text-2xl font-bold mb-2">{trainingDay.day}</h2>
             <div
               key={dayIndex * 10}
-              className="my-6 flex flex-wrap gap-10 items-center"
+              className="my-6 grid grid-cols-4 gap-4 items-start"
             >
               {trainingDay.Bloque1 !== undefined && (
-                <div>
-                  {trainingDay.Bloque1.length > 0 ? (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque1"
-                      onChange={handleInputChange2}
-                      initialExercises={trainingDay.Bloque1}
-                    />
-                  ) : (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque1"
-                      onChange={handleInputChange2}
-                    />
-                  )}
-                </div>
+              <div>
+                {trainingDay.Bloque1.length > 0 ? (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque1"
+                  onChange={handleInputChange2}
+                  initialExercises={trainingDay.Bloque1}
+                />
+                ) : (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque1"
+                  onChange={handleInputChange2}
+                />
+                )}
+              </div>
               )}
               {trainingDay.Bloque2 !== undefined && (
-                <div>
-                  {trainingDay.Bloque2.length > 0 ? (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque2"
-                      onChange={handleInputChange2}
-                      initialExercises={trainingDay.Bloque2}
-                    />
-                  ) : (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque2"
-                      onChange={handleInputChange2}
-                    />
-                  )}
-                </div>
+              <div>
+                {trainingDay.Bloque2.length > 0 ? (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque2"
+                  onChange={handleInputChange2}
+                  initialExercises={trainingDay.Bloque2}
+                />
+                ) : (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque2"
+                  onChange={handleInputChange2}
+                />
+                )}
+              </div>
               )}
               {trainingDay.Bloque3 !== undefined && (
-                <div>
-                  {trainingDay.Bloque3.length > 0 ? (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque3"
-                      onChange={handleInputChange2}
-                      initialExercises={trainingDay.Bloque3}
-                    />
-                  ) : (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque3"
-                      onChange={handleInputChange2}
-                    />
-                  )}
-                </div>
+              <div>
+                {trainingDay.Bloque3.length > 0 ? (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque3"
+                  onChange={handleInputChange2}
+                  initialExercises={trainingDay.Bloque3}
+                />
+                ) : (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque3"
+                  onChange={handleInputChange2}
+                />
+                )}
+              </div>
               )}
               {trainingDay.Bloque4 !== undefined && (
-                <div>
-                  {trainingDay.Bloque4.length > 0 ? (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque4"
-                      onChange={handleInputChange2}
-                      initialExercises={trainingDay.Bloque4}
-                    />
-                  ) : (
-                    <ExerciseForm
-                      day={trainingDay.day}
-                      bloque="Bloque4"
-                      onChange={handleInputChange2}
-                    />
-                  )}
-                </div>
+              <div>
+                {trainingDay.Bloque4.length > 0 ? (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque4"
+                  onChange={handleInputChange2}
+                  initialExercises={trainingDay.Bloque4}
+                />
+                ) : (
+                <ExerciseForm
+                  day={trainingDay.day}
+                  bloque="Bloque4"
+                  onChange={handleInputChange2}
+                />
+                )}
+              </div>
               )}
             </div>
             <button

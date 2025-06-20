@@ -143,23 +143,17 @@ const Planillas: React.FC = () => {
         }
         const responseDel = await fetch(`/api/planillas?id=${id}`, { method: 'DELETE' });
         if (!responseDel.ok) {
-            throw new Error('Error al borrar el usuario');
+            alert('Error al borrar la planilla');
         }
         alert("Planilla borrada con éxito");
-        router.push(`/portalAlumnos/Planilla?id=${userId}`);
+        window.location.reload();
     };
 
     const handlePrint = () => {
         window.print();
     };
 
-    const handleZoomIn = () => {
-        setZoomLevel((prev) => Math.min(prev + 0.1, 2));
-    };
 
-    const handleZoomOut = () => {
-        setZoomLevel((prev) => Math.max(prev - 0.1, 1));
-    };
 
     return (
         <div className="min-h-screen p-4">

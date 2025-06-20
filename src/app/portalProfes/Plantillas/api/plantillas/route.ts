@@ -7,13 +7,13 @@ export const POST = async (req: Request) => {
   if (!plantilla || typeof plantilla !== "object") {
     console.error("No request body found");
   }
-  console.log("Request body:", plantilla);
+  // console.log("Request body:", plantilla);
 
   // Aquí puedes agregar la lógica para guardar la plantilla en la base de datos
   try {
     const newPlantilla = new Plantilla(plantilla);
     await newPlantilla.save();
-    console.log("Plantilla guardada:", newPlantilla);
+    // console.log("Plantilla guardada:", newPlantilla);
     return new NextResponse(
       JSON.stringify({
         message: "POST request received",
@@ -41,7 +41,7 @@ export const POST = async (req: Request) => {
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("plantillaID");
-  console.log("ID de plantilla recibido:", id);
+  // console.log("ID de plantilla recibido:", id);
   if (id) {
     try {
       const plantilla = await Plantilla.findById(id);
@@ -51,7 +51,7 @@ export const GET = async (req: Request) => {
           { status: 404, headers: { "Content-Type": "application/json" } }
         );
       }
-      console.log("Plantilla encontrada:", plantilla);
+      // console.log("Plantilla encontrada:", plantilla);
       return new NextResponse(
         JSON.stringify(plantilla.toObject()),
         {
@@ -71,7 +71,7 @@ export const GET = async (req: Request) => {
   } else {
     try {
       const plantillas = await Plantilla.find();
-      console.log("Plantillas encontradas:", plantillas);
+      // console.log("Plantillas encontradas:", plantillas);
       const plantillasWithStringIds = plantillas.map((plantilla) => {
         return {
           ...plantilla.toObject(),
@@ -99,11 +99,11 @@ export const GET = async (req: Request) => {
 
 export const PUT = async (req: Request) => {
   const plantilla: IPlantillaSId = await req.json();
-  console.log("PUT request received with body:", plantilla);
+  // console.log("PUT request received with body:", plantilla);
   if (!plantilla || typeof plantilla !== "object") {
     console.error("No request body found");
   }
-  console.log("Request body:", plantilla);
+  // console.log("Request body:", plantilla);
 
   try {
     const updatedPlantilla = await Plantilla.findByIdAndUpdate(
@@ -117,7 +117,7 @@ export const PUT = async (req: Request) => {
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
-    console.log("Plantilla actualizada:", updatedPlantilla);
+    // console.log("Plantilla actualizada:", updatedPlantilla);
     return new NextResponse(
       JSON.stringify(updatedPlantilla.toObject()),
       {

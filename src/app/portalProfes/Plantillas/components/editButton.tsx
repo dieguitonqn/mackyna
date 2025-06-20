@@ -1,7 +1,6 @@
 import { FiEdit } from 'react-icons/fi'
 import Link from 'next/link'
 export const EditButton = ({ id }: { id: string }) => {
-    console.log("EditButton ID:", id);
     return (
         <Link
         href={`/portalProfes/editPlani?plantillaID=${id}`}
