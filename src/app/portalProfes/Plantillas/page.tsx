@@ -2,13 +2,11 @@
 import connect from "@/lib/db";
 import React from "react";
 import Plantilla from "@/lib/models/plantilla";
-import { FiEdit } from "react-icons/fi";
-import { IPlantilla, IPlantillaSId } from "@/types/plantilla";
-import { revalidatePath } from 'next/cache';
+import { IPlantillaSId } from "@/types/plantilla";
+
 
 import { ModalViewPlanti } from "./components/modalViewPlanti";
 import { DeleteButton } from "./components/deleteButton";
-import { ObjectId } from "mongodb";
 import { EditButton } from "./components/editButton";
 
 async function Plantillas() {
@@ -24,7 +22,7 @@ async function Plantillas() {
     nombre: plantilla.nombre || "Sin Nombre", // Asegurar que siempre haya un nombre
     descripcion: plantilla.descripcion || "Sin Descripción", // Asegurar que siempre haya una descripción
   }));
-  console.log("Plantillas:", plantillasWithStringIds);
+  // console.log("Plantillas:", plantillasWithStringIds);
 
   
   return (
