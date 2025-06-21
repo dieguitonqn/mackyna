@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Exercise } from "@/types/plani";
 import AutoCompleteInputEj from "./AutoCompleteEjercicio";
 
@@ -24,6 +24,7 @@ const ExerciseForm: React.FC<Props> = ({
   onChange,
   initialExercises,
 }) => {
+
   const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
   const [exercises, setExercises] = useState<Exercise[]>([
     ...(initialExercises || [
@@ -36,6 +37,12 @@ const ExerciseForm: React.FC<Props> = ({
       },
     ]),
   ]);
+  useEffect(() => {
+    if (initialExercises) {
+      setExercises(initialExercises);
+    }
+  }
+  , [initialExercises]);
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
@@ -85,7 +92,7 @@ const ExerciseForm: React.FC<Props> = ({
     const updatedExercises = [...exercises];
 
     // Validaciones específicas por campo
-    if (field === "sets" && typeof value === "number" && value < 1) {
+    if (field === "sets" && typeof value === "number" && value <= 1) {
       value = 1; // Mínimo 1 serie
     }
 
@@ -106,14 +113,14 @@ const ExerciseForm: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col justify-center text-center border-2 border-slate-700 p-5 m-5 shadow-lg rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700/80">
+    <div className="flex flex-col justify-center text-center border-2 border-slate-700 p-2 m-1 shadow-lg rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700/80">
       <h2 className="shadow py-2 px-4 my-4 border border-slate-600 text-2xl font-bold text-slate-100 bg-slate-800/80 rounded-lg">
         {bloque.replace(/bloque(\d)/i, "Bloque $1")}
       </h2>
       {exercises.map((exercise, index) => (
         <div
           key={`exercise-${index}`}
-          className="flex flex-col gap-2 border border-slate-600 shadow-md shadow-slate-900 p-4 mb-6 rounded-lg bg-slate-800/80 transition-colors duration-200 hover:border-blue-400 text-left"
+          className="flex flex-col gap-2 border border-slate-600 shadow-md shadow-slate-900 p-2 mb-6 rounded-lg bg-slate-800/80 transition-colors duration-200 hover:border-blue-400 text-left"
         >
           <label htmlFor={`name-${index}`} className="block mb-1 text-slate-200 font-semibold">
             Nombre del ejercicio

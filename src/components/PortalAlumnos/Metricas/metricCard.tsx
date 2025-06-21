@@ -20,8 +20,7 @@ const MetricCardComponent = ({
   objetivo,
   lesiones,
 }: MetricCardProps) => {
-  console.log("Renderizando MetricCardComponent");
-  console.log('MetricCard rendering with birthDate:', birthDate);
+
 
   const calcularEdad = React.useCallback(
     (birthDate: Date | null | undefined) => {
