@@ -55,7 +55,7 @@ export default function Reservas() {
     if (error) return <div className="text-center p-4">Error al cargar las reservas</div>;
     if (isLoading) return <div className="text-center p-4">Cargando...</div>;
     if (!reservas) return <div className="text-center p-4">No hay reservas disponibles</div>;
-    
+  
     return (
         <div>
             <h1 className="flex justify-center items-center text-4xl font-semibold my-5">Reservas</h1>

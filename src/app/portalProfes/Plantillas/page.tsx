@@ -9,6 +9,8 @@ import { ModalViewPlanti } from "./components/modalViewPlanti";
 import { DeleteButton } from "./components/deleteButton";
 import { EditButton } from "./components/editButton";
 
+export const dynamic = "force-dynamic"; // Evita el caché de la página
+
 async function Plantillas() {
   await connect();
   const plantillas= await Plantilla.find().lean();
