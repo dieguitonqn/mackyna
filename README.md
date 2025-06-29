@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mackyna: Sistema de Gestión Integral para Gimnasios
 
-## Getting Started
+---
 
-First, run the development server:
+¡Bienvenido a **Mackyna**, la solución integral diseñada para optimizar la gestión de tu gimnasio! Mackyna es un sistema robusto y fácil de usar que centraliza toda la información de **alumnos, turnos, planillas de entrenamiento** y, próximamente, **pagos**. Su interfaz amigable asegura una navegación intuitiva tanto para el personal como para los clientes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Este sistema está construido con una **alta escalabilidad y flexibilidad**, garantizando que pueda adaptarse y crecer junto a las necesidades cambiantes de tu gimnasio.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Portales Principales
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Mackyna cuenta con dos portales principales, cada uno diseñado para satisfacer las necesidades específicas de sus usuarios:
 
-## Learn More
+### 1. Portal de Alumnos
 
-To learn more about Next.js, take a look at the following resources:
+El portal de alumnos es el centro de control personal para cada miembro del gimnasio, ofreciendo acceso rápido y sencillo a su información clave a través de un diseño visualmente claro y accesible.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* **Entrenamientos:** Los alumnos pueden visualizar sus diferentes rutinas de entrenamiento a lo largo del tiempo y acceder a los detalles de su plan de ejercicios.
+* **Mediciones Personales:** Permite a los usuarios registrar y visualizar la evolución de sus mediciones corporales, facilitando el seguimiento de su progreso.
+* **Gestión de Turnos:** Los alumnos pueden ver sus turnos actuales y futuros, reservar nuevos horarios disponibles y/o cancelar los existentes. También pueden consultar la capacidad del gimnasio para cada horario.
+* **Pagos:** Próximamente, los alumnos podrán consultar el estado y el historial de sus pagos.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Portal de Profesores (En construcción)
 
-## Deploy on Vercel
+El portal de profesores es la herramienta esencial para el personal del gimnasio, diseñada para gestionar eficientemente todos los aspectos del entrenamiento y la administración de los alumnos.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* **Gestión de Alumnos y Rutinas:** Los profesores tienen una vista completa de todos los alumnos, pudiendo gestionar y asignar sus rutinas de entrenamiento, además de seguir su evolución y progreso individual. Pueden gestionar contraseñas de alumnos, habilitar/deshabilitar el acceso de usuarios según su estado de pago y manejar usuarios morosos.
+* **Gestión de Ejercicios:** Permite a los profesores ver, agregar y/o editar el catálogo completo de ejercicios disponibles en el gimnasio, los cuales son la base para la creación personalizada de las rutinas de entrenamiento.
+* **Visualización de Turnos por Colores:** El sistema incorpora un método visual innovador que permite a los profesores ver de forma global, clara y rápida la disponibilidad del gimnasio, la cantidad de alumnos en cada turno y quiénes son esos alumnos, todo mediante un sistema intuitivo de colores.
+* **Creación de Rutinas de Entrenamiento:** Una herramienta específica facilita a los profesores crear, editar y eliminar las rutinas de entrenamiento de los alumnos de manera eficiente.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Características Adicionales
+
+* **Interfaz Amigable:** Diseñada para una experiencia de usuario fluida y sin complicaciones.
+* **Escalable y Flexible:** Capaz de adaptarse a las necesidades cambiantes y al crecimiento del gimnasio.
+* **Gestión de Pagos (Próximamente):** Integración futura para una administración completa de las finanzas del gimnasio.
