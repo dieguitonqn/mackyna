@@ -23,9 +23,9 @@ El portal de alumnos es el centro de control personal para cada miembro del gimn
 * 💪 **Entrenamientos:** Visualización de rutinas y planes de ejercicios
 * 📏 **Mediciones Personales:** Seguimiento de progreso corporal
 * 🕒 **Gestión de Turnos:** Reservas y consultas de disponibilidad
-* 💳 **Pagos:** *(Próximamente)* Control de pagos y facturación
+* 💳 **Pagos:** Control de pagos y facturación
 
-### 👨‍🏫 Portal de Profesores *(En construcción)*
+### 👨‍🏫 Portal de Profesores 
 
 Herramienta esencial para el personal del gimnasio:
 
@@ -38,7 +38,7 @@ Herramienta esencial para el personal del gimnasio:
 
 * 🎨 **Interfaz Amigable:** UX/UI intuitiva y moderna
 * 📈 **Escalable y Flexible:** Adaptable a cualquier tamaño de gimnasio
-* 💰 **Gestión de Pagos:** *(Próximamente)*
+* 💰 **Gestión de Pagos:** 
 
 ## 📄 Licencia
 
