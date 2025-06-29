@@ -59,7 +59,7 @@ function Page() {
                         imagen='/turnos.png'
                         titulo='Turnos'
                         desc='Días y horarios en que asistirá. También podrá agendar nuevos turnos o editar los que ya tenga.'
-                        link='/portalAlumnos/Reservas'
+                        link='/portalAlumnos/Turnos'
                     />
                     <CardInit 
                         imagen='/pagos.png'

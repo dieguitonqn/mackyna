@@ -27,6 +27,8 @@ export const EditButton = ({ userID }: EditButtonProps) => {
     lesiones: "",
   });
 
+// console.log("fecha_nac",fecha_nac);
+// console.log("fecha_nacimiento",user.fecha_nacimiento);
   useEffect(() => {
     // fetch user data
     const fetchUser = async () => {
@@ -42,7 +44,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
       }
     };
     fetchUser();
-  }, [userID]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;

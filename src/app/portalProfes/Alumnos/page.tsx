@@ -141,6 +141,31 @@ const Usuarios: React.FC = () => {
     }
   };
 
+  const handleSetScrollY = () => {
+    const scrollY = window.scrollY;
+    console.log('Guardando posición del scroll:', scrollY);
+    if (scrollY > 0) {
+      localStorage.setItem('scrollY', scrollY.toString());
+    }
+  };
+
+  useEffect(() => {
+    if (!loading && filteredUsers.length > 0) {
+      const storedScrollY = localStorage.getItem('scrollY');
+      console.log('Restaurando posición del scroll:', storedScrollY);
+      if (storedScrollY) {
+        // Damos tiempo a que el DOM se renderice completamente
+        setTimeout(() => {
+          window.scrollTo({
+            top: parseInt(storedScrollY, 10),
+            behavior: 'smooth',
+          });
+          localStorage.removeItem('scrollY');
+        }, 100);
+      }
+    }
+  }, [loading, filteredUsers]);
+
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
@@ -223,6 +248,7 @@ const Usuarios: React.FC = () => {
                       <Link
                         href={`../portalAlumnos/Planilla?id=${user._id}`}
                         className="text-green-600 hover:text-green-800 transition-colors"
+                         onClick={handleSetScrollY}
                       >
                         <FaClipboardList className="h-5 w-5" />
                       </Link>
@@ -232,6 +258,7 @@ const Usuarios: React.FC = () => {
                       <Link
                         href={`../portalAlumnos/Metricas?id=${user._id}`}
                         className="text-blue-600 hover:text-blue-800 transition-colors"
+                       onClick={handleSetScrollY}
                       >
                         <FaChartBar className="h-5 w-5" />
                       </Link>

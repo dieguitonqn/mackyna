@@ -62,7 +62,7 @@ function CellDetail({ reservas, dia, hora,cantidad }: { reservas: IReserva[],dia
             const response = await fetch('/api/reservas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ turnoID: turnoId, userID: selectedUser._id })
+                body: JSON.stringify({ turnoID: turnoId, userID: selectedUser._id,individual:true })
             });
             if (response.ok) {
                 alert('Reserva creada correctamente');
