@@ -5,32 +5,58 @@ import Image from "next/image";
 import Link from "next/link";
 import { Wap } from "@/components/wap";
 import { Galeria } from "@/components/Galeria";
+import { getHomeData } from "./Tienda/lib/getHomeData";
+import { HomeData } from "./Tienda/types/homedate";
+import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
-export default function Page() {
 
+export default async function Page() {
+  const { title, description, logo_principal, prices, carrousel }:HomeData = await getHomeData() ?? {
+    title: null,
+    description: null,
+    logo_principal: null,
+    prices: '',
+    carrousel: []
+  };
+  const carrouselImages = carrousel?.map((item: {url:string}) => item.url) || [];
+  
+  console.log("Home data:", { title, description, logo_principal });
   return (
     <>
-
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center h-screen bg-gradient-to-b from-black via-gray-900 to-green-900">
           <Image
-            src="/mackyna_verde.png"
+            src={logo_principal? logo_principal : "/mackyna_verde.png"}
             alt="Gimnasio Logo"
             width={300}
             height={300}
-            className="mb-4" />
-          <h1 className="text-4xl md:text-6xl font-extrabold text-green-500" style={{ fontSize: '2.25rem' }}>
-            Transforma tu cuerpo, transforma tu vida
+            className="mb-4"
+          />
+          <h1
+            className="text-4xl md:text-6xl font-extrabold text-green-500"
+            style={{ fontSize: "2.25rem" }}
+          >
+            {title ? title : "Transforma tu cuerpo, transforma tu vida"}
           </h1>
-          <p className="mt-4 text-lg md:text-xl">
-            Entrenamientos personalizados y las mejores instalaciones para vos.
-          </p>
+          <div className="mt-4 text-lg md:text-xl [&>p>strong]:font-bold">
+            {description ? (
+              <BlocksRenderer content={description} />
+            ) : (
+              "Entrenamientos personalizados y las mejores instalaciones para vos."
+            )}
+          </div>
           <div className="mt-6 flex gap-4">
-            <Link href={"/signUp"} className="px-6 py-3 text-lg font-semibold bg-green-600 hover:bg-green-500 rounded-lg">
+            <Link
+              href={"/signUp"}
+              className="px-6 py-3 text-lg font-semibold bg-green-600 hover:bg-green-500 rounded-lg"
+            >
               ¡Inscribite ahora!
             </Link>
-            <Link href="/#beneficios" className="px-6 py-3 text-lg font-semibold bg-white text-black rounded-lg hover:bg-gray-200">
+            <Link
+              href="/#beneficios"
+              className="px-6 py-3 text-lg font-semibold bg-white text-black rounded-lg hover:bg-gray-200"
+            >
               Conoce más
             </Link>
           </div>
@@ -44,35 +70,42 @@ export default function Page() {
           <div className="grid grid-cols-1 gap-8 mt-8 md:grid-cols-3">
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-green-500 rounded-full"></div>
-              <h3 className="text-xl font-semibold">Entrenamiento personalizado</h3>
-              <p className="mt-2 text-gray-400">Planes diseñados para tus metas.</p>
+              <h3 className="text-xl font-semibold">
+                Entrenamiento personalizado
+              </h3>
+              <p className="mt-2 text-gray-400">
+                Planes diseñados para tus metas.
+              </p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-green-500 rounded-full"></div>
               <h3 className="text-xl font-semibold">Clases grupales</h3>
-              <p className="mt-2 text-gray-400">Motívate con otros en clases dinámicas.</p>
+              <p className="mt-2 text-gray-400">
+                Motívate con otros en clases dinámicas.
+              </p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-green-500 rounded-full"></div>
               <h3 className="text-xl font-semibold">Instalaciones modernas</h3>
-              <p className="mt-2 text-gray-400">Equipos de última tecnología.</p>
+              <p className="mt-2 text-gray-400">
+                Equipos de última tecnología.
+              </p>
             </div>
           </div>
-          <Galeria />
+          <Galeria images={carrouselImages}/>
         </section>
 
         <section>
-          <Image 
-          src={"/PagosMayo.jpeg"}
-          alt="precios de enero"
-          width={1920}
-          height={1080}
-          className="my-20"
+          <Image
+            src={prices? prices:"/PagosMayo.jpeg"}
+            alt="precios de enero"
+            width={1920}
+            height={1080}
+            className="my-20"
           />
         </section>
         <Wap />
         {/* Footer */}
-
       </div>
     </>
   );

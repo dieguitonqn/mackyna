@@ -16,6 +16,8 @@ function Navbar() {
   const isTeach = session?.user.rol === 'teach';
   const isUser = session?.user.rol === 'user';
 
+  // 
+
   // console.log(session?.user.rol);
 
   if (!session) {
@@ -127,6 +129,7 @@ function Navbar() {
 
 
         </div>
+        {/* <CartSidebar /> */}
       </nav>
     </div>
   );

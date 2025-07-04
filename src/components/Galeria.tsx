@@ -18,7 +18,10 @@ const images = [
     "/mackyna/gym9.jpeg",
 ];
 
-export function Galeria() {
+
+
+export function Galeria({images}:{images?:string[]}) {
+    
     return (
         <div className="w-full max-w-5xl mx-auto my-12">
             <Swiper
@@ -42,7 +45,7 @@ export function Galeria() {
                 modules={[EffectCoverflow, Pagination, Autoplay]}
                 className="mySwiper"
             >
-                {images.map((src, idx) => (
+                {images?.map((src, idx) => (
                     <SwiperSlide key={idx} className="flex justify-center items-center !w-80 !h-80 md:!w-[400px] md:!h-[400px] bg-black rounded-xl overflow-hidden">
                         <Image 
                             src={src} 
