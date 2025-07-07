@@ -9,7 +9,7 @@ import { getHomeData } from "./Tienda/lib/getHomeData";
 import { HomeData } from "./Tienda/types/homedate";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
-
+export const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
 export default async function Page() {
   const { title, description, logo_principal, prices, carrousel }:HomeData = await getHomeData() ?? {
     title: null,
@@ -20,7 +20,7 @@ export default async function Page() {
   };
   const carrouselImages = carrousel?.map((item: {url:string}) => item.url) || [];
   
-  console.log("Home data:", { title, description, logo_principal });
+  // console.log("Home data:", { title, description, logo_principal });
   return (
     <>
       <div className="min-h-screen bg-black text-white">

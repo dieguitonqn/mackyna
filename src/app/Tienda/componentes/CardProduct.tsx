@@ -7,7 +7,7 @@ import { useCart } from "../lib/useCart";
 export const CardProduct = (product: Product) => {
   const {cart, addToCart} = useCart();
   useEffect(() => {
-    console.log("Cart updated:", cart);
+    // console.log("Cart updated:", cart);
   }, [cart]);
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">

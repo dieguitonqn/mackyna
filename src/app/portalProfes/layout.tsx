@@ -1,11 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 
+
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+const { STRAPI_HOST } = process.env;
   return (
     <div className="flex min-h-screen bg-gray-100 overflow-x-scroll">
       {/* Sidebar */}
@@ -64,6 +67,27 @@ export default function DashboardLayout({
               <Link href="/portalProfes/Plantillas">
                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                   Plantillas
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link href={STRAPI_HOST!} target="_blank">
+                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                  Configurar Tienda
+                </div>
+              </Link>
+            </li>
+                        <li>
+              <Link href="/portalProfes/tiendaProfes">
+                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                  Lista de Productos
+                </div>
+              </Link>
+            </li>
+             <li>
+              <Link href="/portalProfes/ventasTienda">
+                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                  Ventas
                 </div>
               </Link>
             </li>

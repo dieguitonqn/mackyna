@@ -8,7 +8,7 @@ const { STRAPI_HOST } = process.env;
             console.error("No data found");
             return null;
         }
-        console.log("Fetched home data:", data);
+        // console.log("Fetched home data:", data);
         const {title, description, logo_principal, prices, carrousel} = data.data;
         const imagen = `${STRAPI_HOST}${logo_principal.url}`;
         const precios =`${STRAPI_HOST}${prices.url}`;
@@ -16,7 +16,7 @@ const { STRAPI_HOST } = process.env;
             url: `${STRAPI_HOST}${item.url}`,
             
         }));
-        console.log("Carrousel images:", carrouselImages);
+        // console.log("Carrousel images:", carrouselImages);
         return {title, description, logo_principal: imagen, prices: precios, carrousel: carrouselImages};
     } catch (error:unknown) {
         if (error instanceof Error) {

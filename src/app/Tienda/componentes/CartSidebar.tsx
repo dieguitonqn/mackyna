@@ -6,17 +6,33 @@ import { BsCart4, BsBox, BsTrash } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 import { FaShoppingBag } from "react-icons/fa";
 import { CartItem } from "../types/cartContext";
+import { useSession } from "next-auth/react";
+import { saveSoldCart } from "../lib/saveSoldCart"; // Asegúrate de tener esta función implementada
 
 export default function CartSidebar() {
+  const { data: session } = useSession();
   const { cart, removeFromCart, changeQuantity, clearCart } = useCart();
   const [open, setOpen] = useState(false);
+  const [clientData, setClientData] = useState({
+    nombre: "",
+    email: "",
+    telefono: "",
+    direccion: "",
+  });
+  const [modalView, setModalView] = useState(false);
 
   const total = cart.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0
   );
 
-  const handleBuy = (cart: CartItem[]) => {
+  const handleBuy = async (
+    cart: CartItem[],
+    nombre: string,
+    email: string,
+    telefono?: string,
+    direccion?: string
+  ) => {
     // Número de WhatsApp (sin espacios ni caracteres especiales)
     const phoneNumber = "2994630512";
 
@@ -29,10 +45,42 @@ export default function CartSidebar() {
       ).toLocaleString("es-AR")}\n`;
     });
     message += "\n💰 *Total:* $" + total.toLocaleString("es-AR");
-    message += "\n\n¡Gracias por tu compra! 🏋️‍♂️";
+    message += "\n\n**Datos del cliente:**\n";
+    message += `Nombre: ${nombre}\n`;
+    message += `Email: ${email}\n`;
+    message += telefono ? `Teléfono: ${telefono}\n` : "";
+    message += direccion ? `Dirección: ${direccion}\n` : "";
 
     // Codificar el mensaje para la URL
     const encodedMessage = encodeURIComponent(message);
+    try {
+      const cartItems = cart.map((item) => ({
+        productItemName: item.product.name,
+        productItemDescription: item.product.description || "",
+        productItemPrice: item.product.price,
+        productItemSlug: item.product.slug,
+        quantity: item.quantity,
+      }));
+      // console.log("Cart items to save:", cartItems);
+      const venta = saveSoldCart(cartItems, nombre, email, telefono || "", total);
+      // const res = await fetch("/Tienda/api/saveVenta", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     cartItems,
+      //     name: nombre,
+      //     email,
+      //     telefono,
+      //     totalPrice: total,
+      //   }),
+      // });
+    } catch (error: unknown) {
+      console.error("Error al guardar el carrito vendido:", error);
+      alert("Ocurrió un error al procesar tu pedido. Por favor, inténtalo de nuevo más tarde.");
+      return;
+    }
 
     // Abrir WhatsApp en una nueva pestaña
     window.open(
@@ -42,7 +90,7 @@ export default function CartSidebar() {
 
     // Opcional: cerrar el carrito y/o limpiarlo
     setOpen(false);
-    // clearCart(); // Descomenta si quieres limpiar el carrito después de enviar
+    clearCart(); // Descomenta si quieres limpiar el carrito después de enviar
   };
 
   return (
@@ -165,12 +213,107 @@ export default function CartSidebar() {
                   cart.length === 0 ? "hidden" : "block"
                 } flex items-center justify-center gap-2`}
                 disabled={cart.length === 0}
-                onClick={() => handleBuy(cart)}
+                onClick={() => {
+                  if (session) {
+                    // console.log("Session user:", session.user);
+                    handleBuy(
+                      cart,
+                      session.user?.name || "",
+                      session.user?.email || "",
+                      session.user?.telefono || "",
+                      clientData.direccion
+                    );
+                    setOpen(false);
+                  } else {
+                    setModalView(true);
+                  }
+                  cart;
+                }}
               >
                 <FaShoppingBag className="w-5 h-5" />
                 Finalizar compra
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Modal de compra */}
+      {modalView && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex justify-end">
+              <button
+                onClick={() => setModalView(false)}
+                className="text-slate-200 hover:text-emerald-400 text-2xl bg-red-600 rounded-full p-1"
+                aria-label="Cerrar modal"
+              >
+                <IoClose className="w-6 h-6" />
+              </button>
+            </div>
+            <h2 className="text-2xl font-bold text-emerald-400 mb-4 text-center">
+              Finalizar compra
+            </h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                handleBuy(
+                  cart,
+                  clientData.nombre,
+                  clientData.email,
+                  clientData.telefono,
+                  clientData.direccion
+                );
+
+                setModalView(false);
+              }}
+              className="space-y-4"
+            >
+              <input
+                type="text"
+                placeholder="Nombre"
+                value={clientData.nombre}
+                onChange={(e) =>
+                  setClientData({ ...clientData, nombre: e.target.value })
+                }
+                required
+                className="w-full p-2 bg-gray-700 text-white rounded"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={clientData.email}
+                onChange={(e) =>
+                  setClientData({ ...clientData, email: e.target.value })
+                }
+                required
+                className="w-full p-2 bg-gray-700 text-white rounded"
+              />
+              <input
+                type="tel"
+                placeholder="Teléfono (opcional)"
+                value={clientData.telefono}
+                onChange={(e) =>
+                  setClientData({ ...clientData, telefono: e.target.value })
+                }
+                className="w-full p-2 bg-gray-700 text-white rounded"
+              />
+              <input
+                type="text"
+                placeholder="Dirección (opcional)"
+                value={clientData.direccion}
+                onChange={(e) =>
+                  setClientData({ ...clientData, direccion: e.target.value })
+                }
+                className="w-full p-2 bg-gray-700 text-white rounded"
+              />
+              <button
+                type="submit"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold shadow transition-colors text-lg"
+              >
+                Enviar pedido
+              </button>
+            </form>
           </div>
         </div>
       )}

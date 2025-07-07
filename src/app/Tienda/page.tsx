@@ -8,9 +8,11 @@ interface Category {
   description: string;
   slug: string;
 }
+
+export const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
 async function Tienda() {
   const categories: Category[] = await getCategories();
-  console.log("Categories fetched:", categories);
+  // console.log("Categories fetched:", categories);
   return (
     <div className="min-h-screen py-10 px-4 relative">
       <h1 className="text-4xl font-bold text-center text-emerald-400 mb-8 drop-shadow">

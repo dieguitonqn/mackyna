@@ -8,6 +8,7 @@ declare module 'next-auth' {
       email: string;
       image: string;
       rol: string; // Agrega el campo rol
+      telefono?: string; // Agrega el campo telefono opcional
     };
   }
 }

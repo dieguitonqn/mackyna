@@ -180,6 +180,7 @@ const handler = NextAuth({
 
       session.user.rol = userWithRole.rol;
       session.user.id = userWithRole._id;
+      session.user.telefono = userWithRole.telefono;
       return session;
     },
   },
