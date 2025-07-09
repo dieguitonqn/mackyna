@@ -159,26 +159,41 @@ export default function CartSidebar() {
                       </div>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() =>
-                            changeQuantity(item.product.slug, item.quantity - 1)
-                          }
-                          className="px-2 py-1 bg-gray-700 text-gray-200 rounded hover:bg-emerald-600"
-                        >
-                          -
-                        </button>
-                        <span className="px-2 text-lg text-slate-300">
-                          {item.quantity}
+                      <div className="flex flex-col items-center gap-1">
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() =>
+                              changeQuantity(item.product.slug, item.quantity - 1)
+                            }
+                            disabled={item.quantity <= 1}
+                            className={`px-2 py-1 rounded ${
+                              item.quantity <= 1
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-gray-700 text-gray-200 hover:bg-emerald-600'
+                            }`}
+                          >
+                            -
+                          </button>
+                          <span className="px-2 text-lg text-slate-300">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() =>
+                              changeQuantity(item.product.slug, item.quantity + 1)
+                            }
+                            disabled={item.quantity >= (item.product.stock || 0)}
+                            className={`px-2 py-1 rounded ${
+                              item.quantity >= (item.product.stock || 0)
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-gray-700 text-gray-200 hover:bg-emerald-600'
+                            }`}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          Stock disponible: {(item.product.stock || 0) - item.quantity}
                         </span>
-                        <button
-                          onClick={() =>
-                            changeQuantity(item.product.slug, item.quantity + 1)
-                          }
-                          className="px-2 py-1 bg-gray-700 text-gray-200 rounded hover:bg-emerald-600"
-                        >
-                          +
-                        </button>
                       </div>
                       <button
                         onClick={() => removeFromCart(item.product.slug)}

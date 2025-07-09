@@ -9,8 +9,8 @@ const nextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
-        hostname: 'mackyna.com.ar',
+        protocol: 'http',
+        hostname: '149.50.144.192',
         port: '1337',
         pathname: '/**',
       },

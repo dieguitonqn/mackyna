@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
+export const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
 export default function DashboardLayout({
   children,
 }: Readonly<{

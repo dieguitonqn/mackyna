@@ -3,6 +3,12 @@ import { Product } from "../types/procucts";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { useCart } from "../lib/useCart";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import '../styles/swiper-custom.css';
 
 export const CardProduct = (product: Product) => {
   const {cart, addToCart} = useCart();
@@ -11,13 +17,26 @@ export const CardProduct = (product: Product) => {
   }, [cart]);
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-      <Image
-        width={300}
-        height={300}
-        src={product.productImages[0].url}
-        alt={product.name}
-        className="w-full h-48 object-cover"
-      />
+      <div className="h-48 relative">
+        <Swiper
+          modules={[Navigation, Pagination]}
+          navigation={true}
+          pagination={{ clickable: true }}
+          className="h-full w-full"
+        >
+          {product.productImages.map((image, index) => (
+            <SwiperSlide key={index}>
+              <Image
+                width={300}
+                height={300}
+                src={image.url}
+                alt={`${product.name} - imagen ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
       <div className="p-4">
         <h2 className="text-xl font-bold mb-2">{product.name}</h2>
         <p className="text-gray-400 mb-4">{product.description}</p>
