@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 import  StrapiQuery from "./strapi";
 const STRAPI_HOST = process.env.STRAPI_HOST || "http://localhost:1337";
 interface Category {
@@ -15,7 +16,7 @@ export async function getCategories() {
       "product-categories?populate[category_image][fields][0]=url"
     );
     if (!data || !data.data) {
-      console.error("No categories found");
+      logger.error("getCategories.ts :No categories found");
       return [];
     }
     // console.log("Fetched categories:", data);
@@ -28,9 +29,9 @@ export async function getCategories() {
     }));
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Error fetching categories:", error.message);
+      logger.error("Error fetching categories:", error.message);
     }
-    console.error("An unexpected error occurred:", error);
+    logger.error("An unexpected error occurred:", error);
     return [];
   }
 }

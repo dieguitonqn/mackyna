@@ -9,4 +9,5 @@ export interface HomeData {
   logo_principal: string | null;
   prices: string;
   carrousel: { url: string }[];
+  tiendaVisible: boolean;
 }

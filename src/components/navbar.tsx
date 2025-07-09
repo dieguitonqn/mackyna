@@ -1,22 +1,27 @@
-'use client';
-import React from 'react';
-import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
-import Image from 'next/image';
-import { GrLogin } from 'react-icons/gr';
-import { TfiDashboard } from 'react-icons/tfi';
-import { IoIosLogOut } from 'react-icons/io';
-import { FaChalkboardTeacher } from 'react-icons/fa';
-import { HamburguesaAdmin, HamburguesaTeach, HamburguesaUsers } from './hamburguesa';
+"use client";
+import React from "react";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
+import { GrLogin } from "react-icons/gr";
+import { TfiDashboard } from "react-icons/tfi";
+import { IoIosLogOut } from "react-icons/io";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { BsCart4 } from "react-icons/bs";
+import {
+  HamburguesaAdmin,
+  HamburguesaTeach,
+  HamburguesaUsers,
+} from "./hamburguesa";
 import { TbRulerMeasure } from "react-icons/tb";
 
 function Navbar() {
   const { data: session } = useSession();
-  const isAdmin = session?.user.rol === 'admin';
-  const isTeach = session?.user.rol === 'teach';
-  const isUser = session?.user.rol === 'user';
+  const isAdmin = session?.user.rol === "admin";
+  const isTeach = session?.user.rol === "teach";
+  const isUser = session?.user.rol === "user";
 
-  // 
+  //
 
   // console.log(session?.user.rol);
 
@@ -32,6 +37,14 @@ function Navbar() {
               height={50}
             />
           </Link>
+          <div>
+            <Link
+              className="flex items-center gap-1 bg-emerald-800 rounded py-2 px-4 animate-pulse"
+              href="/Tienda"
+            >
+              Tienda <BsCart4 /> 
+            </Link>
+          </div>
           <div>
             <Link
               className="flex items-center gap-1 bg-green-800 rounded py-2 px-4"
@@ -57,17 +70,27 @@ function Navbar() {
             height={50}
           />
         </Link>
-        <Link href="/portalAlumnos/Perfil" className='flex flex-row items-center gap-2'>Hola {session.user.name}!
-          
-          {session.user.image &&
+        <Link
+          href="/portalAlumnos/Perfil"
+          className="flex flex-row items-center gap-2"
+        >
+          Hola {session.user.name}!
+          {session.user.image && (
             <img
               src={session.user.image}
-              alt='user image'
-              className='w-10 h-10 rounded-full cursor-pointer'
-            />}
+              alt="user image"
+              className="w-10 h-10 rounded-full cursor-pointer"
+            />
+          )}
         </Link>
-
-
+        <div>
+            <Link
+              className="flex items-center gap-1 bg-emerald-800 rounded py-2 px-4 animate-pulse"
+              href="/Tienda"
+            >
+              Tienda <BsCart4 /> 
+            </Link>
+          </div>
 
         <div className="flex flex-row gap-2 items-center">
           {/* Menús visibles solo en pantallas medianas o más grandes */}
@@ -79,8 +102,6 @@ function Navbar() {
               <FaChalkboardTeacher />
               Portal Alumnos
             </Link>
-
-
           )}
           {(isAdmin || isUser) && (
             <Link
@@ -90,8 +111,6 @@ function Navbar() {
               <TbRulerMeasure />
               Mis Métricas
             </Link>
-
-
           )}
           {(isAdmin || isTeach) && (
             <Link
@@ -113,21 +132,31 @@ function Navbar() {
           )}
 
           {/* Menú hamburguesa para pantallas pequeñas */}
-          {isAdmin && <div className="block lg:hidden"><HamburguesaAdmin /></div>}
-          {isTeach && <div className="block md:hidden"><HamburguesaTeach /></div>}
-          {isUser && <div className="block md:hidden"><HamburguesaUsers /></div>}
+          {isAdmin && (
+            <div className="block lg:hidden">
+              <HamburguesaAdmin />
+            </div>
+          )}
+          {isTeach && (
+            <div className="block md:hidden">
+              <HamburguesaTeach />
+            </div>
+          )}
+          {isUser && (
+            <div className="block md:hidden">
+              <HamburguesaUsers />
+            </div>
+          )}
 
-          <p className='hidden md:block'>|</p>
+          <p className="hidden md:block">|</p>
 
           <button
-            onClick={() => signOut({ callbackUrl: '/' })}
+            onClick={() => signOut({ callbackUrl: "/" })}
             className="hidden md:flex items-center gap-1 bg-red-500 px-4 py-2 rounded-md hover:font-semibold"
           >
             Log out
             <IoIosLogOut className="h-7 w-7" />
           </button>
-
-
         </div>
         {/* <CartSidebar /> */}
       </nav>

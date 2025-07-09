@@ -8,18 +8,28 @@ import { Galeria } from "@/components/Galeria";
 import { getHomeData } from "./Tienda/lib/getHomeData";
 import { HomeData } from "./Tienda/types/homedate";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
+import { FaArrowCircleRight } from "react-icons/fa";
 
 export const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
 export default async function Page() {
-  const { title, description, logo_principal, prices, carrousel }:HomeData = await getHomeData() ?? {
+  const {
+    title,
+    description,
+    logo_principal,
+    prices,
+    carrousel,
+    tiendaVisible,
+  }: HomeData = (await getHomeData()) ?? {
     title: null,
     description: null,
     logo_principal: null,
-    prices: '',
-    carrousel: []
+    prices: "",
+    carrousel: [],
+    tiendaVisible: false,
   };
-  const carrouselImages = carrousel?.map((item: {url:string}) => item.url) || [];
-  
+  const carrouselImages =
+    carrousel?.map((item: { url: string }) => item.url) || [];
+
   // console.log("Home data:", { title, description, logo_principal });
   return (
     <>
@@ -27,7 +37,7 @@ export default async function Page() {
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center h-screen bg-gradient-to-b from-black via-gray-900 to-green-900">
           <Image
-            src={logo_principal? logo_principal : "/mackyna_verde.png"}
+            src={logo_principal ? logo_principal : "/mackyna_verde.png"}
             alt="Gimnasio Logo"
             width={300}
             height={300}
@@ -92,12 +102,69 @@ export default async function Page() {
               </p>
             </div>
           </div>
-          <Galeria images={carrouselImages}/>
+          <Galeria images={carrouselImages} />
         </section>
 
+        {/* Tienda Section */}
+        {tiendaVisible && (
+          <section className="relative py-24 overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-green-900">
+            <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 bg-[url('/supplements.jpeg')] bg-cover bg-center opacity-20"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
+            </div>
+
+            <div className="relative z-10 container mx-auto px-4">
+              <div className="max-w-2xl">
+                <h2 className="text-4xl font-bold mb-4">
+                  <span className="text-green-400">Tienda de Suplementos</span>
+                </h2>
+                <p className="text-xl text-gray-300 mb-8">
+                  Potencia tus resultados con nuestra selección premium de
+                  suplementos deportivos. Proteínas, pre-entrenos, aminoácidos y
+                  más.
+                </p>
+
+                <div className="flex flex-wrap gap-6">
+                  <Link
+                    href="/Tienda"
+                    className="group relative inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg overflow-hidden transition-all duration-300 hover:bg-green-500"
+                  >
+                    <span className="relative z-10">Explorar Productos</span>
+                    <FaArrowCircleRight />
+                    <div className="absolute inset-0 -z-10 bg-gradient-to-r from-green-500 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  </Link>
+
+                  {/* <div className="flex items-center gap-4 text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Envíos a todo el país</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <span>Productos originales</span>
+                  </div>
+                </div> */}
+                </div>
+              </div>
+            </div>
+
+            {/* Cards flotantes decorativas */}
+            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 hidden lg:block">
+              <div className="relative w-96 h-96">
+                <div className="absolute right-20 top-0 w-64 h-40 bg-gray-800 rounded-lg shadow-xl transform -rotate-12 opacity-75"></div>
+                <div className="absolute right-10 top-20 w-64 h-40 bg-green-800 rounded-lg shadow-xl transform rotate-6 opacity-75"></div>
+                <div className="absolute right-30 top-40 w-64 h-40 bg-emerald-800 rounded-lg shadow-xl transform -rotate-3 opacity-75"></div>
+              </div>
+            </div>
+          </section>
+        )}
         <section>
           <Image
-            src={prices? prices:"/PagosMayo.jpeg"}
+            src={prices ? prices : "/PagosMayo.jpeg"}
             alt="precios de enero"
             width={1920}
             height={1080}

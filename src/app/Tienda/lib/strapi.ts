@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 
 const {STRAPI_API_URL, STRAPI_API_TOKEN} = process.env;
 
@@ -12,11 +13,12 @@ export default async function StrapiQuery(url: string) {
         });
 
         if (!res.ok) {
-            throw new Error(`Error fetching data from Strapi: ${res.statusText}`);
+            logger.error(`Error fetching data from Strapi: ${res.statusText}`);
         }
 
         return await res.json();
     } catch (error) {
-        console.error("Error in StrapiQuery:", error);
+        
+        logger.error(`Error in StrapiQuery: ${error}`);
     }
 }

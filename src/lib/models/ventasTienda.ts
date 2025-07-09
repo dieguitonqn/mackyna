@@ -14,7 +14,7 @@ export interface SalesStore {
   _id: ObjectId | string;
   userName: string;
   totalPrice: number;
-  date: Date;
+  date: Date | string; // Puede ser Date o string dependiendo de cómo se maneje
   state: string;
   email: string;
   telefono?: string;
