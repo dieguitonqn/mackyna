@@ -67,6 +67,15 @@ export const HamburguesaAdmin = () => {
                 Mis Métricas
               </Link>
             </li>
+            <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
+              <Link
+                href="/Tienda"
+                className="text-white hover:font-semibold px-6 py-4 transition-all duration-300 ease-in-out rounded-sm "
+                onClick={toggleMenu}
+              >
+                Tienda
+              </Link>
+            </li>
 
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
@@ -136,6 +145,15 @@ export const HamburguesaTeach = () => {
                 Mis Métricas
               </Link>
             </li>
+              <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
+              <Link
+                href="/Tienda"
+                className="text-white hover:font-semibold px-6 py-4 transition-all duration-300 ease-in-out rounded-sm "
+                onClick={toggleMenu}
+              >
+                Tienda
+              </Link>
+            </li>
 
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
@@ -195,6 +213,15 @@ export const HamburguesaUsers = () => {
                 onClick={toggleMenu}
               >
                 Mis Métricas
+              </Link>
+            </li>
+              <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
+              <Link
+                href="/Tienda"
+                className="text-white hover:font-semibold px-6 py-4 transition-all duration-300 ease-in-out rounded-sm "
+                onClick={toggleMenu}
+              >
+                Tienda
               </Link>
             </li>
 

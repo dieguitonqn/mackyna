@@ -39,7 +39,7 @@ function Navbar() {
           </Link>
           <div>
             <Link
-              className="flex items-center gap-1 bg-emerald-800 rounded py-2 px-4 animate-pulse"
+              className="hidden lg:flex  items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
               href="/Tienda"
             >
               Tienda <BsCart4 /> 
@@ -85,7 +85,7 @@ function Navbar() {
         </Link>
         <div>
             <Link
-              className="flex items-center gap-1 bg-emerald-800 rounded py-2 px-4 animate-pulse"
+              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
               href="/Tienda"
             >
               Tienda <BsCart4 /> 

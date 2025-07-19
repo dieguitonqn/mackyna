@@ -1,5 +1,6 @@
 import React from "react";
 import { getCategories } from "./lib/getCategories";
+import Image from "next/image";
 
 interface Category {
   id: number;
@@ -25,7 +26,9 @@ async function Tienda() {
               key={category.id}
               className="bg-gray-800 rounded-lg shadow-lg overflow-hidden"
             >
-              <img
+              <Image
+                width={300}
+                height={300}
                 src={category.category_image}
                 alt={category.name}
                 className="w-full h-48 object-cover"
