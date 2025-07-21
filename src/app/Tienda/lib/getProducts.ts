@@ -10,7 +10,7 @@ export default async function getProducts({ category }: { category: string }) {
     );
     const { data, meta } = await productosRaw;
     const products = data.map((product: Product) => {
-      const { name, description, price, productImages, isActive, stock, slug } =
+      const { name, description, price, precio_minimo,precio_tarjeta1cuota,precio_tarjeta3cuotas,precio_tarjeta6cuotas, productImages, isActive, stock, slug } =
         product;
       const images = productImages.map((image: { url: string }) => ({
         url: `${STRAPI_HOST}${image.url}`,
@@ -20,6 +20,10 @@ export default async function getProducts({ category }: { category: string }) {
         name,
         description,
         price,
+        precio_minimo,
+        precio_tarjeta1cuota,
+        precio_tarjeta3cuotas,
+        precio_tarjeta6cuotas,
         productImages: images,
         isActive,
         stock,

@@ -14,11 +14,13 @@ export default async function StrapiQuery(url: string) {
 
         if (!res.ok) {
             logger.error(`Error fetching data from Strapi: ${res.statusText}`);
+            return undefined
         }
 
         return await res.json();
     } catch (error) {
         
         logger.error(`Error in StrapiQuery: ${error}`);
+        return;
     }
 }

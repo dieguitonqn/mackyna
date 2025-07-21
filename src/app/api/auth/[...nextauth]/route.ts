@@ -181,6 +181,7 @@ const handler = NextAuth({
       session.user.rol = userWithRole.rol;
       session.user.id = userWithRole._id;
       session.user.telefono = userWithRole.telefono;
+      session.user.dias_permitidos = userWithRole.dias_permitidos;
       return session;
     },
   },

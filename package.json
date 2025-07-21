@@ -46,6 +46,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.28.0",
     "@jest/globals": "^29.7.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.17.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -65,6 +66,7 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.ts"],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     }
