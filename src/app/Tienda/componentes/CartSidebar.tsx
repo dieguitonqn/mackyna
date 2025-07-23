@@ -8,6 +8,7 @@ import { FaShoppingBag } from "react-icons/fa";
 import { CartItem } from "../types/cartContext";
 import { useSession } from "next-auth/react";
 import { saveSoldCart } from "../lib/saveSoldCart"; // Asegúrate de tener esta función implementada
+import logger from "@/lib/logger";
 
 export default function CartSidebar() {
   const { data: session } = useSession();
@@ -23,13 +24,20 @@ export default function CartSidebar() {
   const [modalView, setModalView] = useState(false);
 
   const total = cart.reduce(
-    (acc, item) => acc + (
-      session?.user.dias_permitidos === 5 && metodoPago === "transferencia" ? item.product.precio_minimo ?? 0
-      : metodoPago === "transferencia" ? item.product.precio_minimo ?? 0
-      : metodoPago === "tarjeta_1_pago" ? item.product.precio_tarjeta1cuota ?? 0
-      : metodoPago === "tarjeta_3_pagos" ? item.product.precio_tarjeta3cuotas ?? 0
-      : metodoPago === "tarjeta_6_pagos" ? item.product.precio_tarjeta6cuotas ?? 0
-      : item.product.price ?? 0) * item.quantity,
+    (acc, item) =>
+      acc +
+      (session?.user.dias_permitidos === 5 && metodoPago === "transferencia"
+        ? item.product.precio_minimo ?? 0
+        : metodoPago === "transferencia"
+        ? item.product.precio_minimo ?? 0
+        : metodoPago === "tarjeta_1_pago"
+        ? item.product.precio_tarjeta1cuota ?? 0
+        : metodoPago === "tarjeta_3_pagos"
+        ? item.product.precio_tarjeta3cuotas ?? 0
+        : metodoPago === "tarjeta_6_pagos"
+        ? item.product.precio_tarjeta6cuotas ?? 0
+        : item.product.price ?? 0) *
+        item.quantity,
     0
   );
 
@@ -51,6 +59,16 @@ export default function CartSidebar() {
         item.product.price * item.quantity
       ).toLocaleString("es-AR")}\n`;
     });
+    message +=
+      "\n *Metodo de pago:* " +
+      (metodoPago === "transferencia"
+        ? "Transferencia/Efectivo"
+        : metodoPago === "tarjeta_1_pago"
+        ? "Tarjeta 1 Pago"
+        : metodoPago === "tarjeta_3_pagos"
+        ? "Tarjeta 3 Pagos"
+        : "Tarjeta 6 Pagos") +
+      "\n";
     message += "\n💰 *Total:* $" + total.toLocaleString("es-AR");
     message += "\n\n**Datos del cliente:**\n";
     message += `Nombre: ${nombre}\n`;
@@ -59,6 +77,15 @@ export default function CartSidebar() {
     message += direccion ? `Dirección: ${direccion}\n` : "";
 
     // Codificar el mensaje para la URL
+    const metodoPagoDB = (
+      metodoPago === "transferencia"
+        ? "Transferencia/Efectivo"
+        : metodoPago === "tarjeta_1_pago"
+        ? "Tarjeta 1 Pago"
+        : metodoPago === "tarjeta_3_pagos"
+        ? "Tarjeta 3 Pagos"
+        : "Tarjeta 6 Pagos"
+    );
     const encodedMessage = encodeURIComponent(message);
     try {
       const cartItems = cart.map((item) => ({
@@ -73,26 +100,24 @@ export default function CartSidebar() {
         quantity: item.quantity,
       }));
       // console.log("Cart items to save:", cartItems);
-      const venta = saveSoldCart(
-        cartItems,
-        nombre,
-        email,
-        telefono || "",
-        total
-      );
-      // const res = await fetch("/Tienda/api/saveVenta", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     cartItems,
-      //     name: nombre,
-      //     email,
-      //     telefono,
-      //     totalPrice: total,
-      //   }),
-      // });
+      try {
+        await saveSoldCart(
+          cartItems,
+          nombre,
+          email,
+          telefono || "",
+          total,
+          metodoPagoDB
+        );
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Error al guardar el carrito vendido en la base de datos:", error.message);
+        }
+        alert(
+          "Ocurrió un error al procesar tu pedido. Por favor, inténtalo de nuevo más tarde."
+        );
+        return;
+      }
     } catch (error: unknown) {
       console.error("Error al guardar el carrito vendido:", error);
       alert(
@@ -112,9 +137,20 @@ export default function CartSidebar() {
     clearCart(); // Descomenta si quieres limpiar el carrito después de enviar
   };
 
-  const handlePaymentMethodSelect = (method: string) => {
-    // Aquí puedes manejar la lógica de selección del método de pago
-    console.log(`Método de pago seleccionado: ${method}`);
+  const getPrecio = (item: CartItem) => {
+    switch (metodoPago) {
+      case "tarjeta_1_pago":
+        return item.product.precio_tarjeta1cuota;
+      case "tarjeta_3_pagos":
+        return item.product.precio_tarjeta3cuotas;
+      case "tarjeta_6_pagos":
+        return item.product.precio_tarjeta6cuotas;
+      case "transferencia":
+        return session?.user.dias_permitidos === 5
+          ? item.product.precio_minimo
+          : item.product.price;
+    }
+    return item.product.price;
   };
 
   return (
@@ -179,29 +215,14 @@ export default function CartSidebar() {
                         {item.product.name}
                       </h3>
                       <div className="text-gray-300">
-                        { session?.user.dias_permitidos === 5 && metodoPago === "transferencia"
-                          ? item.product.precio_minimo?.toLocaleString("es-AR")
-                          : metodoPago === "tarjeta_1_pago"
-                          ? item.product.precio_tarjeta1cuota?.toLocaleString(
-                              "es-AR"
-                            )
-                          : metodoPago === "tarjeta_3_pagos"
-                          ? item.product.precio_tarjeta3cuotas?.toLocaleString(
-                              "es-AR"
-                            )
-                          : metodoPago === "tarjeta_6_pagos"
-                          ? item.product.precio_tarjeta6cuotas?.toLocaleString(
-                              "es-AR"
-                            )
-                          : metodoPago === "transferencia"
-                          ? item.product.price.toLocaleString("es-AR")
-                          : item.product.price.toLocaleString("es-AR")}
+                        ${getPrecio(item)?.toLocaleString("es-AR")}
                       </div>
-                      {session?.user.dias_permitidos === 5 && (
-                        <div className="text-xs text-gray-500">
-                          Descuento aplicado
-                        </div>
-                      )}
+                      {session?.user.dias_permitidos === 5 &&
+                        metodoPago === "transferencia" && (
+                          <div className="text-xs text-gray-500">
+                            Descuento alumno libre aplicado
+                          </div>
+                        )}
                     </div>
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col items-center gap-1">
@@ -331,19 +352,22 @@ export default function CartSidebar() {
                 disabled={cart.length === 0}
                 onClick={() => {
                   if (session) {
-                    // console.log("Session user:", session.user);
-                    handleBuy(
-                      cart,
-                      session.user?.name || "",
-                      session.user?.email || "",
-                      session.user?.telefono || "",
-                      clientData.direccion
-                    );
-                    setOpen(false);
+                    if (metodoPago === "") {
+                      alert("Debe seleccionar un método de pago");
+                    } else {
+                      handleBuy(
+                        cart,
+                        session.user?.name || "",
+                        session.user?.email || "",
+                        session.user?.telefono || "",
+                        clientData.direccion
+                      );
+                      setOpen(false);
+                      setMetodoPago("");
+                    }
                   } else {
                     setModalView(true);
                   }
-                  cart;
                 }}
               >
                 <FaShoppingBag className="w-5 h-5" />
