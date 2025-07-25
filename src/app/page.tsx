@@ -9,6 +9,7 @@ import { getHomeData } from "./Tienda/lib/getHomeData";
 import { HomeData } from "./Tienda/types/homedate";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { FaArrowCircleRight } from "react-icons/fa";
+import GoogleMap from "@/components/GoogleMap";
 
 export const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
 export default async function Page() {
@@ -71,7 +72,48 @@ export default async function Page() {
             </Link>
           </div>
         </section>
-
+        <section className="py-16 bg-gray-800">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center text-green-500 mb-8">
+              Nuestra Ubicación
+            </h2>
+            <div className="max-w-5xl mx-auto">
+              <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-semibold text-white">
+                      Visitanos en nuestro gimnasio
+                    </h3>
+                    <div className="space-y-2 text-gray-300">
+                      <p>
+                        📍 Dirección: Juan XXIII 1659, Neuquen, Patagonia,
+                        Argentina
+                      </p>
+                      <p>📞 Teléfono: +54 9 2994 63-0512</p>
+                      <p>🕐 Horarios: Lun-Vie 7:00-22:00</p>
+                    </div>
+                    <Link
+                      href="https://www.google.com/maps/dir/?api=1&destination=-38.952785297081135,-68.0361700090555"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center gap-2"
+                    >
+                      <span>Cómo llegar</span>
+                      <FaArrowCircleRight />
+                    </Link>
+                  </div>
+                  <div className="h-64 lg:h-full min-h-[300px] rounded-lg overflow-hidden">
+                    <GoogleMap
+                      lat={-38.952785297081135}
+                      lng={-68.0361700090555}
+                      zoom={15}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         {/* Beneficios */}
         <section id="beneficios" className="py-16 bg-gray-900">
           <h2 className="text-3xl font-bold text-center text-green-500">
@@ -171,6 +213,7 @@ export default async function Page() {
             className="my-20"
           />
         </section>
+
         <Wap />
         {/* Footer */}
       </div>

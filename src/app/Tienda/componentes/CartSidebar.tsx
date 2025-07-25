@@ -355,15 +355,17 @@ export default function CartSidebar() {
                     if (metodoPago === "") {
                       alert("Debe seleccionar un método de pago");
                     } else {
-                      handleBuy(
-                        cart,
-                        session.user?.name || "",
-                        session.user?.email || "",
-                        session.user?.telefono || "",
-                        clientData.direccion
-                      );
-                      setOpen(false);
-                      setMetodoPago("");
+                      if (confirm("¿Estás seguro de que deseas realizar la compra?")) {
+                        handleBuy(
+                          cart,
+                          session.user?.name || "",
+                          session.user?.email || "",
+                          session.user?.telefono || "",
+                          clientData.direccion
+                        );
+                        setOpen(false);
+                        setMetodoPago("");
+                      }
                     }
                   } else {
                     setModalView(true);
