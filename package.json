@@ -23,7 +23,7 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
     "next": "^15.3.3",
-    "next-auth": "^4.24.7",
+    "next-auth": "^4.24.11",
     "next-turnstile": "^1.0.0",
     "pdfkit": "^0.16.0",
     "pdfkit-table": "^0.1.99",
