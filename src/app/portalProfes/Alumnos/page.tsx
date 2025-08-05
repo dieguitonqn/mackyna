@@ -16,7 +16,7 @@ type FilteredUser = {
   email: string;
   rol: string;
 };
-
+const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
 const Usuarios: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
@@ -195,7 +195,7 @@ const Usuarios: React.FC = () => {
           <table className="table-auto w-full border-collapse border  bg-gray-800 border-gray-500 text-sm rounded-md">
             <thead>
               <tr className="text-gray-200">
-                {['Nombre', 'Apellido', 'Email', 'Última Planilla', 'Última medición', 'Acciones'].map(
+                {['Nombre', 'Apellido', 'Email', 'Última Planilla', 'Última medición', 'Cumpleaños', 'Acciones'].map(
                   (heading, idx) => (
                     <th
                       key={idx}
@@ -241,6 +241,14 @@ const Usuarios: React.FC = () => {
                   <td className="px-2 py-2">
                     {user.ultima_metrica
                       ? new Date(user.ultima_metrica).toLocaleDateString()
+                      : '---'}
+                  </td>
+                  <td className="px-2 py-2">
+                    {user.fecha_nacimiento
+                      ? new Date(user.fecha_nacimiento).toLocaleDateString('es-ES', {
+                        day: 'numeric',
+                        month: 'long',
+                      })
                       : '---'}
                   </td>
                   <td className="px-2 py-2 flex flex-row justify-center gap-3 items-center">
