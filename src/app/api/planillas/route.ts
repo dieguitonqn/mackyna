@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
 import logger from "@/lib/logger";
+import { log } from "console";
 
 export const GET = async (req: Request) => {
     const session = await getServerSession({ req, ...authOptions });
@@ -86,12 +87,13 @@ export const POST = async (req: Request) => {
         logger.warn('Intento de acceso no autorizado al endpoint POST /api/planillas');
         return new NextResponse("No autorizado", { status: 401 });
     }
-
+    logger.info(`Usuario ${session.user?.email} está creando una nueva planilla`);
+    
     try {
         await connect();
         const planilla : Plani = await req.json();
         // console.log(planilla.trainingDays[1].Bloque2);
-
+        logger.debug("Datos recibidos para la nueva planilla: ", { planilla });
         // Validación de datos requeridos
         if (!planilla.userId) {
             logger.error('Intento de crear planilla sin userId');

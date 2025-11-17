@@ -15,6 +15,8 @@ import { set } from "mongoose";
 import { useSession } from "next-auth/react";
 import { GrTemplate } from "react-icons/gr";
 import { BiSave } from "react-icons/bi";
+import clientLogger from "@/lib/clientLogger";
+import logger from "@/lib/logger";
 
 
 // interface IUser {
@@ -166,6 +168,8 @@ const NewPlan: React.FC = () => {
       alert("Por favor, selecciona un usuario.");
       return;
     }
+    clientLogger.info("Creando planilla para el usuario: ", { userId: selectedUser._id });
+    clientLogger.debug("Datos de la planilla: ", { plan });
 
     try {
       const response = await fetch("/api/planillas", {
@@ -179,7 +183,7 @@ const NewPlan: React.FC = () => {
       if (!response.ok) throw new Error("Error al crear la planilla");
       alert("Planilla creada exitosamente");
     } catch (error) {
-      console.error(error);
+      clientLogger.error("Error al crear la planilla", { error, userId: selectedUser._id });
       alert("Error al crear la planilla");
     }
   };
@@ -214,7 +218,7 @@ const NewPlan: React.FC = () => {
       descripcion: descripcion,
       trainingDays: plan.trainingDays,
     };
-    console.log("Datos de la plantilla a guardar:", plantillaData);
+    clientLogger.info("Guardando nueva plantilla: ", { plantillaData });
     try {
       const response = await fetch("/portalProfes/Plantillas/api/plantillas", {
         method: "POST",

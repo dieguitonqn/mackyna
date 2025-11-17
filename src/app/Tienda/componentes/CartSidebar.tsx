@@ -8,7 +8,6 @@ import { FaShoppingBag } from "react-icons/fa";
 import { CartItem } from "../types/cartContext";
 import { useSession } from "next-auth/react";
 import { saveSoldCart } from "../lib/saveSoldCart"; // Asegúrate de tener esta función implementada
-import logger from "@/lib/logger";
 
 export default function CartSidebar() {
   const { data: session } = useSession();

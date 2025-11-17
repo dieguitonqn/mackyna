@@ -16,6 +16,18 @@ const logger = winston.createLogger({
             filename: path.join(process.cwd(), 'logs', 'error.log'), 
             level: 'error' 
         }),
+        new winston.transports.File({ 
+            filename: path.join(process.cwd(), 'logs', 'warn.log'), 
+            level: 'warn' 
+        }),
+        new winston.transports.File({ 
+            filename: path.join(process.cwd(), 'logs', 'info.log'), 
+            level: 'info' 
+        }),
+        new winston.transports.File({ 
+            filename: path.join(process.cwd(), 'logs', 'debug.log'), 
+            level: 'debug' 
+        }),
         // Guardar todos los logs en combined.log
         new winston.transports.File({ 
             filename: path.join(process.cwd(), 'logs', 'combined.log')
