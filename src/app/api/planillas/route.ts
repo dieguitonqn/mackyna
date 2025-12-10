@@ -28,7 +28,7 @@ export const GET = async (req: Request) => {
                 return new NextResponse("El ID no es válido", { status: 400 });
             }
 
-            const planillas = await Plani.find({ userId: _id });
+            const planillas = await Plani.find({ userId: _id }).sort({ _id: -1 });
             logger.info(`Planillas recuperadas para el usuario ${_id}`);
 
             if (!planillas) {
@@ -218,6 +218,7 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
     try {
         const { id, plani } = await req.json();
         await connect();
+        logger.debug("Datos recibidos para actualizar la planilla: ", { id, plani });
         console.log(id);
         if (!ObjectId.isValid(id)) {
             logger.warn(`ID inválido proporcionado para actualización: ${id}`);

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import Plantilla from "@/lib/models/plantilla";
 import { IPlantilla, IPlantillaSId } from "@/types/plantilla";
+import logger from "@/lib/logger";
 
 export const POST = async (req: Request) => {
   const plantilla: IPlantilla = await req.json();
+  logger.debug("POST request received with body:", plantilla);
   if (!plantilla || typeof plantilla !== "object") {
-    console.error("No request body found");
+    logger.error("No request body found");
   }
   // console.log("Request body:", plantilla);
 
@@ -27,7 +29,7 @@ export const POST = async (req: Request) => {
       }
     );
   } catch (error) {
-    console.error("Error al guardar la plantilla:", error);
+    logger.error("Error al guardar la plantilla:", error);
 
     return new NextResponse(
       JSON.stringify({ message: "Error al guardar la plantilla." }),

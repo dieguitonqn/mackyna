@@ -8,6 +8,7 @@ import ExerciseForm from "@/components/ExerciseForm";
 import { IUser } from "@/types/user";
 import { IPlantillaSId } from "@/types/plantilla";
 import { set } from "mongoose";
+import clientLogger from "@/lib/clientLogger";
 
 const EditPlani = () => {
   const searchParams = useSearchParams();
@@ -182,6 +183,8 @@ const EditPlani = () => {
     if (queryPlaniID && plani) {
       try {
         // console.log("Enviando datos de plani:", editedPlani);
+        clientLogger.debug("Updating plani with ID:", plani._id);
+        clientLogger.debug("Updated plani data:", editedPlani);
         const response = await fetch(`/api/planillas?planiID=${queryPlaniID}`, {
           method: "PUT",
           headers: {
