@@ -1,14 +1,19 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Exercise } from "@/types/plani";
 import AutoCompleteInputEj from "./AutoCompleteEjercicio";
+import listGrupoMusc from "@/utils/listGrupoMusc";
+import { useNewPlaniStore } from "@/stores/useNewPlaniStore";
 
 interface Props {
   day: string;
 
   bloque: string;
-  onChange: (day: string, bloque: string, exercises: Exercise[]) => void;
+  onChange?: (day: string, bloque: string, exercises: Exercise[]) => void;
   initialExercises?: Exercise[];
+  useStore?: boolean;
 }
+
+type BloqueKey = "Bloque1" | "Bloque2" | "Bloque3" | "Bloque4";
 
 type Ejercicio = {
   _id: string;
@@ -23,9 +28,14 @@ const ExerciseForm: React.FC<Props> = ({
   bloque,
   onChange,
   initialExercises,
+  useStore = false,
 }) => {
+  const setBlockExercises = useNewPlaniStore((state) => state.setBlockExercises);
 
   const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
+  const [gruposMusc, setGruposMusc] = useState<string[]>([]); // Estado de usuarios
+  const [selectedGrupoMusc, setSelectedGrupoMusc] = useState<string>(""); // Estado del grupo muscular seleccionado
+
   const [exercises, setExercises] = useState<Exercise[]>([
     ...(initialExercises || [
       {
@@ -42,27 +52,63 @@ const ExerciseForm: React.FC<Props> = ({
       setExercises(initialExercises);
     }
   }
-  , [initialExercises]);
+    , [initialExercises]);
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
-        const response = await fetch("/api/ejercicios");
-        const ejerciciosDB = await response.json();
-        const ejerciciosWithStringId = ejerciciosDB.map(
-          (ejercicio: Ejercicio) => ({
-            ...ejercicio,
-            id: ejercicio._id.toString(), // Convertir ObjectId a string
-          })
-        );
+        if (selectedGrupoMusc === "") {
+          const response = await fetch("/api/ejercicios");
+          const ejerciciosDB = await response.json();
+          const ejerciciosWithStringId = ejerciciosDB.map(
+            (ejercicio: Ejercicio) => ({
+              ...ejercicio,
+              id: ejercicio._id.toString(), // Convertir ObjectId a string
+            })
+          );
 
-        setEjercicios(ejerciciosWithStringId);
+          setEjercicios(ejerciciosWithStringId);
+        }else{
+          const response = await fetch("/api/ejercicios?grupoMusc=" + selectedGrupoMusc);
+          const ejerciciosDB = await response.json();
+          const ejerciciosWithStringId = ejerciciosDB.map(
+            (ejercicio: Ejercicio) => ({
+              ...ejercicio,
+              id: ejercicio._id.toString(), // Convertir ObjectId a string
+            })
+          );
+
+          setEjercicios(ejerciciosWithStringId);
+        }
         // console.log(ejerciciosWithStringId);
       } catch (err) {
         console.error("Error al obtener ejercicios:", err);
       }
     };
     fetchEjercicios();
-  }, [exercises]);
+  }, [selectedGrupoMusc]);
+
+  useEffect(() => {
+    const fetchGrupoMusc = async () => {
+      try {
+        const listGruposMusc = await listGrupoMusc();
+        setGruposMusc(listGruposMusc);
+        console.log(listGruposMusc);
+      } catch (err) {
+        console.error("Error al obtener grupos musculares:", err);
+      }
+    };
+    fetchGrupoMusc();
+  }, []);
+
+  const emitExerciseChange = (updatedExercises: Exercise[]) => {
+    if (useStore) {
+      setBlockExercises(day, bloque as BloqueKey, updatedExercises);
+    }
+
+    if (onChange) {
+      onChange(day, bloque, updatedExercises);
+    }
+  };
 
   const handleAddExercise = () => {
     const newExercise: Exercise = {
@@ -74,13 +120,13 @@ const ExerciseForm: React.FC<Props> = ({
     };
     const updatedExercises = [...exercises, newExercise];
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    emitExerciseChange(updatedExercises);
   };
 
   const handleRemoveExercise = (index: number) => {
     const updatedExercises = exercises.filter((_, i) => i !== index);
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    emitExerciseChange(updatedExercises);
   };
 
   const handleInputChange = (
@@ -88,7 +134,7 @@ const ExerciseForm: React.FC<Props> = ({
     field: keyof Exercise,
     value: string | number
   ) => {
-    
+
     const updatedExercises = [...exercises];
 
     // Validaciones específicas por campo
@@ -98,7 +144,7 @@ const ExerciseForm: React.FC<Props> = ({
 
     updatedExercises[index] = { ...updatedExercises[index], [field]: value };
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    emitExerciseChange(updatedExercises);
   };
 
   const handleSelectEjercicio = (index: number, ejercicio: Ejercicio) => {
@@ -109,8 +155,12 @@ const ExerciseForm: React.FC<Props> = ({
       videoLink: ejercicio.video,
     };
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    emitExerciseChange(updatedExercises);
   };
+
+  const handleSelectGrupoMusc = (grupoMusc: string) => {
+    setSelectedGrupoMusc(grupoMusc);
+  }
 
   return (
     <div className="flex flex-col justify-center text-center border-2 border-slate-700 p-2 m-1 shadow-lg rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700/80">
@@ -123,12 +173,29 @@ const ExerciseForm: React.FC<Props> = ({
           className="flex flex-col gap-2 border border-slate-600 shadow-md shadow-slate-900 p-2 mb-6 rounded-lg bg-slate-800/80 transition-colors duration-200 hover:border-blue-400 text-left"
         >
           <label htmlFor={`name-${index}`} className="block mb-1 text-slate-200 font-semibold">
+            Grupo Muscular
+          </label>
+          <select
+            id={`grupoMusc-${index}`}
+            value={selectedGrupoMusc}
+            onChange={(e) => handleSelectGrupoMusc(e.target.value)}
+            className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
+          >
+            <option value="">Seleccionar grupo muscular</option>
+            {gruposMusc.map((grupo) => (
+              <option key={grupo} value={grupo}>
+                {grupo}
+              </option>
+            ))}
+          </select>
+          <label htmlFor={`name-${index}`} className="block mb-1 text-slate-200 font-semibold">
             Nombre del ejercicio
           </label>
           <AutoCompleteInputEj
             ejercicios={ejercicios}
             onSelect={(ejercicio) => handleSelectEjercicio(index, ejercicio)}
             initialValue={exercise.name as string}
+
           />
           <label htmlFor={`reps-${index}`} className="block mb-1 text-slate-300 font-semibold">
             Repeticiones

@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Aplicación Next.js
+  mackyna-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mackyna-nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://host.docker.internal:27017/mackyna
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - TURNSTILE_SECRET_KEY=${TURNSTILE_SECRET_KEY}
+      - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
+    volumes:
+      # Volumen para logs persistentes
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+    # depends_on:
+    #   - mongodb  # Descomenta cuando uses MongoDB dockerizado
+    networks:
+      - mackyna-network
+    restart: unless-stopped
+
+  # Base de datos MongoDB (descomenta para usar BD dockerizada)
+  mongodb:
+    image: mongo:7.0
+    container_name: mackyna-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin123
+      - MONGO_INITDB_DATABASE=mackyna
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    networks:
+      - mackyna-network
+    restart: unless-stopped
+    profiles:
+      - database  # Solo se inicia con --profile database
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  mackyna-network:
+    driver: bridge

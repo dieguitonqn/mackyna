@@ -35,8 +35,8 @@ const nextConfig = {
   // },
   // productionBrowserSourceMaps: false,
   /* config options here */
-  // const nextConfig = {
-  // output:"standalone"
+  // Sin standalone para mejor compatibilidad con App Router
+  // output: "standalone",
 };
 
 module.exports = nextConfig;

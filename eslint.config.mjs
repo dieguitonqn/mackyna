@@ -15,6 +15,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
+    ...compat.extends("next/core-web-vitals"),
     {
         files: ["**/*.ts", "**/*.tsx"],
         languageOptions: {
@@ -25,9 +26,6 @@ export default defineConfig([
         },
         plugins: {
             "@typescript-eslint": typescript
-        },
-        extends: [
-            ...compat.extends("next/core-web-vitals")
-        ]
+        }
     }
 ]);

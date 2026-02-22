@@ -15,6 +15,7 @@ export const GET = async (req: Request) => {
     }
     const { searchParams } = new URL(req.url);
     const _id = searchParams.get("id");
+    const grupoMusc = searchParams.get("grupoMusc");
     try {
         await connect();
 
@@ -34,8 +35,15 @@ export const GET = async (req: Request) => {
 
             return new NextResponse(JSON.stringify(ejercicio), { status: 200 });
         }
+        // Si se proporciona un `grupoMusc`, filtrar por ese grupo muscular
+        if (grupoMusc) {
+            const ejercicios = await Ejercicio.find({ grupoMusc }).sort({ nombre: 1 });
+            return new NextResponse(JSON.stringify(ejercicios), { status: 200 });
+        }
+        
 
-        //     // Si no hay `id`, devolver todos los ejercicios
+        // Si no hay `id` ni `grupoMusc`, devolver todos los ejercicios
+
         const ejercicios = await Ejercicio.find().sort({ nombre: 1 });
         return new NextResponse(JSON.stringify(ejercicios), { status: 200 });
     } catch (error: unknown) {

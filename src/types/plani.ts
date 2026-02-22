@@ -1,6 +1,7 @@
 export interface Exercise {
     name: string | JSX.Element;
     reps: string;
+    grupoMusc?: string;
     sets: number;
     notas: string;
     videoLink?: string;
