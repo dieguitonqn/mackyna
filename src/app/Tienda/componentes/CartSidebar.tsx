@@ -13,6 +13,7 @@ export default function CartSidebar() {
   const { data: session } = useSession();
   const { cart, removeFromCart, changeQuantity, clearCart } = useCart();
   const [open, setOpen] = useState(false);
+  const [metodoPago, setMetodoPago] = useState("");
   const [clientData, setClientData] = useState({
     nombre: "",
     email: "",
@@ -22,7 +23,20 @@ export default function CartSidebar() {
   const [modalView, setModalView] = useState(false);
 
   const total = cart.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
+    (acc, item) =>
+      acc +
+      (session?.user.dias_permitidos === 5 && metodoPago === "transferencia"
+        ? item.product.precio_minimo ?? 0
+        : metodoPago === "transferencia"
+        ? item.product.precio_minimo ?? 0
+        : metodoPago === "tarjeta_1_pago"
+        ? item.product.precio_tarjeta1cuota ?? 0
+        : metodoPago === "tarjeta_3_pagos"
+        ? item.product.precio_tarjeta3cuotas ?? 0
+        : metodoPago === "tarjeta_6_pagos"
+        ? item.product.precio_tarjeta6cuotas ?? 0
+        : item.product.price ?? 0) *
+        item.quantity,
     0
   );
 
@@ -44,6 +58,16 @@ export default function CartSidebar() {
         item.product.price * item.quantity
       ).toLocaleString("es-AR")}\n`;
     });
+    message +=
+      "\n *Metodo de pago:* " +
+      (metodoPago === "transferencia"
+        ? "Transferencia/Efectivo"
+        : metodoPago === "tarjeta_1_pago"
+        ? "Tarjeta 1 Pago"
+        : metodoPago === "tarjeta_3_pagos"
+        ? "Tarjeta 3 Pagos"
+        : "Tarjeta 6 Pagos") +
+      "\n";
     message += "\n💰 *Total:* $" + total.toLocaleString("es-AR");
     message += "\n\n**Datos del cliente:**\n";
     message += `Nombre: ${nombre}\n`;
@@ -52,33 +76,52 @@ export default function CartSidebar() {
     message += direccion ? `Dirección: ${direccion}\n` : "";
 
     // Codificar el mensaje para la URL
+    const metodoPagoDB = (
+      metodoPago === "transferencia"
+        ? "Transferencia/Efectivo"
+        : metodoPago === "tarjeta_1_pago"
+        ? "Tarjeta 1 Pago"
+        : metodoPago === "tarjeta_3_pagos"
+        ? "Tarjeta 3 Pagos"
+        : "Tarjeta 6 Pagos"
+    );
     const encodedMessage = encodeURIComponent(message);
     try {
       const cartItems = cart.map((item) => ({
         productItemName: item.product.name,
         productItemDescription: item.product.description || "",
         productItemPrice: item.product.price,
+        productItemPriceTarjeta1Cuota: item.product.precio_tarjeta1cuota,
+        productItemPriceTarjeta3Cuotas: item.product.precio_tarjeta3cuotas,
+        productItemPriceTarjeta6Cuotas: item.product.precio_tarjeta6cuotas,
+        prodcutItemMinPrice: item.product.precio_minimo,
         productItemSlug: item.product.slug,
         quantity: item.quantity,
       }));
       // console.log("Cart items to save:", cartItems);
-      const venta = saveSoldCart(cartItems, nombre, email, telefono || "", total);
-      // const res = await fetch("/Tienda/api/saveVenta", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     cartItems,
-      //     name: nombre,
-      //     email,
-      //     telefono,
-      //     totalPrice: total,
-      //   }),
-      // });
+      try {
+        await saveSoldCart(
+          cartItems,
+          nombre,
+          email,
+          telefono || "",
+          total,
+          metodoPagoDB
+        );
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Error al guardar el carrito vendido en la base de datos:", error.message);
+        }
+        alert(
+          "Ocurrió un error al procesar tu pedido. Por favor, inténtalo de nuevo más tarde."
+        );
+        return;
+      }
     } catch (error: unknown) {
       console.error("Error al guardar el carrito vendido:", error);
-      alert("Ocurrió un error al procesar tu pedido. Por favor, inténtalo de nuevo más tarde.");
+      alert(
+        "Ocurrió un error al procesar tu pedido. Por favor, inténtalo de nuevo más tarde."
+      );
       return;
     }
 
@@ -91,6 +134,22 @@ export default function CartSidebar() {
     // Opcional: cerrar el carrito y/o limpiarlo
     setOpen(false);
     clearCart(); // Descomenta si quieres limpiar el carrito después de enviar
+  };
+
+  const getPrecio = (item: CartItem) => {
+    switch (metodoPago) {
+      case "tarjeta_1_pago":
+        return item.product.precio_tarjeta1cuota;
+      case "tarjeta_3_pagos":
+        return item.product.precio_tarjeta3cuotas;
+      case "tarjeta_6_pagos":
+        return item.product.precio_tarjeta6cuotas;
+      case "transferencia":
+        return session?.user.dias_permitidos === 5
+          ? item.product.precio_minimo
+          : item.product.price;
+    }
+    return item.product.price;
   };
 
   return (
@@ -155,21 +214,30 @@ export default function CartSidebar() {
                         {item.product.name}
                       </h3>
                       <div className="text-gray-300">
-                        ${item.product.price.toLocaleString("es-AR")}
+                        ${getPrecio(item)?.toLocaleString("es-AR")}
                       </div>
+                      {session?.user.dias_permitidos === 5 &&
+                        metodoPago === "transferencia" && (
+                          <div className="text-xs text-gray-500">
+                            Descuento alumno libre aplicado
+                          </div>
+                        )}
                     </div>
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col items-center gap-1">
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() =>
-                              changeQuantity(item.product.slug, item.quantity - 1)
+                              changeQuantity(
+                                item.product.slug,
+                                item.quantity - 1
+                              )
                             }
                             disabled={item.quantity <= 1}
                             className={`px-2 py-1 rounded ${
                               item.quantity <= 1
-                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                : 'bg-gray-700 text-gray-200 hover:bg-emerald-600'
+                                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                                : "bg-gray-700 text-gray-200 hover:bg-emerald-600"
                             }`}
                           >
                             -
@@ -179,20 +247,26 @@ export default function CartSidebar() {
                           </span>
                           <button
                             onClick={() =>
-                              changeQuantity(item.product.slug, item.quantity + 1)
+                              changeQuantity(
+                                item.product.slug,
+                                item.quantity + 1
+                              )
                             }
-                            disabled={item.quantity >= (item.product.stock || 0)}
+                            disabled={
+                              item.quantity >= (item.product.stock || 0)
+                            }
                             className={`px-2 py-1 rounded ${
                               item.quantity >= (item.product.stock || 0)
-                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                : 'bg-gray-700 text-gray-200 hover:bg-emerald-600'
+                                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                                : "bg-gray-700 text-gray-200 hover:bg-emerald-600"
                             }`}
                           >
                             +
                           </button>
                         </div>
                         <span className="text-xs text-gray-400">
-                          Stock disponible: {(item.product.stock || 0) - item.quantity}
+                          Stock disponible:{" "}
+                          {(item.product.stock || 0) - item.quantity}
                         </span>
                       </div>
                       <button
@@ -207,6 +281,53 @@ export default function CartSidebar() {
               </div>
             )}
             <div className="mt-6 border-t border-gray-700 pt-4">
+              <div>
+                <div className="text-gray-300 mb-2 border-b border-gray-700 pb-2">
+                  <span>Método de pago:</span>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="flex items-center justify-end gap-2">
+                      <span>Transferencia/Efectivo</span>
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        className="accent-emerald-400"
+                        checked={metodoPago === "transferencia"}
+                        onChange={() => setMetodoPago("transferencia")}
+                      />
+                    </div>
+                    <div className="flex items-center justify-end gap-2">
+                      <span>Tarjeta de crédito 1 pago</span>
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        className="accent-emerald-400"
+                        checked={metodoPago === "tarjeta_1_pago"}
+                        onChange={() => setMetodoPago("tarjeta_1_pago")}
+                      />
+                    </div>
+                    <div className="flex items-center justify-end gap-2">
+                      <span>Tarjeta de crédito 3 pagos</span>
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        className="accent-emerald-400"
+                        checked={metodoPago === "tarjeta_3_pagos"}
+                        onChange={() => setMetodoPago("tarjeta_3_pagos")}
+                      />
+                    </div>
+                    <div className="flex items-center justify-end gap-2">
+                      <span>Tarjeta de crédito 6 pagos</span>
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        className="accent-emerald-400"
+                        checked={metodoPago === "tarjeta_6_pagos"}
+                        onChange={() => setMetodoPago("tarjeta_6_pagos")}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="flex justify-between items-center text-lg text-gray-200 mb-4">
                 <span>Total:</span>
                 <span className="font-bold text-emerald-400 text-2xl">
@@ -230,19 +351,24 @@ export default function CartSidebar() {
                 disabled={cart.length === 0}
                 onClick={() => {
                   if (session) {
-                    // console.log("Session user:", session.user);
-                    handleBuy(
-                      cart,
-                      session.user?.name || "",
-                      session.user?.email || "",
-                      session.user?.telefono || "",
-                      clientData.direccion
-                    );
-                    setOpen(false);
+                    if (metodoPago === "") {
+                      alert("Debe seleccionar un método de pago");
+                    } else {
+                      if (confirm("¿Estás seguro de que deseas realizar la compra?")) {
+                        handleBuy(
+                          cart,
+                          session.user?.name || "",
+                          session.user?.email || "",
+                          session.user?.telefono || "",
+                          clientData.direccion
+                        );
+                        setOpen(false);
+                        setMetodoPago("");
+                      }
+                    }
                   } else {
                     setModalView(true);
                   }
-                  cart;
                 }}
               >
                 <FaShoppingBag className="w-5 h-5" />

@@ -22,7 +22,8 @@ export default async function Page() {
     userName: venta.userName || '', // Asegurarse de que userName sea un string
     email: venta.email || '', // Asegurarse de que email sea un string
     telefono: venta.telefono || '', // Asegurarse de que telefono sea un string
-    totalPrice: venta.totalPrice || 0 // Asegurarse de que totalPrice sea un number
+    totalPrice: venta.totalPrice || 0, // Asegurarse de que totalPrice sea un number
+    metodoPago: venta.metodoPago || '' // Asegurarse de que metodoPago sea un string
   }));
 
   return (

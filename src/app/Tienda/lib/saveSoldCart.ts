@@ -7,7 +7,8 @@ export async function saveSoldCart(
   name: string,
   email: string,
   telefono: string,
-  totalPrice: number
+  totalPrice: number,
+  metodoPago?: string,
 ) {
   // console.log("Guardando carrito vendido:", {
   //   cart,
@@ -23,18 +24,19 @@ export async function saveSoldCart(
       email: email,
       telefono: telefono,
       totalPrice: totalPrice,
+      metodoPago: metodoPago,
       cart: cart,
       state: "pending",
     });
     
-    const response = await Venta.create({
-      userName: name,
-      email: email,
-      telefono: telefono,
-      totalPrice: totalPrice,
-      cart: cart,
-      state: "pending",
-    });
+    const response = await Venta.create(newVenta);
+    //   userName: name,
+    //   email: email,
+    //   telefono: telefono,
+    //   totalPrice: totalPrice,
+    //   cart: cart,
+    //   state: "pending",
+    // });
 
     if (!response) {
       console.error("Error al guardar el carrito vendido");

@@ -14,7 +14,8 @@ export interface SalesStore {
   _id: ObjectId | string;
   userName: string;
   totalPrice: number;
-  date: Date | string; // Puede ser Date o string dependiendo de cómo se maneje
+  metodoPago: string; 
+  date: Date | string; 
   state: string;
   email: string;
   telefono?: string;
@@ -33,6 +34,7 @@ const SalesStoreSchema = new Schema<SalesStore>(
     
     userName: { type: String, required: true },
     totalPrice: { type: Number, required: true },
+    metodoPago: { type: String, required: true },
     date: { type: Date, default: Date.now },
     state: { type: String, default: "pending" },
     email: { type: String, required: true },

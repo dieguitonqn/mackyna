@@ -16,7 +16,7 @@ async function Tienda() {
   // console.log("Categories fetched:", categories);
   return (
     <div className="min-h-screen py-10 px-4 relative">
-      <h1 className="text-4xl font-bold text-center text-emerald-400 mb-8 drop-shadow">
+      <h1 className="text-4xl font-bold text-center text-slate-200 mb-8 drop-shadow border-b border-gray-300 pb-2">
         Tienda de Suplementos y Accesorios
       </h1>
       <div>

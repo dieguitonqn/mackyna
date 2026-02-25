@@ -9,6 +9,7 @@ declare module 'next-auth' {
       image: string;
       rol: string; // Agrega el campo rol
       telefono?: string; // Agrega el campo telefono opcional
+      dias_permitidos?: number; // Agrega el campo dias_permitidos opcional
     };
   }
 }

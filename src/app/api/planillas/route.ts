@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
 import logger from "@/lib/logger";
+import { log } from "console";
 
 export const GET = async (req: Request) => {
     const session = await getServerSession({ req, ...authOptions });
@@ -27,7 +28,7 @@ export const GET = async (req: Request) => {
                 return new NextResponse("El ID no es válido", { status: 400 });
             }
 
-            const planillas = await Plani.find({ userId: _id });
+            const planillas = await Plani.find({ userId: _id }).sort({ _id: -1 });
             logger.info(`Planillas recuperadas para el usuario ${_id}`);
 
             if (!planillas) {
@@ -86,12 +87,13 @@ export const POST = async (req: Request) => {
         logger.warn('Intento de acceso no autorizado al endpoint POST /api/planillas');
         return new NextResponse("No autorizado", { status: 401 });
     }
-
+    logger.info(`Usuario ${session.user?.email} está creando una nueva planilla`);
+    
     try {
         await connect();
         const planilla : Plani = await req.json();
         // console.log(planilla.trainingDays[1].Bloque2);
-
+        logger.debug("Datos recibidos para la nueva planilla: ", { planilla });
         // Validación de datos requeridos
         if (!planilla.userId) {
             logger.error('Intento de crear planilla sin userId');
@@ -216,6 +218,7 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
     try {
         const { id, plani } = await req.json();
         await connect();
+        logger.debug("Datos recibidos para actualizar la planilla: ", { id, plani });
         console.log(id);
         if (!ObjectId.isValid(id)) {
             logger.warn(`ID inválido proporcionado para actualización: ${id}`);
