@@ -35,7 +35,7 @@ import logger from "@/lib/logger";
 const NewPlan: React.FC = () => {
   const [users, setUsers] = useState<IUser[] | null>(null);
   const [userInfo, setUserInfo] = useState(false);
-  
+
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [days, setDays] = useState<number>(1); // Cantidad de días seleccionados
   const [plan, setPlan] = useState<Plani>({
@@ -190,28 +190,28 @@ const NewPlan: React.FC = () => {
   // ------------ CODIGO DE PLANTILLAS ----------------
   const [plantillas, setPlantillas] = useState<IPlantilla[]>([]);
   const [modalPlantilla, setModalPlantilla] = useState(false);
-  const {data:session} = useSession();
+  const { data: session } = useSession();
 
   const handlePlantillaSelect = (plantilla: IPlantilla) => {
     console.log("Plantilla seleccionada:", plantilla);
     setDays(0); // Resetea los días antes de aplicar la plantilla
-    setPlan(prevPlan => ({...prevPlan, trainingDays: []}));
+    setPlan(prevPlan => ({ ...prevPlan, trainingDays: [] }));
     setTimeout(() => {
       setPlan(plan => ({
-      ...plan,
-      trainingDays: plantilla.trainingDays || [],
+        ...plan,
+        trainingDays: plantilla.trainingDays || [],
       }));
-      
+
       setDays(plantilla.trainingDays.length); // Actualiza los días según la plantilla seleccionada
     }, 0);
-      
+
     console.log(plan);
   }
 
   const handleModalPlantilla = () => {
     setModalPlantilla(!modalPlantilla);
   };
-  const handleSavePlantilla = async (name: string, descripcion:string) => {
+  const handleSavePlantilla = async (name: string, descripcion: string) => {
     const plantillaData: IPlantilla = {
       nombre: name,
       nombreUser: session?.user?.name || "Usuario Desconocido",
@@ -259,7 +259,7 @@ const NewPlan: React.FC = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="w-full">
+      <form onSubmit={handleSubmit} onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()} className="w-full">
         <div className="flex flex-wrap justify-center items-center gap-2 mb-5 max-w-3xl m-auto">
           {users && (
             <AutoCompleteInput users={users} onSelect={handleSelectUser} />
@@ -347,25 +347,25 @@ const NewPlan: React.FC = () => {
             type="submit"
             className="bg-emerald-500/50 py-2 px-4 rounded-md shadow-md shadow-gray-300 hover:bg-emerald-500 hover:text-white transition-colors"
           >
-             <BiSave className="inline-block mr-2" /> Guardar
+            <BiSave className="inline-block mr-2" /> Guardar
           </button>
         </div>
-          <div className="flex justify-center mt-5">
+        <div className="flex justify-center mt-5">
           <button
             type="button"
             onClick={handleModalPlantilla}
             className="bg-gray-800/50 text-gray-300 py-2 px-4 rounded-md shadow-md shadow-gray-300 hover:bg-gray-700 hover:text-white hover:font-semibold transition-colors ml-5"
           >
-            
-           <GrTemplate className="inline-block mr-2" /> Guardar Como Plantilla
+
+            <GrTemplate className="inline-block mr-2" /> Guardar Como Plantilla
           </button>
         </div>
       </form>
-       {modalPlantilla && (
-            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-slate-900 p-6 rounded-lg shadow-xl max-w-md w-full border border-slate-500">
-              <h2 className="text-2xl font-semibold mb-4 text-slate-300">Guardar Plantilla</h2>
-              <form
+      {modalPlantilla && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-slate-900 p-6 rounded-lg shadow-xl max-w-md w-full border border-slate-500">
+            <h2 className="text-2xl font-semibold mb-4 text-slate-300">Guardar Plantilla</h2>
+            <form
               onSubmit={(e) => {
                 e.preventDefault();
                 const name = (e.target as any).name.value;
@@ -373,52 +373,52 @@ const NewPlan: React.FC = () => {
                 handleSavePlantilla(name, descripcion);
               }}
               className="space-y-4"
-              >
+            >
               <div className="flex flex-col">
                 <label htmlFor="name" className="mb-1 font-medium text-slate-300">
-                Nombre de la Plantilla:
+                  Nombre de la Plantilla:
                 </label>
                 <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Ej: Rutina Full Body"
-                className="border rounded-md p-2 bg-slate-800 text-slate-200 border-slate-700 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition duration-200"
-                required
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Ej: Rutina Full Body"
+                  className="border rounded-md p-2 bg-slate-800 text-slate-200 border-slate-700 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition duration-200"
+                  required
                 />
               </div>
               <div className="flex flex-col">
                 <label htmlFor="descripcion" className="mb-1 font-medium text-slate-300">
-                Descripción:
+                  Descripción:
                 </label>
                 <textarea
-                id="descripcion"
-                name="descripcion"
-                rows={4}
-                placeholder="Describe el objetivo y características de esta plantilla..."
-                className="border rounded-md p-2 bg-slate-800 text-slate-200 border-slate-700 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition duration-200 resize-none"
+                  id="descripcion"
+                  name="descripcion"
+                  rows={4}
+                  placeholder="Describe el objetivo y características de esta plantilla..."
+                  className="border rounded-md p-2 bg-slate-800 text-slate-200 border-slate-700 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition duration-200 resize-none"
                 />
               </div>
               <div className="flex justify-end gap-3 mt-6">
                 <button
-                type="button"
-                onClick={handleModalPlantilla}
-                className="px-4 py-2 bg-red-500/50 text-white rounded-md hover:bg-red-600 transition duration-200 shadow-sm"
+                  type="button"
+                  onClick={handleModalPlantilla}
+                  className="px-4 py-2 bg-red-500/50 text-white rounded-md hover:bg-red-600 transition duration-200 shadow-sm"
                 >
-                Cancelar
+                  Cancelar
                 </button>
                 <button
-                type="submit"
-                className="px-4 py-2 bg-emerald-500/50 text-white rounded-md hover:bg-emerald-600 transition duration-200 shadow-sm"
+                  type="submit"
+                  className="px-4 py-2 bg-emerald-500/50 text-white rounded-md hover:bg-emerald-600 transition duration-200 shadow-sm"
                 >
-                Guardar Plantilla 
+                  Guardar Plantilla
                 </button>
               </div>
-              </form>
-            </div>
-            </div>
+            </form>
+          </div>
+        </div>
 
-        )}
+      )}
     </div>
   );
 };
