@@ -1,12 +1,12 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Exercise } from "@/types/plani";
 import AutoCompleteInputEj from "./AutoCompleteEjercicio";
+import usePlanilla from "@/app/stores/store.plani";
 
 interface Props {
   day: string;
 
   bloque: string;
-  onChange: (day: string, bloque: string, exercises: Exercise[]) => void;
   initialExercises?: Exercise[];
 }
 
@@ -21,9 +21,9 @@ type Ejercicio = {
 const ExerciseForm: React.FC<Props> = ({
   day,
   bloque,
-  onChange,
   initialExercises,
 }) => {
+  const setExercisesForBlock = usePlanilla((state) => state.setExercisesForBlock);
 
   const [ejercicios, setEjercicios] = useState<Ejercicio[]>([]); // Estado de usuarios
   const [exercises, setExercises] = useState<Exercise[]>([
@@ -43,6 +43,8 @@ const ExerciseForm: React.FC<Props> = ({
     }
   }
   , [initialExercises]);
+
+  
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
@@ -62,7 +64,7 @@ const ExerciseForm: React.FC<Props> = ({
       }
     };
     fetchEjercicios();
-  }, [exercises]);
+  }, []);
 
   const handleAddExercise = () => {
     const newExercise: Exercise = {
@@ -74,13 +76,13 @@ const ExerciseForm: React.FC<Props> = ({
     };
     const updatedExercises = [...exercises, newExercise];
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    setExercisesForBlock(day, bloque, updatedExercises);
   };
 
   const handleRemoveExercise = (index: number) => {
     const updatedExercises = exercises.filter((_, i) => i !== index);
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    setExercisesForBlock(day, bloque, updatedExercises);
   };
 
   const handleInputChange = (
@@ -98,7 +100,7 @@ const ExerciseForm: React.FC<Props> = ({
 
     updatedExercises[index] = { ...updatedExercises[index], [field]: value };
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    setExercisesForBlock(day, bloque, updatedExercises);
   };
 
   const handleSelectEjercicio = (index: number, ejercicio: Ejercicio) => {
@@ -109,7 +111,7 @@ const ExerciseForm: React.FC<Props> = ({
       videoLink: ejercicio.video,
     };
     setExercises(updatedExercises);
-    onChange(day, bloque, updatedExercises);
+    setExercisesForBlock(day, bloque, updatedExercises);
   };
 
   return (
