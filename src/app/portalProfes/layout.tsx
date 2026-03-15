@@ -12,7 +12,7 @@ const { STRAPI_HOST } = process.env;
   return (
     <div className="flex min-h-screen bg-gray-100 overflow-x-scroll">
       {/* Sidebar */}
-      <aside className="w-32 bg-gray-800 text-white flex flex-col">
+      <aside className="w-40 bg-gray-800 text-white flex flex-col">
         {/* Logo e información */}
         <div className="p-6 text-center justify-start">
           <Image

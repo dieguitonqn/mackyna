@@ -144,21 +144,21 @@ const NewPlan: React.FC = () => {
     // clientLogger.info("Creando planilla para el usuario: ", { userId: selectedUser._id });
     // clientLogger.debug("Datos de la planilla: ", { plan });
 
-    // try {
-    //   const response = await fetch("/api/planillas", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ ...plan }),
-    //   });
+    try {
+      const response = await fetch("/api/planillas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...planilla }),
+      });
 
-    //   if (!response.ok) throw new Error("Error al crear la planilla");
-    //   alert("Planilla creada exitosamente");
-    // } catch (error) {
-    //   clientLogger.error("Error al crear la planilla", { error, userId: selectedUser._id });
-    //   alert("Error al crear la planilla");
-    // }
+      if (!response.ok) throw new Error("Error al crear la planilla");
+      alert("Planilla creada exitosamente");
+    } catch (error) {
+      clientLogger.error("Error al crear la planilla", { error, userId: selectedUser._id });
+      alert("Error al crear la planilla");
+    }
   };
   // ------------ CODIGO DE PLANTILLAS ----------------
   const [plantillas, setPlantillas] = useState<IPlantilla[]>([]);

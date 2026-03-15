@@ -37,14 +37,14 @@ function Navbar() {
               height={50}
             />
           </Link>
-          <div>
+          {/* <div>
             <Link
               className="hidden lg:flex  items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
               href="/Tienda"
             >
               Tienda <BsCart4 /> 
             </Link>
-          </div>
+          </div> */}
           <div>
             <Link
               className="flex items-center gap-1 bg-green-800 rounded py-2 px-4"
@@ -83,14 +83,14 @@ function Navbar() {
             />
           )}
         </Link>
-        <div>
-            <Link
-              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
-              href="/Tienda"
-            >
-              Tienda <BsCart4 /> 
-            </Link>
-          </div>
+        {/* <div>
+          <Link
+            className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+            href="/Tienda"
+          >
+            Tienda <BsCart4 />
+          </Link>
+        </div> */}
 
         <div className="flex flex-row gap-2 items-center">
           {/* Menús visibles solo en pantallas medianas o más grandes */}
