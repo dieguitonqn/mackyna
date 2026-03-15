@@ -67,7 +67,7 @@ export const HamburguesaAdmin = () => {
                 Mis Métricas
               </Link>
             </li>
-            <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
+            {/* <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
               <Link
                 href="/Tienda"
                 className="text-white hover:font-semibold px-6 py-4 transition-all duration-300 ease-in-out rounded-sm "
@@ -75,7 +75,7 @@ export const HamburguesaAdmin = () => {
               >
                 Tienda
               </Link>
-            </li>
+            </li> */}
 
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
@@ -135,7 +135,7 @@ export const HamburguesaTeach = () => {
                 Portal Alumnos
               </Link>
             </li>
-            
+
             <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
               <Link
                 href="/portalAlumnos/Metricas"
@@ -145,7 +145,7 @@ export const HamburguesaTeach = () => {
                 Mis Métricas
               </Link>
             </li>
-              <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
+            {/* <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
               <Link
                 href="/Tienda"
                 className="text-white hover:font-semibold px-6 py-4 transition-all duration-300 ease-in-out rounded-sm "
@@ -153,7 +153,7 @@ export const HamburguesaTeach = () => {
               >
                 Tienda
               </Link>
-            </li>
+            </li> */}
 
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
@@ -195,7 +195,7 @@ export const HamburguesaUsers = () => {
             {/* <FaTimes /> */}
           </button>
           <ul className="flex flex-col space-y-6 text-left text-xs">
-            
+
             <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
               <Link
                 href="/portalAlumnos"
@@ -205,7 +205,7 @@ export const HamburguesaUsers = () => {
                 Portal Alumnos
               </Link>
             </li>
-            
+
             <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
               <Link
                 href="/portalAlumnos/Metricas"
@@ -215,7 +215,7 @@ export const HamburguesaUsers = () => {
                 Mis Métricas
               </Link>
             </li>
-              <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
+            {/* <li className="shadow-green-500 shadow-md border border-green-800 text-xl  rounded-sm justify-center flex ">
               <Link
                 href="/Tienda"
                 className="text-white hover:font-semibold px-6 py-4 transition-all duration-300 ease-in-out rounded-sm "
@@ -223,12 +223,12 @@ export const HamburguesaUsers = () => {
               >
                 Tienda
               </Link>
-            </li>
+            </li> */}
 
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
               className="flex items-center justify-center gap-1 bg-red-500 px-6 py-4 rounded-md hover:font-semibold"
-              
+
             >
               Log out
               <IoIosLogOut className="h-4 w-4" />

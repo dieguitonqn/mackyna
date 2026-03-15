@@ -1,5 +1,5 @@
 // import { ObjectId } from "mongodb";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Ejercicio = {
   _id: string;
@@ -21,6 +21,13 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
   const [filtered, setFiltered] = useState<Ejercicio[]>([]); // Usuarios filtrados
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // Control del desplegable
   const [isValidSelection, setIsValidSelection] = useState<boolean>(true); // Control de selección válida
+
+  useEffect(() => {
+    setQuery(initialValue || "");
+    setIsValidSelection(true);
+    setShowDropdown(false);
+    setFiltered([]);
+  }, [initialValue]);
   
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

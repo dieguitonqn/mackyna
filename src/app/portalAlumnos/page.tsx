@@ -55,7 +55,7 @@ function Page() {
                         desc="Todas las mediciones realizadas en Mackyna"
                         link='/portalAlumnos/Metricas'
                     />
-                    <CardInit
+                    {/* <CardInit
                         imagen='/turnos.png'
                         titulo='Turnos'
                         desc='Días y horarios en que asistirá. También podrá agendar nuevos turnos o editar los que ya tenga.'
@@ -66,7 +66,7 @@ function Page() {
                         titulo='Pagos'
                         desc="Realizar pagos de cuotas (Solo Mercado Pago)"
                         link='/portalAlumnos/Pago'
-                    />
+                    /> */}
                 </div>
 
                 {showBirthdayModal && (

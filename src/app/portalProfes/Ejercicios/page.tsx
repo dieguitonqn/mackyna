@@ -28,7 +28,7 @@ const Ejercicios: React.FC = () => {
 
     const [filters, setFilters] = useState({
         nombre: '',
-        
+        grupoMusc: '',
         specificMusc: '',
         description: '',
         video: '',
@@ -151,8 +151,8 @@ const Ejercicios: React.FC = () => {
 
 
                         </th>
-                        {/* <th
-                            className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                        <th
+                             className="border border-gray-400 px-2 py-2 text-left"
                         >
                             Grupo Muscular
                             <input
@@ -169,7 +169,7 @@ const Ejercicios: React.FC = () => {
                                 required
                             />
 
-                        </th> */}
+                        </th>
                         <th
                             className="border border-gray-400 px-2 py-2 text-left "
                         >
@@ -240,7 +240,7 @@ const Ejercicios: React.FC = () => {
                             className="hover:bg-gray-300 hover:text-gray-800 text-slate-300 border-gray-400 bg-gray-800 border "
                         >
                             <td className="px-2 py-2 border border-gray-400">{ejercicio.nombre}</td>
-                            {/* <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td> */}
+                            <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td>
                             <td className="px-2 py-2 border border-gray-400">{ejercicio.specificMusc}</td>
                             <td className="px-2 py-2 border border-gray-400">{ejercicio.description}</td>
                             <td className="px-2 py-2 border border-gray-400">

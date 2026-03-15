@@ -7,8 +7,18 @@ import { Exercise, Plani } from "@/types/plani";
 import ExerciseForm from "@/components/ExerciseForm";
 import { IUser } from "@/types/user";
 import { IPlantillaSId } from "@/types/plantilla";
-import { set } from "mongoose";
 import clientLogger from "@/lib/clientLogger";
+import usePlanilla from "@/app/stores/store.plani";
+
+const EMPTY_PLANILLA: Plani = {
+  month: "",
+  year: "",
+  userId: "",
+  email: "",
+  trainingDays: [],
+  startDate: "",
+  endDate: "",
+};
 
 const EditPlani = () => {
   const searchParams = useSearchParams();
@@ -16,18 +26,14 @@ const EditPlani = () => {
   const queryPlantillaID = searchParams.get("plantillaID");
   const [plani, setPlani] = useState<Plani>();
   const [user, setUser] = useState<IUser>();
-  // const queryPlantillaUserID = searchParams.get("userID");
 
-  // Estado para la planilla editada
-  const [editedPlani, setEditedPlani] = useState<Plani>({
-    month: "",
-    year: "",
-    userId: "",
-    email: "",
-    trainingDays: [],
-    startDate: "",
-    endDate: "",
-  });
+  const planilla = usePlanilla((state) => state.planilla);
+  const setPlanilla = usePlanilla((state) => state.setPlanilla);
+  const setTrainingDays = usePlanilla((state) => state.setTrainingDays);
+  const setDays = usePlanilla((state) => state.setDays);
+  const setStartDate = usePlanilla((state) => state.setStartDate);
+  const setEndDate = usePlanilla((state) => state.setEndDate);
+
   const [editedPlanti, setEditedPlanti] = useState<IPlantillaSId>({
     nombre: "",
     nombreUser: "",
@@ -36,10 +42,12 @@ const EditPlani = () => {
     createdAt: "",
     updatedAt: "",
     trainingDays: [],
-   
   });
 
   useEffect(() => {
+    setPlanilla(EMPTY_PLANILLA);
+    setDays(1);
+
     // Si tenemos un planiID, cargamos la plani existente
     if (queryPlaniID) {
       fetch(`/api/planillas?planiID=${queryPlaniID}`)
@@ -52,7 +60,8 @@ const EditPlani = () => {
         .then((data) => {
           // console.log("Plani data:", data);
           setPlani(data);
-          setEditedPlani(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
+          setPlanilla(JSON.parse(JSON.stringify(data))); // Crear una copia profunda de data
+          setDays(data?.trainingDays?.length || 1);
         })
         .catch((error) => console.error("Error fetching plani:", error));
     }
@@ -70,17 +79,25 @@ const EditPlani = () => {
         .then((data) => {
           // console.log("Plantilla data:", data);
           if (data && data.trainingDays) {
-            setEditedPlani((prev) => ({
-              ...prev,
-              trainingDays: data.trainingDays,
-            }));
+            setTrainingDays(data.trainingDays);
+            setDays(data.trainingDays.length || 1);
             setEditedPlanti(data);
             // console.log(editedPlani);
+          } else {
+            setTrainingDays([]);
+            setDays(1);
           }
         })
         .catch((error) => console.error("Error fetching plantilla:", error));
     }
-  }, [queryPlantillaID, queryPlaniID]);
+  }, [queryPlantillaID, queryPlaniID, setDays, setPlanilla, setTrainingDays]);
+
+  useEffect(() => {
+    return () => {
+      setPlanilla(EMPTY_PLANILLA);
+      setDays(1);
+    };
+  }, [setDays, setPlanilla]);
 
   useEffect(() => {
     if (plani) {
@@ -103,8 +120,8 @@ const EditPlani = () => {
   // }
 
   const handlePlaniChange = (field: string, value: string | number) => {
-    setEditedPlani({
-      ...editedPlani,
+    setPlanilla({
+      ...planilla,
       [field]: value,
     });
   };
@@ -118,22 +135,26 @@ const EditPlani = () => {
   ) => {
     e.preventDefault();
     // console.log('currentLength:', currentLength);
-    if (currentLength >= 5) {
-      alert("No se pueden agregar más de 5 días");
+    if (currentLength >= 6) {
+      alert("No se pueden agregar más de 6 días");
       return;
     }
-    currentLength++;
+    const nextDayNumber = currentLength + 1;
     const newDay = {
-      day: "Día " + currentLength,
+      day: "Día " + nextDayNumber,
       Bloque1: [] as Exercise[],
       Bloque2: [] as Exercise[],
       Bloque3: [] as Exercise[],
       Bloque4: [] as Exercise[],
     };
-    setEditedPlani({
-      ...editedPlani,
-      trainingDays: [...editedPlani.trainingDays, newDay],
-    });
+    const updatedDays = [...(planilla.trainingDays || []), newDay].map(
+      (day, index) => ({
+        ...day,
+        day: `Día ${index + 1}`,
+      })
+    );
+    setTrainingDays(updatedDays);
+    setDays(updatedDays.length);
   };
 
   // Función para borrar un día
@@ -142,55 +163,33 @@ const EditPlani = () => {
     dayIndex: number
   ) => {
     e.preventDefault();
-    const updatedDays = editedPlani.trainingDays.filter(
-      (_, index) => index !== dayIndex
-    );
-    setEditedPlani({
-      ...editedPlani,
-      trainingDays: updatedDays,
-    });
-  };
+    const updatedDays = (planilla.trainingDays || [])
+      .filter((_, index) => index !== dayIndex)
+      .map((day, index) => ({
+        ...day,
+        day: `Día ${index + 1}`,
+      }));
 
-  const handleInputChange2 = (
-    day: string,
-    bloque: string,
-    exercises: Exercise[]
-  ) => {
-    const dayIndex = parseInt(day.split(" ")[1]) - 1;
-
-    if (dayIndex < 0 || dayIndex >= editedPlani.trainingDays.length) {
-      console.error("Invalid day index");
-      return;
-    }
-
-    const updatedTrainingDays = editedPlani.trainingDays.map(
-      (trainingDay, index) =>
-        index === dayIndex
-          ? { ...trainingDay, [bloque]: exercises }
-          : trainingDay
-    );
-
-    setEditedPlani({
-      ...editedPlani,
-      trainingDays: updatedTrainingDays,
-    });
+    setTrainingDays(updatedDays);
+    setDays(updatedDays.length || 1);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log('editedPlani:', editedPlani);
-    
+
     if (queryPlaniID && plani) {
       try {
-        // console.log("Enviando datos de plani:", editedPlani);
         clientLogger.debug("Updating plani with ID:", plani._id);
-        clientLogger.debug("Updated plani data:", editedPlani);
+        clientLogger.debug("Updated plani data:", planilla);
         const response = await fetch(`/api/planillas?planiID=${queryPlaniID}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id: plani._id?.toString(), plani: editedPlani }),
+          body: JSON.stringify({
+            id: plani._id?.toString() || queryPlaniID,
+            plani: planilla,
+          }),
         });
         if (!response.ok) {
           throw new Error("Error al actualizar planilla");
@@ -216,10 +215,8 @@ const EditPlani = () => {
               nombre: editedPlanti.nombre,
               nombreUser: editedPlanti.nombreUser,
               descripcion: editedPlanti.descripcion,
-              trainingDays: editedPlani.trainingDays,
+              trainingDays: planilla.trainingDays,
               _id: editedPlanti._id,
-        
-            
             }),
           }
         );
@@ -235,203 +232,177 @@ const EditPlani = () => {
       }
     }
   };
+
+  const trainingDays = planilla.trainingDays || [];
+
   return (
     <div className="flex flex-col items-center">
       <form onSubmit={handleSubmit}>
-        {queryPlaniID && (
-          <h1 className="text-3xl font-bold mb-4 text-slate-300 text-center">
-            Editar planilla de {user?.nombre} {user?.apellido}
-          </h1>
-        )}
-        {queryPlantillaID && (
-            <div className="bg-slate-500/30 p-6 rounded-lg shadow-lg mb-8">
-            <h1 className="text-3xl font-bold mb-6 text-slate-200 text-center">
-              Editar plantilla de <span className="text-emerald-400">{editedPlanti.nombreUser}</span>
+          {queryPlaniID && (
+            <h1 className="text-3xl font-bold mb-4 text-slate-300 text-center">
+              Editar planilla de {user?.nombre} {user?.apellido}
             </h1>
-            <div className="space-y-4">
-              <div className="flex flex-col items-center">
-              <p className="text-lg text-slate-300 font-semibold">
-                Nombre de la plantilla:
-              </p>
-              <p className="text-xl text-emerald-400">{editedPlanti.nombre}</p>
-              </div>
-              <div className="flex flex-col items-center">
-              <p className="text-lg text-slate-300 font-semibold">
-                Descripción:
-              </p>
-              <p className="text-xl text-emerald-400">{editedPlanti.descripcion}</p>
+          )}
+          {queryPlantillaID && (
+            <div className="bg-slate-500/30 p-6 rounded-lg shadow-lg mb-8">
+              <h1 className="text-3xl font-bold mb-6 text-slate-200 text-center">
+                Editar plantilla de <span className="text-emerald-400">{editedPlanti.nombreUser}</span>
+              </h1>
+              <div className="space-y-4">
+                <div className="flex flex-col items-center">
+                  <p className="text-lg text-slate-300 font-semibold">
+                    Nombre de la plantilla:
+                  </p>
+                  <p className="text-xl text-emerald-400">{editedPlanti.nombre}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-lg text-slate-300 font-semibold">
+                    Descripción:
+                  </p>
+                  <p className="text-xl text-emerald-400">{editedPlanti.descripcion}</p>
+                </div>
               </div>
             </div>
+          )}
+          {/* Aquí puedes agregar un formulario para editar la planilla */}
+          {!queryPlantillaID && (
+            <div className="mb-4">
+              <label className="block text-gray-300 text-sm font-bold mb-2">
+                Mes
+              </label>
+              <input
+                type="text"
+                value={planilla.month}
+                onChange={(e) => handlePlaniChange("month", e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+              />
             </div>
-        )}
-        {/* Aquí puedes agregar un formulario para editar la planilla */}
-        {!queryPlantillaID && (
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
-            Mes
-          </label>
-          <input
-            type="text"
-            value={editedPlani.month}
-            onChange={(e) => handlePlaniChange("month", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
-          />
-        </div>
-        )}
-        {!queryPlantillaID && (
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
-            Año
-          </label>
-          <input
-            type="text"
-            value={editedPlani.year}
-            onChange={(e) => handlePlaniChange("year", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
-          />
-        </div>
-        )}
-        {!queryPlantillaID && (
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
-            Fecha de Inicio
-          </label>
-          
-            <input
-            type="date"
-            value={editedPlani.startDate ? new Date(editedPlani.startDate).toISOString().split("T")[0] : ''}
-            onChange={(e) => handlePlaniChange("startDate", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
-          />
-          
-        </div>
-        )}
-        {!queryPlantillaID && (
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
-            Fecha de Fin
-          </label>
-          
-          <input
-            type="date"
-            value={editedPlani.endDate? new Date(editedPlani.endDate).toISOString().split("T")[0]:''}
-            onChange={(e) => handlePlaniChange("endDate", e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
-          />
-        </div>
-        )}
-        {editedPlani.trainingDays.map((trainingDay, dayIndex) => (
-          <div
-            className="flex flex-col items-center  bg-slate-500/30 my-5 p-2"
-            key={dayIndex}
-          >
-            <h2 className="text-2xl font-bold mb-2">{trainingDay.day}</h2>
-            <div
-              key={dayIndex * 10}
-              className="my-6 grid grid-cols-4 gap-4 items-start"
-            >
-              {trainingDay.Bloque1 !== undefined && (
-              <div>
-                {trainingDay.Bloque1.length > 0 ? (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque1"
-                  onChange={handleInputChange2}
-                  initialExercises={trainingDay.Bloque1}
-                />
-                ) : (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque1"
-                  onChange={handleInputChange2}
-                />
-                )}
-              </div>
-              )}
-              {trainingDay.Bloque2 !== undefined && (
-              <div>
-                {trainingDay.Bloque2.length > 0 ? (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque2"
-                  onChange={handleInputChange2}
-                  initialExercises={trainingDay.Bloque2}
-                />
-                ) : (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque2"
-                  onChange={handleInputChange2}
-                />
-                )}
-              </div>
-              )}
-              {trainingDay.Bloque3 !== undefined && (
-              <div>
-                {trainingDay.Bloque3.length > 0 ? (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque3"
-                  onChange={handleInputChange2}
-                  initialExercises={trainingDay.Bloque3}
-                />
-                ) : (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque3"
-                  onChange={handleInputChange2}
-                />
-                )}
-              </div>
-              )}
-              {trainingDay.Bloque4 !== undefined && (
-              <div>
-                {trainingDay.Bloque4.length > 0 ? (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque4"
-                  onChange={handleInputChange2}
-                  initialExercises={trainingDay.Bloque4}
-                />
-                ) : (
-                <ExerciseForm
-                  day={trainingDay.day}
-                  bloque="Bloque4"
-                  onChange={handleInputChange2}
-                />
-                )}
-              </div>
-              )}
+          )}
+          {!queryPlantillaID && (
+            <div className="mb-4">
+              <label className="block text-gray-300 text-sm font-bold mb-2">
+                Año
+              </label>
+              <input
+                type="text"
+                value={planilla.year}
+                onChange={(e) => handlePlaniChange("year", e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+              />
             </div>
-            <button
-              onClick={(e) => handleDeleteDay(e, dayIndex)}
-              className="bg-red-500/50 px-2 py-1 m-2 rounded-md"
-            >
-              Borrar Día
-            </button>
-          </div>
-        ))}
+          )}
+          {!queryPlantillaID && (
+            <div className="mb-4">
+              <label className="block text-gray-300 text-sm font-bold mb-2">
+                Fecha de Inicio
+              </label>
 
-        <button
-          onClick={(e) => handleAddDay(e, editedPlani.trainingDays.length)}
-          className="flex m-auto bg-blue-500/60 px-2 py-1 rounded-md my-4"
-        >
-          Agregar Día
-        </button>
-        {!queryPlantillaID && (
-        <button className="flex m-auto bg-green-600/60 px-2 py-1 rounded-md">
-          Guardar
-        </button>
-        )}
-        {queryPlantillaID && (
-        <button className="flex m-auto bg-green-600/60 px-2 py-1 rounded-md">
-          Guardar Plantilla
-        </button>
-        )}
-      </form>
-    </div>
-  );
-};
+              <input
+                type="date"
+                value={
+                  planilla.startDate
+                    ? new Date(planilla.startDate).toISOString().split("T")[0]
+                    : ""
+                }
+                onChange={(e) => setStartDate(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+              />
+            </div>
+          )}
+          {!queryPlantillaID && (
+            <div className="mb-4">
+              <label className="block text-gray-300 text-sm font-bold mb-2">
+                Fecha de Fin
+              </label>
+
+              <input
+                type="date"
+                value={
+                  planilla.endDate
+                    ? new Date(planilla.endDate).toISOString().split("T")[0]
+                    : ""
+                }
+                onChange={(e) => setEndDate(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+              />
+            </div>
+          )}
+          {trainingDays.map((trainingDay, dayIndex) => (
+            <div
+              className="flex flex-col items-center  bg-slate-500/30 my-5 p-2"
+              key={dayIndex}
+            >
+              <h2 className="text-2xl font-bold mb-2">{trainingDay.day}</h2>
+              <div
+                key={dayIndex * 10}
+                className="my-6 grid grid-cols-4 gap-4 items-start"
+              >
+                {trainingDay.Bloque1 !== undefined && (
+                  <div>
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque1"
+                      initialExercises={trainingDay.Bloque1}
+                    />
+                  </div>
+                )}
+                {trainingDay.Bloque2 !== undefined && (
+                  <div>
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque2"
+                      initialExercises={trainingDay.Bloque2}
+                    />
+                  </div>
+                )}
+                {trainingDay.Bloque3 !== undefined && (
+                  <div>
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque3"
+                      initialExercises={trainingDay.Bloque3}
+                    />
+                  </div>
+                )}
+                {trainingDay.Bloque4 !== undefined && (
+                  <div>
+                    <ExerciseForm
+                      day={trainingDay.day}
+                      bloque="Bloque4"
+                      initialExercises={trainingDay.Bloque4}
+                    />
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={(e) => handleDeleteDay(e, dayIndex)}
+                className="bg-red-500/50 px-2 py-1 m-2 rounded-md"
+              >
+                Borrar Día
+              </button>
+            </div>
+          ))}
+
+          <button
+            onClick={(e) => handleAddDay(e, trainingDays.length)}
+            className="flex m-auto bg-blue-500/60 px-2 py-1 rounded-md my-4"
+          >
+            Agregar Día
+          </button>
+          {!queryPlantillaID && (
+            <button className="flex m-auto bg-green-600/60 px-2 py-1 rounded-md">
+              Guardar
+            </button>
+          )}
+          {queryPlantillaID && (
+            <button className="flex m-auto bg-green-600/60 px-2 py-1 rounded-md">
+              Guardar Plantilla
+            </button>
+          )}
+        </form>
+      </div>
+    );
+  };
 
 const EditPlaniPage = () => (
   <Suspense fallback={<div>Cargando...</div>}>
