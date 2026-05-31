@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { FaSave, FaPrint, FaSearchPlus, FaSearchMinus, FaEdit, FaTrashAlt, FaCalendarAlt, FaDumbbell, FaListOl, FaLayerGroup } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { ImYoutube2 } from "react-icons/im";
+import { updatePlanillaNote } from './planillas.utils';
 
 const Planillas: React.FC = () => {
     const searchParams = useSearchParams();
@@ -72,46 +73,62 @@ const Planillas: React.FC = () => {
 
     const handleInputChange = (
         dayIndex: number,
-        bloque: string, // Aceptamos un string inicialmente
+        bloque: string,
         exerciseIndex: number,
         value: string
     ) => {
-        if (selectedPlani) {
-            const updatedPlani = { ...selectedPlani };
-            const trainingDay = updatedPlani.trainingDays[dayIndex];
-
-            // Aseguramos que `bloque` es una clave válida de TrainingDay
-            if (trainingDay && Object.prototype.hasOwnProperty.call(trainingDay, bloque)) {
-                const exercises = trainingDay[bloque as keyof TrainingDay];
-                if (Array.isArray(exercises)) {
-                    exercises[exerciseIndex].notas = value; // Actualizamos "notas"
-                }
+        setSelectedPlani((currentPlani) => {
+            if (!currentPlani) {
+                return currentPlani;
             }
-            setSelectedPlani(updatedPlani);
-            console.log(updatedPlani)
-        }
+
+            return updatePlanillaNote(currentPlani, dayIndex, bloque, exerciseIndex, value);
+        });
     };
 
-    const handleSaveNote = async () => {
-        console.log("a guardar en la base de datos");
-        console.log(selectedPlani?._id);
+    const handleSaveNote = async (dayIndex: number, bloque: string, exerciseIndex: number) => {
+        if (!selectedPlani?._id) {
+            alert('No se pudo guardar la nota porque la planilla no tiene ID.');
+            return;
+        }
+
+        const bloqueKey = bloque as keyof TrainingDay;
+        const exercises = selectedPlani.trainingDays[dayIndex]?.[bloqueKey];
+
+        if (!Array.isArray(exercises)) {
+            alert('No se pudo identificar el bloque a guardar.');
+            return;
+        }
+
+        const notas = exercises[exerciseIndex]?.notas ?? '';
 
         try {
-            // Enviar los datos al backend
             const response = await fetch(`/api/planillas`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id: selectedPlani?._id,
-                    plani: selectedPlani
+                    id: selectedPlani._id,
+                    noteUpdate: {
+                        dayIndex,
+                        bloque: bloqueKey,
+                        exerciseIndex,
+                        notas,
+                    },
                 }),
             });
 
             if (!response.ok) {
                 throw new Error('Error al guardar las notas');
             }
+
+            // Actualizar el estado local para que el modal refleje las notas guardadas
+            setPlanillasUser((prev) =>
+                prev
+                    ? prev.map((p) => (p._id === selectedPlani._id ? selectedPlani : p))
+                    : prev
+            );
 
             alert('Notas guardadas con éxito');
         } catch (error) {
@@ -327,8 +344,9 @@ const Planillas: React.FC = () => {
                                                                                     }}
                                                                                 />
                                                                             </div>
-                                                                            <button
-                                                                                onClick={() => handleSaveNote()}
+                                                                                <button
+                                                                                type="button"
+                                                                                onClick={() => handleSaveNote(dayIndex, bloque, exerciseIndex)}
                                                                                 className="inline-flex items-center px-3 py-2 bg-emerald-900 text-emerald-100 rounded-lg hover:bg-emerald-800 transition-colors duration-200 font-medium"
                                                                                 aria-label="Guardar notas"
                                                                             >

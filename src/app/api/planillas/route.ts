@@ -216,7 +216,7 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
     }
 
     try {
-        const { id, plani } = await req.json();
+        const { id, plani, noteUpdate } = await req.json();
         await connect();
         logger.debug("Datos recibidos para actualizar la planilla: ", { id, plani });
         console.log(id);
@@ -225,7 +225,49 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
             return NextResponse.json({ error: "El ID proporcionado no es válido" }, { status: 400 });
         }
 
-        const editedPlani = await Plani.findByIdAndUpdate(new ObjectId(id as string), plani);
+        if (noteUpdate) {
+            const { dayIndex, bloque, exerciseIndex, notas } = noteUpdate;
+
+            if (
+                typeof dayIndex !== 'number' ||
+                typeof exerciseIndex !== 'number' ||
+                typeof bloque !== 'string'
+            ) {
+                return NextResponse.json({ error: "Datos de nota inválidos" }, { status: 400 });
+            }
+
+            const updatePath = `trainingDays.${dayIndex}.${bloque}.${exerciseIndex}.notas`;
+
+            const editedPlani = await Plani.findByIdAndUpdate(
+                new ObjectId(id as string),
+                { $set: { [updatePath]: notas ?? '' } },
+                { new: true }
+            );
+
+            if (!editedPlani) {
+                logger.error(`No se pudo editar la planilla con ID: ${id}`);
+                return NextResponse.json({ message: "No se pudo editar la planilla" }, { status: 501 });
+            }
+
+            logger.info(`Nota actualizada exitosamente: ${id}`);
+            return NextResponse.json({ message: "todo ok" }, { status: 200 });
+        }
+
+        const editedPlani = await Plani.findByIdAndUpdate(
+            new ObjectId(id as string),
+            {
+                $set: {
+                    month: plani?.month,
+                    year: plani?.year,
+                    userId: plani?.userId,
+                    email: plani?.email,
+                    trainingDays: plani?.trainingDays,
+                    startDate: plani?.startDate,
+                    endDate: plani?.endDate,
+                },
+            },
+            { new: true, runValidators: true }
+        );
         if (!editedPlani) {
             logger.error(`No se pudo editar la planilla con ID: ${id}`);
             return NextResponse.json({ message: "No se pudo editar la planilla" }, { status: 501 });
