@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
 import { NextRequest } from 'next/server';
 import logger from '@/lib/logger';
+import { parseDateOnlyToUTC } from '@/utils/dateOnly';
 
 export const GET = async (req: NextRequest) => {
     try {
@@ -92,13 +93,31 @@ export const PUT = async (req: NextRequest) => {
 
         const { _id, ...rest } = await req.json();
         const userId = new ObjectId(_id as string);
-        console.log(rest);
+        const payload = { ...rest };
+
+        if (Object.prototype.hasOwnProperty.call(payload, 'fecha_nacimiento')) {
+            const rawBirthDate = payload.fecha_nacimiento;
+
+            if (rawBirthDate === null || rawBirthDate === '') {
+                payload.fecha_nacimiento = null;
+            } else if (typeof rawBirthDate === 'string') {
+                const normalizedBirthDate = parseDateOnlyToUTC(rawBirthDate);
+
+                if (!normalizedBirthDate) {
+                    logger.error(`[PUT] Fecha de nacimiento inválida: ${rawBirthDate}`);
+                    return new NextResponse("Fecha de nacimiento inválida", { status: 400 });
+                }
+
+                payload.fecha_nacimiento = normalizedBirthDate;
+            }
+        }
+
         if (!rest.email) {
             logger.error("[PUT] Email no proporcionado");
             return new NextResponse("El email es obligatorio", { status: 400 });
         }
 
-        const updatedUser = await User.findByIdAndUpdate(userId, rest, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(userId, payload, { new: true });
         if (!updatedUser) {
             logger.error(`[PUT] Usuario no encontrado con ID: ${_id}`);
             return new NextResponse("Usuario no encontrado", { status: 404 });

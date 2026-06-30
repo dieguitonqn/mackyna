@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import MetriscsTable from "@/components/PortalAlumnos/Metricas/metricsTable";
 import { Suspense } from "react";
 import { MetricCard } from "@/components/PortalAlumnos/Metricas/metricCard";
+import { toDateInputValue } from "@/utils/dateOnly";
 
 
 interface MedicionLocal {
@@ -41,18 +42,10 @@ async function page({
         redirect('/login');
     }
 
-    function formatDate(date: string): string {
-        const parsedDate = new Date(date);
-        const day = parsedDate.getDate();
-        const month = parsedDate.toLocaleString('es-ES', { month: 'short' });
-        const year = parsedDate.getFullYear();
-        return `${day}-${month}-${year}`;
-    }
-
     function processMetricsData(rawMetricsData: MedicionLocal[]): MedicionLocal[] {
         return rawMetricsData.map(({ _id,date, ...rest }) => ({
             ...rest,
-            date: formatDate(date),
+            date: toDateInputValue(date),
             _id: _id.toString(),
         }));
     }

@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
 import connect from "@/lib/db";
+import { parseDateOnlyToUTC } from "@/utils/dateOnly";
 
 
 export  const POST = async (req:Request)=>{
@@ -14,11 +15,21 @@ export  const POST = async (req:Request)=>{
     }
     try {
         const newMetric = await req.json();
+        const normalizedDate = parseDateOnlyToUTC(newMetric.date);
+
+        if (!normalizedDate) {
+            return new NextResponse("Fecha de medición inválida", { status: 400 });
+        }
+
+        const metricPayload = {
+            ...newMetric,
+            date: normalizedDate,
+        };
         // console.log(newMetric);
         // const userID = newMetric.userID;
         // console.log(userID);
         await connect();
-        const nuevaMedicion = await Metric.create(newMetric);
+        const nuevaMedicion = await Metric.create(metricPayload);
         if(!nuevaMedicion){
             return new NextResponse ("No se pudo ingresar la medidicón",{status:500})
         }
@@ -41,18 +52,14 @@ export const PUT = async (req:Request)=>{
         return new NextResponse("No autorizado", { status: 401 });
     }
     try {
-        const editedMetric0 = await req.json();
-        console.log(editedMetric0);
+        const editedMetric = await req.json();
+        const normalizedDate = parseDateOnlyToUTC(editedMetric.date);
 
-        const partesFecha = editedMetric0.date.split('-');
-        const dia = parseInt(partesFecha[0]);
-        const mes = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'].indexOf(partesFecha[1]) + 1;
-        const anio = parseInt(partesFecha[2]);
-        
-        // Creamos el objeto Date
-        const fecha = new Date(anio, mes - 1, dia);
-        const editedMetric = editedMetric0;
-        editedMetric.date = new Date(fecha);
+        if (!normalizedDate) {
+            return new NextResponse("Fecha de medición inválida", { status: 400 });
+        }
+
+        editedMetric.date = normalizedDate;
         await connect();
         const metricaEditada = await Metric.findOneAndUpdate(
             {createdAt:editedMetric.createdAt},

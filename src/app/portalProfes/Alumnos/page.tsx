@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff, FaUserCircle } from 'react-icons/fa';
 import Tooltip from '@/components/PortalProfes/Tooltip';
+import { formatDateOnlyEs } from '@/utils/dateOnly';
 
 type FilteredUser = {
   _id: string;
@@ -235,17 +236,25 @@ const Usuarios: React.FC = () => {
 
                   <td className="px-2 py-2">
                     {user.ultima_plani
-                      ? new Date(user.ultima_plani).toLocaleDateString()
+                      ? formatDateOnlyEs(user.ultima_plani, {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })
                       : '---'}
                   </td>
                   <td className="px-2 py-2">
                     {user.ultima_metrica
-                      ? new Date(user.ultima_metrica).toLocaleDateString()
+                      ? formatDateOnlyEs(user.ultima_metrica, {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })
                       : '---'}
                   </td>
                   <td className="px-2 py-2">
                     {user.fecha_nacimiento
-                      ? new Date(user.fecha_nacimiento).toLocaleDateString('es-ES', {
+                      ? formatDateOnlyEs(user.fecha_nacimiento, {
                         day: 'numeric',
                         month: 'long',
                       })

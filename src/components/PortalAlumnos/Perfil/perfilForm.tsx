@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FormUserValues } from '@/types/user';
+import { parseDateOnlyToUTC, toDateInputValue } from '@/utils/dateOnly';
 
 
 const UserForm = ({ user }: { user: FormUserValues }) => {
@@ -195,8 +196,8 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
                 type="date"
                 id="fecha_nacimiento"
                 name="fecha_nacimiento"
-                value={formValues.fecha_nacimiento ? formValues.fecha_nacimiento.toISOString().slice(0, 10) : ''}
-                onChange={(e) => handleDateChange(e.target.value ? new Date(e.target.value) : null)}
+                value={toDateInputValue(formValues.fecha_nacimiento)}
+                onChange={(e) => handleDateChange(e.target.value ? parseDateOnlyToUTC(e.target.value) : null)}
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none"
               />
             </div>

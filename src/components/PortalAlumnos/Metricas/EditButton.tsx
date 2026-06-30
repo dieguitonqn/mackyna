@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdCancel, MdSave } from "react-icons/md";
+import { parseDateOnlyToUTC, toDateInputValue } from "@/utils/dateOnly";
 
 interface EditButtonProps {
   userID: string;
@@ -49,11 +50,26 @@ export const EditButton = ({ userID }: EditButtonProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     console.log(id, value);
-    setUser((prevUser) => ({
-      ...prevUser,
-      [id]: id === "altura" ? parseFloat(value) : value,
-      [id]: id === "fecha_nacimiento" ? new Date(value) : value,
-    }));
+    setUser((prevUser) => {
+      if (id === "altura") {
+        return {
+          ...prevUser,
+          altura: parseFloat(value),
+        };
+      }
+
+      if (id === "fecha_nacimiento") {
+        return {
+          ...prevUser,
+          fecha_nacimiento: value ? parseDateOnlyToUTC(value) : null,
+        };
+      }
+
+      return {
+        ...prevUser,
+        [id]: value,
+      };
+    });
     console.log(user);
   };
 
@@ -110,7 +126,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
                 type="date"
                 id="fecha_nacimiento"
                 className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition duration-200"
-                value={user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toISOString().slice(0, 10) : ""}
+                value={toDateInputValue(user.fecha_nacimiento)}
                 onChange={handleInputChange}
               />
               </div>
