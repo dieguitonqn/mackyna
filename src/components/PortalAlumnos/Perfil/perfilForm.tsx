@@ -109,7 +109,7 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
         body: JSON.stringify(formValues),
       });
       if (response.ok) {
-
+        window.dispatchEvent(new Event('profile-updated'));
         window.alert('Usuario actualizado correctamente');
       }
 

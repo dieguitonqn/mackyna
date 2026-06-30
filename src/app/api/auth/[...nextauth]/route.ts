@@ -7,7 +7,6 @@ import User from "@/lib/models/user";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connect from "@/lib/db";
 import argon2 from "argon2";
-import bcrypt from "bcryptjs";
 import logger from "@/lib/logger";
 // import Pago from "@/lib/models/pagos";
 
@@ -48,21 +47,11 @@ const handler = NextAuth({
 
           // console.log("Usuario encontrado:", isUser);
 
-          // Verificar la contraseña — soporte para hashes bcrypt (legacy) y argon2
-          let isPasswordValid = false;
-          const isBcryptHash = isUser.pwd.startsWith("$2b$") || isUser.pwd.startsWith("$2a$");
-
-          if (isBcryptHash) {
-            isPasswordValid = await bcrypt.compare(credentials.password, isUser.pwd);
-            if (isPasswordValid) {
-              // Migrar el hash a argon2 de forma transparente
-              const newHash = await argon2.hash(credentials.password);
-              await User.findByIdAndUpdate(isUser._id, { pwd: newHash });
-              logger.info(`Contraseña migrada de bcrypt a argon2 para: ${credentials.email}`);
-            }
-          } else {
-            isPasswordValid = await argon2.verify(isUser.pwd, credentials.password);
-          }
+          // Verificar la contraseña con argon2
+          const isPasswordValid = await argon2.verify(
+            isUser.pwd,
+            credentials.password
+          );
 
           if (!isPasswordValid) {
             console.error("Contraseña incorrecta.");

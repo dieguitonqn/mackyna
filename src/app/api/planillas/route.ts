@@ -5,8 +5,58 @@ import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth0";
 import { getServerSession } from "next-auth";
-import logger from "@/lib/logger";
-import { log } from "console";
+import logger, { planillaNotasLogger } from "@/lib/logger";
+
+const VALID_BLOQUES = ['Bloque1', 'Bloque2', 'Bloque3', 'Bloque4'] as const;
+
+const getNestedValue = (value: unknown, path: string[]): unknown => {
+    return path.reduce<unknown>((currentValue, segment) => {
+        if (currentValue === null || currentValue === undefined) {
+            return undefined;
+        }
+
+        if (Array.isArray(currentValue)) {
+            const index = Number(segment);
+            return Number.isInteger(index) ? currentValue[index] : undefined;
+        }
+
+        if (typeof currentValue === 'object') {
+            return (currentValue as Record<string, unknown>)[segment];
+        }
+
+        return undefined;
+    }, value);
+};
+
+const buildNoteLogMeta = ({
+    requestId,
+    planillaId,
+    session,
+    dayIndex,
+    bloque,
+    exerciseIndex,
+    notas,
+    updatePath,
+}: {
+    requestId: string;
+    planillaId: string;
+    session: Awaited<ReturnType<typeof getServerSession>>;
+    dayIndex?: number;
+    bloque?: string;
+    exerciseIndex?: number;
+    notas?: string;
+    updatePath?: string;
+}) => ({
+    requestId,
+    planillaId,
+    sessionUserEmail: session?.user?.email ?? null,
+    sessionUserId: session?.user && 'id' in session.user ? session.user.id : null,
+    dayIndex,
+    bloque,
+    exerciseIndex,
+    noteLength: notas?.length ?? 0,
+    updatePath,
+});
 
 export const GET = async (req: Request) => {
     const session = await getServerSession({ req, ...authOptions });
@@ -219,38 +269,104 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
         const { id, plani, noteUpdate } = await req.json();
         await connect();
         logger.debug("Datos recibidos para actualizar la planilla: ", { id, plani });
-        console.log(id);
         if (!ObjectId.isValid(id)) {
             logger.warn(`ID inválido proporcionado para actualización: ${id}`);
             return NextResponse.json({ error: "El ID proporcionado no es válido" }, { status: 400 });
         }
 
         if (noteUpdate) {
+            const requestId = new ObjectId().toHexString();
             const { dayIndex, bloque, exerciseIndex, notas } = noteUpdate;
+            const normalizedNotas = notas ?? '';
+            const noteLogMeta = buildNoteLogMeta({
+                requestId,
+                planillaId: id,
+                session,
+                dayIndex,
+                bloque,
+                exerciseIndex,
+                notas: typeof normalizedNotas === 'string' ? normalizedNotas : undefined,
+            });
+
+            planillaNotasLogger.info('Inicio de guardado de nota', noteLogMeta);
 
             if (
                 typeof dayIndex !== 'number' ||
+                !Number.isInteger(dayIndex) ||
+                dayIndex < 0 ||
                 typeof exerciseIndex !== 'number' ||
-                typeof bloque !== 'string'
+                !Number.isInteger(exerciseIndex) ||
+                exerciseIndex < 0 ||
+                typeof bloque !== 'string' ||
+                !VALID_BLOQUES.includes(bloque as (typeof VALID_BLOQUES)[number]) ||
+                (notas !== undefined && notas !== null && typeof notas !== 'string')
             ) {
+                planillaNotasLogger.warn('Payload inválido en guardado de nota', noteLogMeta);
                 return NextResponse.json({ error: "Datos de nota inválidos" }, { status: 400 });
             }
 
             const updatePath = `trainingDays.${dayIndex}.${bloque}.${exerciseIndex}.notas`;
+            const updateLogMeta = {
+                ...noteLogMeta,
+                updatePath,
+            };
 
-            const editedPlani = await Plani.findByIdAndUpdate(
+            const updateResult = await Plani.updateOne(
                 new ObjectId(id as string),
-                { $set: { [updatePath]: notas ?? '' } },
-                { new: true }
+                { $set: { [updatePath]: normalizedNotas } },
+                { runValidators: true }
             );
 
-            if (!editedPlani) {
+            planillaNotasLogger.info('Resultado de update de nota', {
+                ...updateLogMeta,
+                acknowledged: updateResult.acknowledged,
+                matchedCount: updateResult.matchedCount,
+                modifiedCount: updateResult.modifiedCount,
+            });
+
+            if (!updateResult.acknowledged || updateResult.matchedCount === 0) {
                 logger.error(`No se pudo editar la planilla con ID: ${id}`);
+                planillaNotasLogger.error('No hubo coincidencias para el update de nota', {
+                    ...updateLogMeta,
+                    acknowledged: updateResult.acknowledged,
+                    matchedCount: updateResult.matchedCount,
+                    modifiedCount: updateResult.modifiedCount,
+                });
                 return NextResponse.json({ message: "No se pudo editar la planilla" }, { status: 501 });
             }
 
+            const verificationPlani = await Plani.findById(new ObjectId(id as string))
+                .select({ [updatePath]: 1 })
+                .lean();
+
+            const persistedNote = getNestedValue(verificationPlani, [
+                'trainingDays',
+                String(dayIndex),
+                bloque,
+                String(exerciseIndex),
+                'notas',
+            ]);
+
+            if (persistedNote !== normalizedNotas) {
+                logger.error(`La verificación de persistencia falló para la planilla con ID: ${id}`);
+                planillaNotasLogger.error('Mismatch en verificación post-write de nota', {
+                    ...updateLogMeta,
+                    persistedNoteLength: typeof persistedNote === 'string' ? persistedNote.length : null,
+                    persistedNoteType: typeof persistedNote,
+                    modifiedCount: updateResult.modifiedCount,
+                });
+                return NextResponse.json({
+                    message: 'La nota no pudo verificarse luego del guardado',
+                    requestId,
+                }, { status: 500 });
+            }
+
             logger.info(`Nota actualizada exitosamente: ${id}`);
-            return NextResponse.json({ message: "todo ok" }, { status: 200 });
+            planillaNotasLogger.info('Guardado de nota verificado', {
+                ...updateLogMeta,
+                modifiedCount: updateResult.modifiedCount,
+            });
+            return NextResponse.json({ message: "todo ok", requestId }, { status: 200 });
         }
 
         const editedPlani = await Plani.findByIdAndUpdate(
