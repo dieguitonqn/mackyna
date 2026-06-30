@@ -15,7 +15,7 @@ const REQUIRED_FIELDS = [
   { key: 'genero', label: 'Genero' },
   { key: 'altura', label: 'Altura' },
   { key: 'objetivo', label: 'Objetivo de entrenamiento' },
-  { key: 'lesiones', label: 'Lesiones' },
+  { key: 'lesiones', label: 'Observaciones' },
 ]
 
 function getMissingFields(userData: Record<string, unknown>) {

@@ -275,7 +275,7 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
             </div>
             <div>
               <label htmlFor="lesiones" className="block text-sm font-semibold mt-5">
-                Lesiones:
+                Observaciones:
               </label>
               <input
                 type="text"

@@ -151,7 +151,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
               />
               </div>
               <div className="flex flex-col">
-              <label htmlFor="lesiones" className="mb-1 font-medium text-gray-700">Lesiones: </label>
+              <label htmlFor="lesiones" className="mb-1 font-medium text-gray-700">Observaciones: </label>
               <input 
                 type="text" 
                 id="lesiones" 
