@@ -6,7 +6,7 @@ import { IUser } from '@/types/user';
 import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff, FaUserCircle } from 'react-icons/fa';
 import Tooltip from '@/components/PortalProfes/Tooltip';
 
 type FilteredUser = {
@@ -269,6 +269,16 @@ const Usuarios: React.FC = () => {
                        onClick={handleSetScrollY}
                       >
                         <FaChartBar className="h-5 w-5" />
+                      </Link>
+                    </Tooltip>
+
+                    <Tooltip text="Ver Perfil">
+                      <Link
+                        href={`../portalAlumnos/Perfil?id=${user._id}`}
+                        className="text-cyan-600 hover:text-cyan-800 transition-colors"
+                        onClick={handleSetScrollY}
+                      >
+                        <FaUserCircle className="h-5 w-5" />
                       </Link>
                     </Tooltip>
 
