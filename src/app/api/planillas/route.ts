@@ -9,6 +9,13 @@ import logger, { planillaNotasLogger } from "@/lib/logger";
 
 const VALID_BLOQUES = ['Bloque1', 'Bloque2', 'Bloque3', 'Bloque4'] as const;
 
+type NoteLogSession = {
+    user?: {
+        email?: string | null;
+        id?: string | null;
+    };
+} | null;
+
 const getNestedValue = (value: unknown, path: string[]): unknown => {
     return path.reduce<unknown>((currentValue, segment) => {
         if (currentValue === null || currentValue === undefined) {
@@ -40,7 +47,7 @@ const buildNoteLogMeta = ({
 }: {
     requestId: string;
     planillaId: string;
-    session: Awaited<ReturnType<typeof getServerSession>>;
+    session: NoteLogSession;
     dayIndex?: number;
     bloque?: string;
     exerciseIndex?: number;
@@ -312,7 +319,7 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
             };
 
             const updateResult = await Plani.updateOne(
-                new ObjectId(id as string),
+                { _id: new ObjectId(id as string) },
                 { $set: { [updatePath]: normalizedNotas } },
                 { runValidators: true }
             );
@@ -336,7 +343,7 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
             }
 
             const verificationPlani = await Plani.findById(new ObjectId(id as string))
-                .select({ [updatePath]: 1 })
+                .select({ trainingDays: 1 })
                 .lean();
 
             const persistedNote = getNestedValue(verificationPlani, [

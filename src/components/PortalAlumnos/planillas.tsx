@@ -19,6 +19,7 @@ const Planillas: React.FC = () => {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [isTeach, setIsTeach] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>('');
+    const [userSurname, setUserSurname] = useState<string>('');
     const [zoomLevel, setZoomLevel] = useState<number>(1);
     const router = useRouter();
 
@@ -44,7 +45,9 @@ const Planillas: React.FC = () => {
                     if (!responseUser.ok) {
                         throw new Error('Error obteniendo el usuario');
                     }
-                    setUserName((await responseUser.json()).nombre);
+                    const user = await responseUser.json();
+                    setUserName(user.nombre);
+                    setUserSurname(user.apellido);
 
                 } else if (session) {
                     const userId = session.user.id;
@@ -133,7 +136,7 @@ const Planillas: React.FC = () => {
             alert('Notas guardadas con éxito');
         } catch (error) {
             console.error(error);
-            alert('Hubo un error al guardar las notas');
+            alert('Hubo un error al guardar las notas: ' + (error instanceof Error ? error.message : 'Error desconocido'));
         }
 
     }
@@ -175,7 +178,7 @@ const Planillas: React.FC = () => {
     return (
         <div className="min-h-screen p-4">
             <div className="flex justify-center">
-                <h1 className="text-4xl font-bold mb-4 text-center text-gray-200">Rutinas de entrenamiento de {userName ? userName : session?.user.name}</h1>
+                <h1 className="text-4xl font-bold mb-4 text-center text-gray-200">Rutinas de entrenamiento de {userName ? `${userName} ${userSurname}` : `${session?.user.name} `}</h1>
             </div>
 
             {planillasUser ? (
