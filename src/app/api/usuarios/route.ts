@@ -8,6 +8,50 @@ import { NextRequest } from 'next/server';
 import logger from '@/lib/logger';
 import { parseDateOnlyToUTC } from '@/utils/dateOnly';
 
+const normalizeGenero = (value: unknown): string => {
+    if (typeof value !== 'string') {
+        return '';
+    }
+
+    const trimmed = value.trim().toLowerCase();
+
+    if (trimmed === 'masculino') {
+        return 'Masculino';
+    }
+
+    if (trimmed === 'femenino') {
+        return 'Femenino';
+    }
+
+    if (trimmed === 'otro') {
+        return 'Otro';
+    }
+
+    return value;
+};
+
+const normalizeBirthDate = (value: unknown): Date | null => {
+    if (value === null || value === undefined || value === '') {
+        return null;
+    }
+
+    if (typeof value !== 'string') {
+        return null;
+    }
+
+    const dateOnly = parseDateOnlyToUTC(value);
+    if (dateOnly) {
+        return dateOnly;
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+        return null;
+    }
+
+    return parsed;
+};
+
 export const GET = async (req: NextRequest) => {
     try {
         const session = await getServerSession(authOptions);
@@ -92,24 +136,29 @@ export const PUT = async (req: NextRequest) => {
         logger.info("[PUT] Conexión a DB establecida");
 
         const { _id, ...rest } = await req.json();
+
+        if (!_id || !ObjectId.isValid(_id as string)) {
+            logger.error(`[PUT] ID inválido: ${_id}`);
+            return new NextResponse("El ID no es válido", { status: 400 });
+        }
+
         const userId = new ObjectId(_id as string);
         const payload = { ...rest };
 
         if (Object.prototype.hasOwnProperty.call(payload, 'fecha_nacimiento')) {
-            const rawBirthDate = payload.fecha_nacimiento;
+            const normalizedBirthDate = normalizeBirthDate(payload.fecha_nacimiento);
+            const isEmptyBirthDate = payload.fecha_nacimiento === '' || payload.fecha_nacimiento === null;
 
-            if (rawBirthDate === null || rawBirthDate === '') {
-                payload.fecha_nacimiento = null;
-            } else if (typeof rawBirthDate === 'string') {
-                const normalizedBirthDate = parseDateOnlyToUTC(rawBirthDate);
-
-                if (!normalizedBirthDate) {
-                    logger.error(`[PUT] Fecha de nacimiento inválida: ${rawBirthDate}`);
-                    return new NextResponse("Fecha de nacimiento inválida", { status: 400 });
-                }
-
-                payload.fecha_nacimiento = normalizedBirthDate;
+            if (!normalizedBirthDate && !isEmptyBirthDate) {
+                logger.error(`[PUT] Fecha de nacimiento inválida: ${payload.fecha_nacimiento}`);
+                return new NextResponse("Fecha de nacimiento inválida", { status: 400 });
             }
+
+            payload.fecha_nacimiento = normalizedBirthDate;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(payload, 'genero')) {
+            payload.genero = normalizeGenero(payload.genero);
         }
 
         if (!rest.email) {

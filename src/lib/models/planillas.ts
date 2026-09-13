@@ -58,8 +58,8 @@ const PlaniSchema = new Schema<Plani>(
       type: [TrainingDaySchema],
       validate: [
         {
-          validator: (v: TrainingDay[]) => v.length <= 5, // Máximo 5 días de entrenamiento
-          message: "No puedes agregar más de 5 días de entrenamiento."
+          validator: (v: TrainingDay[]) => v.length <= 6, // Máximo 6 días de entrenamiento
+          message: "No puedes agregar más de 6 días de entrenamiento."
         },
       ],
     },
