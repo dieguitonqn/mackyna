@@ -6,8 +6,9 @@ import { IUser } from '@/types/user';
 import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff, FaUserCircle, FaTrash } from 'react-icons/fa';
 import Tooltip from '@/components/PortalProfes/Tooltip';
+import { formatDateOnlyEs } from '@/utils/dateOnly';
 
 type FilteredUser = {
   _id: string;
@@ -166,6 +167,28 @@ const Usuarios: React.FC = () => {
     }
   }, [loading, filteredUsers]);
 
+  const handleDeleteUser = async (userId: string) => {
+    const isConfirmed = window.confirm("¿Estás seguro de que deseas borrar este usuario?");
+    if (!isConfirmed) return;
+    const isConfirmed2 = window.confirm("¿Estás REALMENTE seguro de que deseas borrar este usuario?");
+    if (!isConfirmed2) return;
+    try {
+      const response = await fetch(`/api/usuarios?id=${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al borrar el usuario');
+      }
+
+      setUsers(users.filter(user => user._id.toString() !== userId));
+      alert('Usuario borrado correctamente');
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert('Error al borrar el usuario');
+    }
+  };
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
@@ -235,17 +258,25 @@ const Usuarios: React.FC = () => {
 
                   <td className="px-2 py-2">
                     {user.ultima_plani
-                      ? new Date(user.ultima_plani).toLocaleDateString()
+                      ? formatDateOnlyEs(user.ultima_plani, {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })
                       : '---'}
                   </td>
                   <td className="px-2 py-2">
                     {user.ultima_metrica
-                      ? new Date(user.ultima_metrica).toLocaleDateString()
+                      ? formatDateOnlyEs(user.ultima_metrica, {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })
                       : '---'}
                   </td>
                   <td className="px-2 py-2">
                     {user.fecha_nacimiento
-                      ? new Date(user.fecha_nacimiento).toLocaleDateString('es-ES', {
+                      ? formatDateOnlyEs(user.fecha_nacimiento, {
                         day: 'numeric',
                         month: 'long',
                       })
@@ -272,6 +303,16 @@ const Usuarios: React.FC = () => {
                       </Link>
                     </Tooltip>
 
+                    <Tooltip text="Ver Perfil">
+                      <Link
+                        href={`../portalAlumnos/Perfil?id=${user._id}`}
+                        className="text-cyan-600 hover:text-cyan-800 transition-colors"
+                        onClick={handleSetScrollY}
+                      >
+                        <FaUserCircle className="h-5 w-5" />
+                      </Link>
+                    </Tooltip>
+
                     <Tooltip text="Resetear Contraseña">
                       <button
                         onClick={() =>{
@@ -282,13 +323,13 @@ const Usuarios: React.FC = () => {
                             handleResetPwd(user._id.toString());
                           }
                         } }
-                        className="text-red-600 hover:text-red-800 transition-colors"
+                        className="text-yellow-600 hover:text-yellow-800 transition-colors"
                       >
                         <FaKey className="h-5 w-5" />
                       </button>
                     </Tooltip>
 
-                    <Tooltip text="Configurar Días">
+                    {/* <Tooltip text="Configurar Días">
                       <button
                         onClick={() => {
                           setShowSetDias(!showSetDias)
@@ -298,6 +339,22 @@ const Usuarios: React.FC = () => {
                         className="text-yellow-600 hover:text-yellow-800 transition-colors"
                       >
                         <FaCalendarAlt className="h-5 w-5" />
+                      </button>
+                    </Tooltip> */}
+
+                     <Tooltip text="Borrar Usuario">
+                      <button
+                        onClick={() => {
+                          const confirmar = window.confirm(
+                            '¿Estás seguro que deseas borrar este usuario?'
+                          );
+                          if (confirmar) {
+                            handleDeleteUser(user._id.toString());
+                          }
+                        }}
+                        className="text-red-600 hover:text-red-800 transition-colors"
+                      >
+                        <FaTrash className="h-5 w-5" />
                       </button>
                     </Tooltip>
 

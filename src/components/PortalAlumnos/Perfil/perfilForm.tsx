@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FormUserValues } from '@/types/user';
+import { parseDateOnlyToUTC, toDateInputValue } from '@/utils/dateOnly';
 
 
 const UserForm = ({ user }: { user: FormUserValues }) => {
@@ -99,6 +100,14 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const payload = {
+      ...formValues,
+      fecha_nacimiento: formValues.fecha_nacimiento
+        ? toDateInputValue(formValues.fecha_nacimiento)
+        : null,
+    };
+
     try {
 
       const response = await fetch('/api/usuarios', {
@@ -106,10 +115,17 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify(payload),
       });
-      if (response.ok) {
 
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        window.alert(errorMessage || 'No se pudo actualizar el perfil');
+        return;
+      }
+
+      if (response.ok) {
+        window.dispatchEvent(new Event('profile-updated'));
         window.alert('Usuario actualizado correctamente');
       }
 
@@ -195,8 +211,8 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
                 type="date"
                 id="fecha_nacimiento"
                 name="fecha_nacimiento"
-                value={formValues.fecha_nacimiento ? formValues.fecha_nacimiento.toISOString().slice(0, 10) : ''}
-                onChange={(e) => handleDateChange(e.target.value ? new Date(e.target.value) : null)}
+                value={toDateInputValue(formValues.fecha_nacimiento)}
+                onChange={(e) => handleDateChange(e.target.value ? parseDateOnlyToUTC(e.target.value) : null)}
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none"
               />
             </div>
@@ -254,8 +270,9 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none"
               >
                 <option value="">Seleccionar</option>
-                <option value="masculino">Masculino</option>
-                <option value="femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
               </select>
             </div>
 
@@ -274,7 +291,7 @@ const UserForm = ({ user }: { user: FormUserValues }) => {
             </div>
             <div>
               <label htmlFor="lesiones" className="block text-sm font-semibold mt-5">
-                Lesiones:
+                Observaciones:
               </label>
               <input
                 type="text"

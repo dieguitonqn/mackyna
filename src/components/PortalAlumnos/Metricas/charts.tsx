@@ -2,6 +2,7 @@
 
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Medicion } from "@/types/metrics"
+import { formatDateOnlyEs } from "@/utils/dateOnly"
 
 
 const Chart = ({ data }: { data: Medicion[] }) => {
@@ -23,7 +24,7 @@ const Chart = ({ data }: { data: Medicion[] }) => {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
+                        <XAxis dataKey="date" tickFormatter={(value: string) => formatDateOnlyEs(value, { day: '2-digit', month: 'short' })} />
                         <YAxis />
                         <Tooltip />
                         <Legend />

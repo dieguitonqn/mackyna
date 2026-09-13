@@ -65,7 +65,7 @@ const MetricCardComponent = ({
         </p>
         <p className="card-text flex items-center gap-1">
           <MdOutlinePersonalInjury className="h-8 w-5" />
-          <span className="underline font-semibold">Lesiones:</span> {lesiones}
+          <span className="underline font-semibold">Observaciones:</span> {lesiones}
         </p>
       </div>
       <EditButton userID={userID} fecha_nac={birthDate as Date} />

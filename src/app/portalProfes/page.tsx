@@ -8,6 +8,7 @@ import React from 'react';
 import User from "@/lib/models/user";
 import { ConfettiComponent } from '@/components/PortalProfes/Confetti';
 import connect from '@/lib/db';
+import { formatDateOnlyEs, getUTCMonthDayKey } from '@/utils/dateOnly';
 
 export const dynamic = 'force-dynamic';
 const PaginaProfes = async() => {
@@ -34,52 +35,51 @@ const PaginaProfes = async() => {
     connect();
     const users = await User.find().lean();
     const today = new Date();
+    const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const todayKey = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    const getBirthdayDateForYear = (birthDate: Date | string, year: number) => {
+        const parsed = new Date(birthDate);
+        if (isNaN(parsed.getTime())) {
+            return null;
+        }
+
+        return new Date(year, parsed.getUTCMonth(), parsed.getUTCDate());
+    };
     
     const todayBirthdays = users.filter(user => {
-        if (!user || !user.fecha_nacimiento) return false; // Validación
-        const fecha = new Date(user.fecha_nacimiento); // Convertir a Date
-        if (isNaN(fecha.getTime())) return false; // Validar que sea una fecha válida
-
-        const todayString = `${today.getMonth() + 1}`.padStart(2, '0') + '-' + `${today.getDate()}`.padStart(2, '0');
-
-        const day = fecha.getUTCDate().toString().padStart(2, '0'); // Día (en formato 2 dígitos)
-        const month = (fecha.getUTCMonth() + 1).toString().padStart(2, '0'); // Mes (0-indexado, por eso +1)
-
-        return `${month}-${day}` === todayString;
+        if (!user || !user.fecha_nacimiento) return false;
+        return getUTCMonthDayKey(user.fecha_nacimiento) === todayKey;
     });
 
     const upcomingBirthdays = users
         .filter(user => {
-            if (!user || !user.fecha_nacimiento) return false; // Validación
+            if (!user || !user.fecha_nacimiento) return false;
 
-            const fecha = new Date(user.fecha_nacimiento); // Convertir a Date
-            if (isNaN(fecha.getTime())) return false; // Validar que sea una fecha válida
+            const birthdayThisYear = getBirthdayDateForYear(user.fecha_nacimiento, today.getFullYear());
+            if (!birthdayThisYear) return false;
 
-            const birthdayThisYear = new Date(today.getFullYear(), fecha.getMonth(), fecha.getDate() + 1);
-            const todayWithoutTimeUp = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            return birthdayThisYear > todayWithoutTimeUp;
+            return birthdayThisYear > todayWithoutTime;
         })
         .sort((a, b) => {
-            const aDate = new Date(today.getFullYear(), new Date(a.fecha_nacimiento).getMonth(), new Date(a.fecha_nacimiento).getDate());
-            const bDate = new Date(today.getFullYear(), new Date(b.fecha_nacimiento).getMonth(), new Date(b.fecha_nacimiento).getDate());
+            const aDate = getBirthdayDateForYear(a.fecha_nacimiento, today.getFullYear());
+            const bDate = getBirthdayDateForYear(b.fecha_nacimiento, today.getFullYear());
+            if (!aDate || !bDate) return 0;
             return aDate.getTime() - bDate.getTime();
         })
         .slice(0, 5);
 
     const pastBirthdays = users
         .filter(user => {
-            if (!user || !user.fecha_nacimiento) return false; // Validación
-            const fecha = new Date(user.fecha_nacimiento); // Convertir a Date
-            if (isNaN(fecha.getTime())) return false; // Validar que sea una fecha válida
-
-            const birthdayThisYear = new Date(today.getFullYear(), fecha.getMonth(), fecha.getDate() + 1);
-            const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
+            if (!user || !user.fecha_nacimiento) return false;
+            const birthdayThisYear = getBirthdayDateForYear(user.fecha_nacimiento, today.getFullYear());
+            if (!birthdayThisYear) return false;
             return birthdayThisYear < todayWithoutTime;
         })
         .sort((a, b) => {
-            const aDate = new Date(today.getFullYear(), new Date(a.fecha_nacimiento).getMonth(), new Date(a.fecha_nacimiento).getDate());
-            const bDate = new Date(today.getFullYear(), new Date(b.fecha_nacimiento).getMonth(), new Date(b.fecha_nacimiento).getDate());
+            const aDate = getBirthdayDateForYear(a.fecha_nacimiento, today.getFullYear());
+            const bDate = getBirthdayDateForYear(b.fecha_nacimiento, today.getFullYear());
+            if (!aDate || !bDate) return 0;
             return bDate.getTime() - aDate.getTime();
         })
         .slice(0, 5);
@@ -125,7 +125,7 @@ const PaginaProfes = async() => {
                                 <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
                                  <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
                                  <td className="border border-gray-300 px-4 py-2">
-                                     {user.fecha_nacimiento && new Date(new Date(user.fecha_nacimiento).getTime() + new Date(user.fecha_nacimiento).getTimezoneOffset() * 60000).toLocaleDateString('es-ES', {
+                                     {user.fecha_nacimiento && formatDateOnlyEs(user.fecha_nacimiento, {
                                         day: '2-digit',
                                         month: 'long',
                                      })}
@@ -151,7 +151,7 @@ const PaginaProfes = async() => {
                                 <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
                                 <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
                                 <td className="border border-gray-300 px-4 py-2">
-                                    {new Date(new Date(user.fecha_nacimiento).getTime() + new Date(user.fecha_nacimiento).getTimezoneOffset() * 60000).toLocaleDateString('es-ES', {
+                                    {formatDateOnlyEs(user.fecha_nacimiento, {
                                         day: '2-digit',
                                         month: 'long',
                                     })}

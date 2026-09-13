@@ -47,11 +47,12 @@ const handler = NextAuth({
 
           // console.log("Usuario encontrado:", isUser);
 
-          // Verificar la contraseña
+          // Verificar la contraseña con argon2
           const isPasswordValid = await argon2.verify(
             isUser.pwd,
             credentials.password
           );
+
           if (!isPasswordValid) {
             console.error("Contraseña incorrecta.");
             logger.warn(

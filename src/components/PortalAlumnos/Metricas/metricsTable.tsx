@@ -5,6 +5,7 @@ import { Medicion } from "@/types/metrics"; // Asegúrate de tener esta ruta cor
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatDateOnlyEs, toDateInputValue } from "@/utils/dateOnly";
 
 interface Props {
     data: Medicion[];
@@ -30,7 +31,10 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
 
     function onEdit(item: Medicion) {
         setEdit(true);
-        setEditedItem(item);
+        setEditedItem({
+            ...item,
+            date: toDateInputValue(item.date),
+        });
         return
     }
     async function onDelete(key: string) {
@@ -105,7 +109,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                 <tbody>
                     {data.slice().reverse().map((item) => (
                         <tr key={item._id} className="even:bg-gray-700 hover:bg-gray-600">
-                            <td className="py-2 px-4">{item.date}</td>
+                            <td className="py-2 px-4">{formatDateOnlyEs(item.date, { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                             <td className="py-2 px-4">{item.weigth} kg</td>
                             <td className="py-2 px-4">{item.IMC}</td>
                             <td className="py-2 px-4">{item.body_fat}%</td>
@@ -143,10 +147,10 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                                 <label htmlFor="date">Fecha:</label>
                                 <input
                                     id="date"
-                                    type="text"
+                                    type="date"
                                     placeholder="fecha"
                                     className="p-1 border border-slate-200 m-2 rounded-sm"
-                                    value={editedItem?.date}
+                                    value={toDateInputValue(editedItem?.date)}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
                             <div>

@@ -8,8 +8,28 @@ import { FormUserValues, IUser } from '@/types/user';
 import React from 'react';
 import User from '@/lib/models/user';
 import { ObjectId } from 'mongodb';
+import connect from '@/lib/db';
 
-
+const mapToFormUserValues = (rawUser: IUser): FormUserValues => ({
+    _id: rawUser._id.toString(),
+    nombre: rawUser.nombre,
+    apellido: rawUser.apellido || '',
+    genero: rawUser.genero || '',
+    fecha_nacimiento: rawUser.fecha_nacimiento || null,
+    localidad: rawUser.localidad || '',
+    telefono: rawUser.telefono || '',
+    email: rawUser.email,
+    pwd: rawUser.pwd,
+    rol: rawUser.rol,
+    altura: rawUser.altura || 0,
+    objetivo: rawUser.objetivo || '',
+    lesiones: rawUser.lesiones || '',
+    redes: {
+        Facebook: rawUser.redes?.Facebook || '',
+        Instagram: rawUser.redes?.Instagram || '',
+        Twitter: rawUser.redes?.Twitter || '',
+    },
+});
 
 async function page({
     searchParams,
@@ -20,46 +40,79 @@ async function page({
     if (!session) {
         redirect('/login');
     }
+
+    await connect();
+
     const sessionUserID = session?.user.id.toString();
-    // console.log("session: " + sessionUserID);
-    const urlUserId = (await searchParams).id as string;
-    // console.log("url: " + urlUserId);
+    const role = session.user.rol;
+    const params = await searchParams;
+    const rawParamId = params.id;
+    const urlUserId = Array.isArray(rawParamId) ? rawParamId[0] : rawParamId;
 
     if (urlUserId) {
+        if (!ObjectId.isValid(urlUserId)) {
+            return (
+                <div className='md:h-screen h-full'>
+                    <div className='text-4xl text-slate-300 font-semibold justify-center text-center my-10'>
+                        ID de usuario inválido
+                    </div>
+                </div>
+            );
+        }
+
+        const canAccessForeignProfile = role === 'teach' || role === 'admin';
+        const isOwnProfile = sessionUserID === urlUserId;
+
+        if (!canAccessForeignProfile && !isOwnProfile) {
+            redirect('/portalAlumnos/Perfil');
+        }
+
         try {
-            const user = await User.findOne({ _id: new ObjectId(urlUserId) });
-            console.log("usuario url: " + user);
+            const rawUser = await User.findOne({ _id: new ObjectId(urlUserId) }).lean<IUser>();
+
+            if (!rawUser) {
+                return (
+                    <div className='md:h-screen h-full'>
+                        <div className='text-4xl text-slate-300 font-semibold justify-center text-center my-10'>
+                            Usuario no encontrado
+                        </div>
+                    </div>
+                );
+            }
+
+            const user = mapToFormUserValues(rawUser);
+
             return (
                 <div className='md:h-screen h-full '>
                     <div className='text-6xl text-slate-300 font-semibold justify-center text-center my-10'>
                         Perfil de usuario
                     </div>
                     <div>
-                        {/* <PerfilUserForm user={user}/> */}
+                        <PerfilUserForm user={user} />
                     </div>
                 </div>
             )
 
         } catch (error: unknown) {
             console.log(error);
-            window.alert("Usuario no encontrado");
-
-
+            return (
+                <div className='md:h-screen h-full'>
+                    <div className='text-4xl text-slate-300 font-semibold justify-center text-center my-10'>
+                        Ocurrió un error al cargar el perfil
+                    </div>
+                </div>
+            );
         }
 
     } else if (sessionUserID && !urlUserId) {
         try {
             const rawUser = await User.findOne({ email: session.user.email }).lean<IUser>();
-           
-            const user: FormUserValues = {
-                ...rawUser,
-                _id: rawUser!._id.toString(),
-                nombre: rawUser!.nombre,
-                email: rawUser!.email,
-                pwd: rawUser!.pwd,
-                rol: rawUser!.rol,
 
+            if (!rawUser) {
+                redirect('/login');
             }
+
+            const user = mapToFormUserValues(rawUser!);
             
             return (
                 <div className='w-[620]:h-screen h-full '>
@@ -74,7 +127,6 @@ async function page({
 
         } catch (error: unknown) {
             console.log(error);
-            window.alert("Usuario no encontrado");
             redirect('/login');
 
         }

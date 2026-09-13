@@ -37,14 +37,14 @@ const ExerciseForm: React.FC<Props> = ({
       },
     ]),
   ]);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [selectedSpecificMuscs, setSelectedSpecificMuscs] = useState<string[]>([]);
 
-  const gruposMusculares = Array.from(
-    new Set(ejercicios.map((ejercicio) => ejercicio.grupoMusc).filter(Boolean))
+  const muscEspecificos = Array.from(
+    new Set(ejercicios.map((ejercicio) => ejercicio.specificMusc).filter(Boolean))
   ).sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
 
   useEffect(() => {
-    setSelectedGroups((prev) => {
+    setSelectedSpecificMuscs((prev) => {
       if (prev.length === exercises.length) return prev;
       const next = Array(exercises.length).fill("");
       for (let i = 0; i < exercises.length; i++) {
@@ -131,23 +131,23 @@ const ExerciseForm: React.FC<Props> = ({
     setExercisesForBlock(day, bloque, updatedExercises);
   };
 
-  const handleGroupChange = (index: number, group: string) => {
-    setSelectedGroups((prev) => {
+  const handleSpecificMuscChange = (index: number, specificMusc: string) => {
+    setSelectedSpecificMuscs((prev) => {
       const updated = [...prev];
-      updated[index] = group;
+      updated[index] = specificMusc;
       return updated;
     });
 
-    if (!group) return;
+    if (!specificMusc) return;
 
-    const ejerciciosDelGrupo = ejercicios.filter(
-      (ejercicio) => ejercicio.grupoMusc === group
+    const ejerciciosDelMusculo = ejercicios.filter(
+      (ejercicio) => ejercicio.specificMusc === specificMusc
     );
 
-    if (ejerciciosDelGrupo.length === 0) return;
+    if (ejerciciosDelMusculo.length === 0) return;
 
-    const randomIndex = Math.floor(Math.random() * ejerciciosDelGrupo.length);
-    const randomExercise = ejerciciosDelGrupo[randomIndex];
+    const randomIndex = Math.floor(Math.random() * ejerciciosDelMusculo.length);
+    const randomExercise = ejerciciosDelMusculo[randomIndex];
 
     if (!exercises[index]) return;
 
@@ -168,9 +168,9 @@ const ExerciseForm: React.FC<Props> = ({
         {bloque.replace(/bloque(\d)/i, "Bloque $1")}
       </h2>
       {exercises.map((exercise, index) => {
-        const groupSelected = selectedGroups[index] || "";
-        const ejerciciosFiltrados = groupSelected
-          ? ejercicios.filter((ejercicio) => ejercicio.grupoMusc === groupSelected)
+        const specificMuscSelected = selectedSpecificMuscs[index] || "";
+        const ejerciciosFiltrados = specificMuscSelected
+          ? ejercicios.filter((ejercicio) => ejercicio.specificMusc === specificMuscSelected)
           : ejercicios;
 
         return (
@@ -178,19 +178,19 @@ const ExerciseForm: React.FC<Props> = ({
           key={`exercise-${index}`}
           className="flex flex-col gap-2 border border-slate-600 shadow-md shadow-slate-900 p-2 mb-6 rounded-lg bg-slate-800/80 transition-colors duration-200 hover:border-blue-400 text-left"
         >
-          <label htmlFor={`grupo-${index}`} className="block mb-1 text-slate-200 font-semibold">
-            Grupo muscular
+          <label htmlFor={`specificMusc-${index}`} className="block mb-1 text-slate-200 font-semibold">
+            Músculo específico
           </label>
           <select
-            id={`grupo-${index}`}
-            value={groupSelected}
-            onChange={(e) => handleGroupChange(index, e.target.value)}
+            id={`specificMusc-${index}`}
+            value={specificMuscSelected}
+            onChange={(e) => handleSpecificMuscChange(index, e.target.value)}
             className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
           >
-            <option value="">Todos los grupos</option>
-            {gruposMusculares.map((grupo) => (
-              <option key={`${index}-${grupo}`} value={grupo}>
-                {grupo}
+            <option value="">Todos los músculos</option>
+            {muscEspecificos.map((musculo) => (
+              <option key={`${index}-${musculo}`} value={musculo}>
+                {musculo}
               </option>
             ))}
           </select>
