@@ -12,7 +12,6 @@ import { v4 } from "uuid";
 export const POST = async (req: Request) => {
     try {
         const body = await req.json();
-        console.log(body);
         await connect();
         const existingUser = await User.findOne(
 
@@ -38,8 +37,13 @@ export const POST = async (req: Request) => {
         const hashedPassword = await argon2.hash(body.pwd);
         // Crear un nuevo usuario
         const newUser = new User({
-            ...body,
-            pwd: hashedPassword, // Guardar la contraseña hasheada
+            nombre: body.nombre,
+            apellido: body.apellido,
+            email: typeof body.email === 'string' ? body.email.trim().toLowerCase() : body.email,
+            pwd: hashedPassword,
+            rol: "user",
+            habilitado: false,
+            bloqueado: false,
         });
 
         // Guardar el usuario en la base de datos

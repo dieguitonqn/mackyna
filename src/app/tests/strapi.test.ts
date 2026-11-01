@@ -1,5 +1,5 @@
 import { url } from "inspector";
-import StrapiQuery from "../Tienda/lib/strapi";
+import StrapiQuery from "@/lib/strapi";
 import logger from "@/lib/logger";
 // Importa fetch-mock para acceder a sus métodos de mock
 import fetchMock from "jest-fetch-mock";
@@ -19,7 +19,7 @@ describe("StrapiQuery", () => {
     const mockData = { data: "test data" };
     fetchMock.mockResponseOnce(JSON.stringify(mockData), { status: 200 });
 
-    const StrapiQuery = require("../Tienda/lib/strapi").default;
+    const StrapiQuery = require("@/lib/strapi").default;
     const data = await StrapiQuery("test-endpoint");
 
     expect(data).toEqual(mockData);
@@ -39,7 +39,7 @@ describe("StrapiQuery", () => {
     fetchMock.mockResponseOnce(JSON.stringify({ error: "Not Found" }), {
       status: 404,
     });
-    const StrapiQuery = require("../Tienda/lib/strapi").default;
+    const StrapiQuery = require("@/lib/strapi").default;
     const data = await StrapiQuery("test-endpoint");
 
     expect(logger.error).toHaveBeenCalledWith(

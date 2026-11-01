@@ -11,6 +11,9 @@ export interface IUser {
     localidad: string;
     telefono: string;
     email: string;
+    pendingEmail?: string;
+    emailChangeRequestedBy?: string;
+    emailChangeRequestedAt?: Date;
     pwd:string;
     rol: string;
     altura: number;
@@ -18,8 +21,6 @@ export interface IUser {
     lesiones: string;
     habilitado: boolean;
     bloqueado: boolean;
-    dias_permitidos: number;
-    ultimo_pago: Date;
     ultima_plani: Date;
     ultima_metrica: Date;
 
@@ -48,15 +49,16 @@ const UserSchema = new Schema(
         localidad:{type: String, required:false},
         telefono:{type: String, required:false},
         email:{type: String, required: true, unique: true},
+        pendingEmail: {type: String, required: false, lowercase: true, trim: true},
+        emailChangeRequestedBy: {type: String, required: false},
+        emailChangeRequestedAt: {type: Date, required: false},
         pwd:{type: String, required: true},
-        rol:{type:String, enum: ['user', 'admin', 'teacher', ''], default:"user"},
+        rol:{type:String, enum: ['user', 'admin', 'teacher', 'teach', ''], default:"user"},
         altura:{type: Number, required:false},
         objetivo:{type: String, required:false},
         lesiones:{type: String, required:false},
         habilitado:{type: Boolean, required:false, default:false},
         bloqueado:{type: Boolean, required:false, default:false},
-        dias_permitidos:{type: Number, required:false},
-        ultimo_pago:{type: Date, required:false},
         ultima_plani:{type: Date, required:false},
         ultima_metrica:{type: Date, required:false},
         redes:{type: RedesSchema, required:false},

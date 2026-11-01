@@ -30,7 +30,7 @@ const Planillas: React.FC = () => {
             try {
                 if (session?.user.rol === "admin") {
                     setIsAdmin(true);
-                } else if (session?.user.rol === "teach") {
+                } else if (session?.user.rol === "teach" || session?.user.rol === "teacher") {
                     setIsTeach(true);
                 }
                 if (user_id) {
@@ -41,7 +41,11 @@ const Planillas: React.FC = () => {
                     const planillas = await response.json();
                     setPlanillasUser(planillas);
 
-                    const responseUser = await fetch(`/api/usuarios?id=${user_id}`);
+                    const responseUser = await fetch(
+                        user_id === session?.user.id
+                            ? '/api/me'
+                            : `/api/usuarios?id=${user_id}`
+                    );
                     if (!responseUser.ok) {
                         throw new Error('Error obteniendo el usuario');
                     }

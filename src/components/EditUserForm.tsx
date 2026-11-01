@@ -1,5 +1,6 @@
 // import FetchUsers from '@/lib/fetchUsers';
 import React, { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 type EditUserFormProps = {
     email: string;
@@ -7,6 +8,11 @@ type EditUserFormProps = {
 };
 
 const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
+    const { data: session } = useSession();
+    const canEditRole = session?.user?.rol === 'admin';
+    const [targetRole, setTargetRole] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+    const [pendingEmail, setPendingEmail] = useState('');
     const [userData, setUserData] = useState({
         nombre: '',
         apellido: '',
@@ -33,6 +39,9 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
 
                 const data = await response.json();
                 setUserData(data);
+                setTargetRole(data.rol ?? '');
+                setPendingEmail(data.pendingEmail ?? '');
+                setNewEmail(data.pendingEmail ?? '');
             } catch (err: unknown) {
                 setError('Error al cargar los datos del usuario'+err);
             }
@@ -53,19 +62,28 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
         setError(null);
       
         try {
+          const requestedEmail = newEmail.trim() || userData.email;
+          const emailWasChanged = requestedEmail.trim().toLowerCase() !== userData.email.trim().toLowerCase();
           const response = await fetch('/api/usuarios', {
             method: 'PUT', // Método PUT para actualizar
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ ...userData }), // Enviar email y los datos actualizados
+            body: JSON.stringify({ ...userData, email: requestedEmail }),
           });
       
           if (!response.ok) {
-            throw new Error('Error al actualizar los datos');
+            throw new Error(await response.text() || 'Error al actualizar los datos');
           }
-      
-          alert('Usuario actualizado con éxito');
+          const result = await response.json();
+          if (result.emailChangePending) {
+            setPendingEmail(result.user?.pendingEmail ?? requestedEmail);
+            alert('Datos actualizados. El cambio de email quedó pendiente de confirmación del alumno.');
+          } else if (emailWasChanged) {
+            alert('Usuario y email actualizados con éxito.');
+          } else {
+            alert('Usuario actualizado con éxito');
+          }
           onClose(); // Cierra el formulario
           
         } catch (err: unknown) {
@@ -115,20 +133,23 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700">
-                            Email
+                        <label htmlFor="newEmail" className="block text-gray-700">
+                            {targetRole === 'user' ? 'Solicitar cambio de email' : 'Email'}
                         </label>
                         <input
                             type="email"
-                            id="email"
-                            name="email"
-                            value={userData.email}
-                            onChange={handleInputChange}
+                            id="newEmail"
+                            name="newEmail"
+                            value={newEmail}
+                            placeholder={userData.email}
+                            onChange={(event) => setNewEmail(event.target.value)}
                             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            disabled // Deshabilitado porque es el identificador único
+                            disabled={!canEditRole && targetRole !== 'user'}
                         />
+                        {targetRole === 'user' && <p className="mt-1 text-sm text-gray-600">El email actual no cambia hasta que el alumno confirme desde su sesión.</p>}
+                        {pendingEmail && <p className="mt-1 text-sm text-amber-700">Pendiente de confirmación: {pendingEmail}</p>}
                     </div>
-                    <div className="mb-4">
+                    {canEditRole && <div className="mb-4">
                         <label htmlFor="email" className="block text-gray-700">
                             Rol
                         </label>
@@ -144,11 +165,12 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ email, onClose }) => {
                         >
                             <option value={userData.rol}>{userData.rol}</option>
                             <option value="admin">admin</option>
-                            <option value="teach">teach</option>
+                            <option value="teacher">teacher</option>
+                            <option value="teach">teach (legacy)</option>
                             <option value="user">user</option>
                         </select>
                         
-                    </div>
+                    </div>}
                     <div className="flex justify-between">
                         <button
                             type="button"

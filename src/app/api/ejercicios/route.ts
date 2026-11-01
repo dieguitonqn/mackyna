@@ -2,14 +2,16 @@ import connect from "@/lib/db";
 import Ejercicio from "@/lib/models/ejercicios";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth0";
-import { getServerSession } from "next-auth";
+import { getActiveSession } from "@/lib/getActiveSession";
+
+const isStaff = (session: Awaited<ReturnType<typeof getActiveSession>>) =>
+    ['admin', 'teacher', 'teach'].includes(session?.user?.rol ?? '');
 
 
 
 
 export const GET = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
     }
@@ -46,23 +48,41 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
+    }
+    if (!isStaff(session)) {
+        return new NextResponse("No autorizado", { status: 403 });
     }
     try {
         await connect();
 
         // Parsear el cuerpo de la solicitud
-        const ejercicio = await req.json();
-        console.log(ejercicio);
-        if (!ejercicio) {
-            return new NextResponse("El ejercicio es obligatorio", { status: 400 });
+        const body = await req.json();
+        if (!body || typeof body !== 'object' || Array.isArray(body)) {
+            return new NextResponse("Datos de ejercicio inválidos", { status: 400 });
+        }
+        const { nombre, grupoMusc, specificMusc, description, video } = body;
+        if (
+            typeof nombre !== 'string' || !nombre.trim() || nombre.length > 150 ||
+            typeof specificMusc !== 'string' || !specificMusc.trim() || specificMusc.length > 150 ||
+            (grupoMusc !== undefined && typeof grupoMusc !== 'string') ||
+            (description !== undefined && typeof description !== 'string') ||
+            (video !== undefined && typeof video !== 'string') ||
+            (description?.length ?? 0) > 2000 || (video?.length ?? 0) > 2000 || (grupoMusc?.length ?? 0) > 150
+        ) {
+            return new NextResponse("Datos de ejercicio inválidos", { status: 400 });
         }
 
         // Crear ejercicio
-        const newEjercicio = await Ejercicio.create( ejercicio );
-        console.log(newEjercicio);
+        const newEjercicio = await Ejercicio.create({
+            nombre: nombre.trim(),
+            grupoMusc: grupoMusc?.trim(),
+            specificMusc: specificMusc.trim(),
+            description,
+            video,
+        });
 
         if (!newEjercicio) {
             return new NextResponse("Usuario no encontrado", { status: 404 });
@@ -79,25 +99,48 @@ export const POST = async (req: Request) => {
 
 
 export const PUT = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
+    }
+    if (!isStaff(session)) {
+        return new NextResponse("No autorizado", { status: 403 });
     }
     try {
         await connect();
 
-        const { _id, nombre, grupoMusc, specificMusc, description, video } = await req.json();
+        const body = await req.json();
+        if (!body || typeof body !== 'object' || Array.isArray(body)) {
+            return new NextResponse("Datos de ejercicio inválidos", { status: 400 });
+        }
+        const { _id, nombre, grupoMusc, specificMusc, description, video } = body;
         // console.log(rol);
 
-        if (!_id) {
-            return new NextResponse("El email es obligatorio", { status: 400 });
+        if (typeof _id !== 'string' || !ObjectId.isValid(_id)) {
+            return new NextResponse("El ID no es válido", { status: 400 });
+        }
+        if (
+            typeof nombre !== 'string' || !nombre.trim() || nombre.length > 150 ||
+            typeof specificMusc !== 'string' || !specificMusc.trim() || specificMusc.length > 150 ||
+            (grupoMusc !== undefined && typeof grupoMusc !== 'string') ||
+            (description !== undefined && typeof description !== 'string') ||
+            (video !== undefined && typeof video !== 'string') ||
+            (description?.length ?? 0) > 2000 || (video?.length ?? 0) > 2000 || (grupoMusc?.length ?? 0) > 150
+        ) {
+            return new NextResponse("Datos de ejercicio inválidos", { status: 400 });
         }
         // const idObject = new ObjectId(_id);
         const updatedEjercicio = await Ejercicio.findOneAndUpdate(
             // {  idObject },
             new ObjectId(_id),
-            { nombre, grupoMusc, specificMusc, description, video },
-            { new: true }
+            {
+                nombre: nombre.trim(),
+                grupoMusc: grupoMusc?.trim(),
+                specificMusc: specificMusc.trim(),
+                description,
+                video,
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedEjercicio) {
@@ -114,9 +157,12 @@ export const PUT = async (req: Request) => {
 
 
 export const DELETE = async (req: Request): Promise<NextResponse> => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if(!session){
         return new NextResponse("No autorizado", { status: 401 });
+    }
+    if (!isStaff(session)) {
+        return new NextResponse("No autorizado", { status: 403 });
     }
     try {
         // Conectar a la base de datos

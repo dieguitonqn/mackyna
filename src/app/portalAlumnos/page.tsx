@@ -13,7 +13,7 @@ function Page() {
         const checkBirthday = async () => {
             if (session?.user?.email) {
                 try {
-                    const response = await fetch(`/api/usuarios?id=${session.user.id}`);
+                    const response = await fetch('/api/me');
                     const userData = await response.json();
                     console.log('User Data:', userData);
                     if (userData?.fecha_nacimiento) {
@@ -55,18 +55,6 @@ function Page() {
                         desc="Todas las mediciones realizadas en Mackyna"
                         link='/portalAlumnos/Metricas'
                     />
-                    {/* <CardInit
-                        imagen='/turnos.png'
-                        titulo='Turnos'
-                        desc='Días y horarios en que asistirá. También podrá agendar nuevos turnos o editar los que ya tenga.'
-                        link='/portalAlumnos/Turnos'
-                    />
-                    <CardInit 
-                        imagen='/pagos.png'
-                        titulo='Pagos'
-                        desc="Realizar pagos de cuotas (Solo Mercado Pago)"
-                        link='/portalAlumnos/Pago'
-                    /> */}
                 </div>
 
                 {showBirthdayModal && (

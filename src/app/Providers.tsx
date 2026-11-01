@@ -73,7 +73,7 @@ function ProfileCompletionGuard({ children }: { children: React.ReactNode }) {
     const verifyProfile = async () => {
       try {
         setChecked(false)
-        const response = await fetch(`/api/usuarios?id=${session.user.id}`)
+        const response = await fetch('/api/me')
 
         if (!response.ok) {
           setMissingFields([])

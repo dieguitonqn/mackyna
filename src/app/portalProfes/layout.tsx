@@ -1,14 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { getActiveSession } from "@/lib/getActiveSession";
 
 export const dynamic = "force-dynamic"; // Para evitar el cacheo de la página
-export default function DashboardLayout({
+const isStaff = (role?: string) => ["admin", "teacher", "teach"].includes(role ?? "");
+
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getActiveSession();
+  if (!session) redirect("/login");
+  if (!isStaff(session.user?.rol)) redirect("/portalAlumnos");
 
-const { STRAPI_HOST } = process.env;
+  const strapiHost = process.env.STRAPI_HOST;
+
   return (
     <div className="flex min-h-screen bg-gray-100 overflow-x-scroll">
       {/* Sidebar */}
@@ -43,20 +51,6 @@ const { STRAPI_HOST } = process.env;
               </Link>
             </li>
             <li>
-              <Link href="/portalProfes/Reservas">
-                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                  Reservas
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link href="/portalProfes/Pagos">
-                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                  Pagos
-                </div>
-              </Link>
-            </li>
-            <li>
               <Link href="/portalProfes/newPlani">
                 <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                   Nueva Rutina/Plantilla
@@ -70,27 +64,15 @@ const { STRAPI_HOST } = process.env;
                 </div>
               </Link>
             </li>
-            <li>
-              <Link href={STRAPI_HOST!} target="_blank">
-                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                  Configurar Tienda
-                </div>
-              </Link>
-            </li>
-                        <li>
-              <Link href="/portalProfes/tiendaProfes">
-                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                  Lista de Productos
-                </div>
-              </Link>
-            </li>
-             <li>
-              <Link href="/portalProfes/ventasTienda">
-                <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                  Ventas
-                </div>
-              </Link>
-            </li>
+            {strapiHost && (
+              <li>
+                <Link href={strapiHost} target="_blank" rel="noopener noreferrer">
+                  <div className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                    Administrar Strapi
+                  </div>
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 

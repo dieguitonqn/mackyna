@@ -3,10 +3,10 @@
 import EditUserForm from '@/components/EditUserForm';
 import React, { useEffect, useState } from 'react';
 import { IUser } from '@/types/user';
-import { SetDiasForm } from '@/components/PortalProfes/SetDiasForm';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { FaClipboardList, FaChartBar, FaKey, FaCalendarAlt, FaToggleOn, FaToggleOff, FaUserCircle, FaTrash } from 'react-icons/fa';
+import { FaClipboardList, FaChartBar, FaKey, FaToggleOn, FaToggleOff, FaUserCircle, FaTrash } from 'react-icons/fa';
 import Tooltip from '@/components/PortalProfes/Tooltip';
 import { formatDateOnlyEs } from '@/utils/dateOnly';
 
@@ -31,10 +31,9 @@ const Usuarios: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [showSetDias, setShowSetDias] = useState<boolean>(false);
-  const [userID, setUserID] = useState<string | null>(null);
-  const [diasPermitidos, setDiasPermitidos] = useState<number | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
+  const canManageStaffAccounts = session?.user?.rol === 'admin';
 
   const normalizeString = (str: string) => {
     return str
@@ -83,19 +82,20 @@ const Usuarios: React.FC = () => {
     setSelectedEmail(null);
   };
 
-  const handleCloseDias = () => {
-    setShowSetDias(false);
-    setUserID(null);
-  }
-
   const handleResetPwd = async (id: string) => {
+    const temporaryPassword = window.prompt('Ingresá una contraseña temporal nueva (mínimo 8 caracteres):');
+    if (!temporaryPassword) return;
+    if (temporaryPassword.length < 8 || temporaryPassword.length > 128) {
+      window.alert('La contraseña debe tener entre 8 y 128 caracteres.');
+      return;
+    }
     try {
       const response = await fetch('/api/userP', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ _id: id, pwd: "1234" }),
+        body: JSON.stringify({ _id: id, pwd: temporaryPassword }),
       });
       if (!response.ok) {
         throw new Error('Error al resetear la contraseña');
@@ -313,59 +313,52 @@ const Usuarios: React.FC = () => {
                       </Link>
                     </Tooltip>
 
-                    <Tooltip text="Resetear Contraseña">
-                      <button
-                        onClick={() =>{
-                          const confirmar = window.confirm(
-                            '¿Estás seguro que deseas resetear la contraseña de este usuario?'
-                          );
-                          if (confirmar) {
-                            handleResetPwd(user._id.toString());
-                          }
-                        } }
-                        className="text-yellow-600 hover:text-yellow-800 transition-colors"
-                      >
-                        <FaKey className="h-5 w-5" />
-                      </button>
-                    </Tooltip>
+                    {(user.rol === 'user' || canManageStaffAccounts) && (
+                      <Tooltip text="Resetear Contraseña">
+                        <button
+                          onClick={() =>{
+                            const confirmar = window.confirm(
+                              '¿Estás seguro que deseas resetear la contraseña de este usuario?'
+                            );
+                            if (confirmar) {
+                              handleResetPwd(user._id.toString());
+                            }
+                          } }
+                          className="text-yellow-600 hover:text-yellow-800 transition-colors"
+                        >
+                          <FaKey className="h-5 w-5" />
+                        </button>
+                      </Tooltip>
+                    )}
 
-                    {/* <Tooltip text="Configurar Días">
-                      <button
-                        onClick={() => {
-                          setShowSetDias(!showSetDias)
-                          setUserID(user._id.toString())
-                          setDiasPermitidos(user.dias_permitidos || null)
-                        }}
-                        className="text-yellow-600 hover:text-yellow-800 transition-colors"
-                      >
-                        <FaCalendarAlt className="h-5 w-5" />
-                      </button>
-                    </Tooltip> */}
+                    {(user.rol === 'user' || canManageStaffAccounts) && (
+                      <>
+                        <Tooltip text="Borrar Usuario">
+                          <button
+                            onClick={() => {
+                              const confirmar = window.confirm(
+                                '¿Estás seguro que deseas borrar este usuario?'
+                              );
+                              if (confirmar) {
+                                handleDeleteUser(user._id.toString());
+                              }
+                            }}
+                            className="text-red-600 hover:text-red-800 transition-colors"
+                          >
+                            <FaTrash className="h-5 w-5" />
+                          </button>
+                        </Tooltip>
 
-                     <Tooltip text="Borrar Usuario">
-                      <button
-                        onClick={() => {
-                          const confirmar = window.confirm(
-                            '¿Estás seguro que deseas borrar este usuario?'
-                          );
-                          if (confirmar) {
-                            handleDeleteUser(user._id.toString());
-                          }
-                        }}
-                        className="text-red-600 hover:text-red-800 transition-colors"
-                      >
-                        <FaTrash className="h-5 w-5" />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip text={user.habilitado ? 'Deshabilitar Usuario' : 'Habilitar Usuario'}>
-                      <button
-                        onClick={() => handleToggleHabilitado(user._id.toString(), user.habilitado || false)}
-                        className={`${user.habilitado ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
-                      >
-                        {user.habilitado ? <FaToggleOn className="h-5 w-5" /> : <FaToggleOff className="h-5 w-5" />}
-                      </button>
-                    </Tooltip>
+                        <Tooltip text={user.habilitado ? 'Deshabilitar Usuario' : 'Habilitar Usuario'}>
+                          <button
+                            onClick={() => handleToggleHabilitado(user._id.toString(), user.habilitado || false)}
+                            className={`${user.habilitado ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
+                          >
+                            {user.habilitado ? <FaToggleOn className="h-5 w-5" /> : <FaToggleOff className="h-5 w-5" />}
+                          </button>
+                        </Tooltip>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -373,9 +366,6 @@ const Usuarios: React.FC = () => {
           </table>
           {selectedEmail && (
             <EditUserForm email={selectedEmail} onClose={handleClose} />
-          )}
-          {showSetDias && (
-            <SetDiasForm userID={userID!} diasPermitidos={diasPermitidos!} onCloseSetDias={handleCloseDias} />
           )}
         </div>
       )}

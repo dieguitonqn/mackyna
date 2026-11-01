@@ -3,11 +3,16 @@ import Plani from "@/lib/models/planillas";
 import User from "@/lib/models/user";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth0";
-import { getServerSession } from "next-auth";
+import type { Session } from "next-auth";
+import { getActiveSession } from "@/lib/getActiveSession";
 import logger, { planillaNotasLogger } from "@/lib/logger";
 
 const VALID_BLOQUES = ['Bloque1', 'Bloque2', 'Bloque3', 'Bloque4'] as const;
+const isStaff = (session: Session | null) =>
+    ['admin', 'teacher', 'teach'].includes(session?.user?.rol ?? '');
+
+const isOwnPlanilla = (session: Session | null, userId: unknown) =>
+    session?.user?.id != null && String(userId) === String(session.user.id);
 
 type NoteLogSession = {
     user?: {
@@ -66,7 +71,7 @@ const buildNoteLogMeta = ({
 });
 
 export const GET = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if (!session) {
         logger.warn('Intento de acceso no autorizado al endpoint GET /api/planillas');
         return new NextResponse("No autorizado", { status: 401 });
@@ -85,14 +90,14 @@ export const GET = async (req: Request) => {
                 return new NextResponse("El ID no es válido", { status: 400 });
             }
 
+            if (!isStaff(session) && !isOwnPlanilla(session, _id)) {
+                return new NextResponse("No autorizado", { status: 403 });
+            }
+
             const planillas = await Plani.find({ userId: _id }).sort({ _id: -1 });
             logger.info(`Planillas recuperadas para el usuario ${_id}`);
 
-            if (!planillas) {
-                logger.warn(`Usuario no encontrado con ID: ${_id}`);
-                return new NextResponse("Usuario no encontrado", { status: 404 });
-            }
-            return new NextResponse(JSON.stringify(planillas), { status: 201 });
+            return new NextResponse(JSON.stringify(planillas), { status: 200 });
         } else if (planiID) {
             if (!ObjectId.isValid(planiID)) {
                 logger.warn(`ID inválido proporcionado en GET /api/planillas: ${planiID}`);
@@ -106,7 +111,14 @@ export const GET = async (req: Request) => {
                 logger.warn(`Planilla no encontrada con ID: ${planiID}`);
                 return new NextResponse("Planilla no encontrada", { status: 404 });
             }
+            if (!isStaff(session) && !isOwnPlanilla(session, planilla.userId)) {
+                return new NextResponse("No autorizado", { status: 403 });
+            }
             return new NextResponse(JSON.stringify(planilla), { status: 200 });
+        }
+
+        if (!isStaff(session)) {
+            return new NextResponse("No autorizado", { status: 403 });
         }
 
         const planillas = await Plani.find();
@@ -139,10 +151,13 @@ export const GET = async (req: Request) => {
 // }
 
 export const POST = async (req: Request) => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if (!session) {
         logger.warn('Intento de acceso no autorizado al endpoint POST /api/planillas');
         return new NextResponse("No autorizado", { status: 401 });
+    }
+    if (!isStaff(session)) {
+        return new NextResponse("No autorizado", { status: 403 });
     }
     logger.info(`Usuario ${session.user?.email} está creando una nueva planilla`);
     
@@ -152,9 +167,14 @@ export const POST = async (req: Request) => {
         // console.log(planilla.trainingDays[1].Bloque2);
         logger.debug("Datos recibidos para la nueva planilla: ", { planilla });
         // Validación de datos requeridos
-        if (!planilla.userId) {
+        if (!planilla.userId || !ObjectId.isValid(planilla.userId)) {
             logger.error('Intento de crear planilla sin userId');
-            return NextResponse.json({ error: "userId es requerido" }, { status: 400 });
+            return NextResponse.json({ error: "userId válido es requerido" }, { status: 400 });
+        }
+
+        const targetUser = await User.findById(planilla.userId).select({ email: 1 });
+        if (!targetUser) {
+            return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
         }
 
         // // Validar que exercises exista y tenga la estructura correcta
@@ -201,7 +221,15 @@ export const POST = async (req: Request) => {
         // }
 
         logger.info(`Intentando crear nueva planilla para usuario: ${planilla.userId}`);
-        await Plani.create(planilla);
+        await Plani.create({
+            month: planilla.month,
+            year: planilla.year,
+            userId: targetUser._id.toString(),
+            email: targetUser.email,
+            trainingDays: planilla.trainingDays,
+            startDate: planilla.startDate,
+            endDate: planilla.endDate,
+        });
 
         const ultima_planilla = await User.findByIdAndUpdate(
             { _id: new ObjectId(planilla.userId as string) },
@@ -229,10 +257,13 @@ export const POST = async (req: Request) => {
 }
 
 export const DELETE = async (req: Request): Promise<NextResponse> => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if (!session) {
         logger.warn('Intento de acceso no autorizado al endpoint DELETE /api/planillas');
         return new NextResponse("No autorizado", { status: 401 });
+    }
+    if (!isStaff(session)) {
+        return new NextResponse("No autorizado", { status: 403 });
     }
 
     try {
@@ -266,7 +297,7 @@ export const DELETE = async (req: Request): Promise<NextResponse> => {
 }
 
 export const PUT = async (req: Request): Promise<NextResponse> => {
-    const session = await getServerSession({ req, ...authOptions });
+    const session = await getActiveSession(req);
     if (!session) {
         logger.warn('Intento de acceso no autorizado al endpoint PUT /api/planillas');
         return new NextResponse("No autorizado", { status: 401 });
@@ -297,6 +328,14 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
 
             planillaNotasLogger.info('Inicio de guardado de nota', noteLogMeta);
 
+            const existingPlanilla = await Plani.findById(id).select({ userId: 1, trainingDays: 1 });
+            if (!existingPlanilla) {
+                return NextResponse.json({ error: "Planilla no encontrada" }, { status: 404 });
+            }
+            if (!isStaff(session) && !isOwnPlanilla(session, existingPlanilla.userId)) {
+                return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+            }
+
             if (
                 typeof dayIndex !== 'number' ||
                 !Number.isInteger(dayIndex) ||
@@ -312,6 +351,16 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
                 return NextResponse.json({ error: "Datos de nota inválidos" }, { status: 400 });
             }
 
+            const exercise = getNestedValue(existingPlanilla, [
+                'trainingDays',
+                String(dayIndex),
+                bloque,
+                String(exerciseIndex),
+            ]);
+            if (!exercise || typeof exercise !== 'object') {
+                return NextResponse.json({ error: "El ejercicio no existe en la planilla" }, { status: 400 });
+            }
+
             const updatePath = `trainingDays.${dayIndex}.${bloque}.${exerciseIndex}.notas`;
             const updateLogMeta = {
                 ...noteLogMeta,
@@ -319,7 +368,10 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
             };
 
             const updateResult = await Plani.updateOne(
-                { _id: new ObjectId(id as string) },
+                {
+                    _id: new ObjectId(id as string),
+                    ...(!isStaff(session) ? { userId: String(session.user?.id) } : {}),
+                },
                 { $set: { [updatePath]: normalizedNotas } },
                 { runValidators: true }
             );
@@ -376,14 +428,16 @@ export const PUT = async (req: Request): Promise<NextResponse> => {
             return NextResponse.json({ message: "todo ok", requestId }, { status: 200 });
         }
 
+        if (!isStaff(session)) {
+            return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+        }
+
         const editedPlani = await Plani.findByIdAndUpdate(
             new ObjectId(id as string),
             {
                 $set: {
                     month: plani?.month,
                     year: plani?.year,
-                    userId: plani?.userId,
-                    email: plani?.email,
                     trainingDays: plani?.trainingDays,
                     startDate: plani?.startDate,
                     endDate: plani?.endDate,

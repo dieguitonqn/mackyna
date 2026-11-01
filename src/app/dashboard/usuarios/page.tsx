@@ -2,6 +2,7 @@
 
 import EditUserForm from '@/components/EditUserForm';
 import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 type User = {
   _id: string;
@@ -12,6 +13,8 @@ type User = {
 };
 
 const Usuarios: React.FC = () => {
+  const { data: session } = useSession();
+  const canManageStaffAccounts = session?.user?.rol === 'admin';
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
@@ -138,16 +141,20 @@ const Usuarios: React.FC = () => {
                   <td className="px-2 py-2">{user.email}</td>
                   <td className="px-2 py-2">{user.rol}</td>
                   <td className="px-2 py-2 flex flex-col gap-1 items-center">
-                    <button
-                      className="w-full px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
-                      onClick={() => handleEdit(user.email)}
-                    >
-                      Editar
-                    </button>
-                    <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
-                    onClick={() => handleDelete(user._id)}>
-                      Borrar
-                    </button>
+                    {(user.rol === 'user' || canManageStaffAccounts) && (
+                      <button
+                        className="w-full px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
+                        onClick={() => handleEdit(user.email)}
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {(user.rol === 'user' || canManageStaffAccounts) && (
+                      <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
+                      onClick={() => handleDelete(user._id)}>
+                        Borrar
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

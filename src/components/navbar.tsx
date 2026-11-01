@@ -7,7 +7,6 @@ import { GrLogin } from "react-icons/gr";
 import { TfiDashboard } from "react-icons/tfi";
 import { IoIosLogOut } from "react-icons/io";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { BsCart4 } from "react-icons/bs";
 import {
   HamburguesaAdmin,
   HamburguesaTeach,
@@ -18,7 +17,7 @@ import { TbRulerMeasure } from "react-icons/tb";
 function Navbar() {
   const { data: session } = useSession();
   const isAdmin = session?.user.rol === "admin";
-  const isTeach = session?.user.rol === "teach";
+  const isTeach = session?.user.rol === "teach" || session?.user.rol === "teacher";
   const isUser = session?.user.rol === "user";
 
   //
@@ -37,14 +36,6 @@ function Navbar() {
               height={50}
             />
           </Link>
-          {/* <div>
-            <Link
-              className="hidden lg:flex  items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
-              href="/Tienda"
-            >
-              Tienda <BsCart4 /> 
-            </Link>
-          </div> */}
           <div>
             <Link
               className="flex items-center gap-1 bg-green-800 rounded py-2 px-4"
@@ -83,14 +74,6 @@ function Navbar() {
             />
           )}
         </Link>
-        {/* <div>
-          <Link
-            className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
-            href="/Tienda"
-          >
-            Tienda <BsCart4 />
-          </Link>
-        </div> */}
 
         <div className="flex flex-row gap-2 items-center">
           {/* Menús visibles solo en pantallas medianas o más grandes */}
@@ -158,7 +141,6 @@ function Navbar() {
             <IoIosLogOut className="h-7 w-7" />
           </button>
         </div>
-        {/* <CartSidebar /> */}
       </nav>
     </div>
   );

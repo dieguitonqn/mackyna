@@ -1,7 +1,6 @@
 
 import PerfilUserForm from '@/components/PortalAlumnos/Perfil/perfilForm';
-import { authOptions } from '@/lib/auth0';
-import { getServerSession } from 'next-auth';
+import { getActiveSession } from '@/lib/getActiveSession';
 import { redirect } from 'next/navigation';
 import { FormUserValues, IUser } from '@/types/user';
 
@@ -19,7 +18,7 @@ const mapToFormUserValues = (rawUser: IUser): FormUserValues => ({
     localidad: rawUser.localidad || '',
     telefono: rawUser.telefono || '',
     email: rawUser.email,
-    pwd: rawUser.pwd,
+    pendingEmail: rawUser.pendingEmail,
     rol: rawUser.rol,
     altura: rawUser.altura || 0,
     objetivo: rawUser.objetivo || '',
@@ -36,7 +35,7 @@ async function page({
 }: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const session = await getServerSession(authOptions);
+    const session = await getActiveSession();
     if (!session) {
         redirect('/login');
     }
@@ -60,7 +59,7 @@ async function page({
             );
         }
 
-        const canAccessForeignProfile = role === 'teach' || role === 'admin';
+        const canAccessForeignProfile = role === 'teacher' || role === 'teach' || role === 'admin';
         const isOwnProfile = sessionUserID === urlUserId;
 
         if (!canAccessForeignProfile && !isOwnProfile) {
@@ -68,7 +67,7 @@ async function page({
         }
 
         try {
-            const rawUser = await User.findOne({ _id: new ObjectId(urlUserId) }).lean<IUser>();
+            const rawUser = await User.findOne({ _id: new ObjectId(urlUserId) }).select('-pwd').lean<IUser>();
 
             if (!rawUser) {
                 return (
@@ -88,7 +87,7 @@ async function page({
                         Perfil de usuario
                     </div>
                     <div>
-                        <PerfilUserForm user={user} />
+                        <PerfilUserForm user={user} isOwnProfile={isOwnProfile} />
                     </div>
                 </div>
             )
@@ -106,7 +105,7 @@ async function page({
 
     } else if (sessionUserID && !urlUserId) {
         try {
-            const rawUser = await User.findOne({ email: session.user.email }).lean<IUser>();
+            const rawUser = await User.findOne({ email: session.user.email }).select('-pwd').lean<IUser>();
 
             if (!rawUser) {
                 redirect('/login');
@@ -120,7 +119,7 @@ async function page({
                         Perfil de usuario
                     </div>
                     <div>
-                        <PerfilUserForm user={user} />
+                        <PerfilUserForm user={user} isOwnProfile />
                     </div>
                 </div>
             );

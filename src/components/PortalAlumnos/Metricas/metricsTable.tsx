@@ -102,7 +102,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                         <th className="py-2 px-4">% Masa Muscular</th>
                         <th className="py-2 px-4">% Grasa Visceral</th>
                         <th className="py-2 px-4">Edad Corporal</th>
-                        {(session?.user.rol == "admin" || session?.user.rol == "teach") && (
+                        {(session?.user.rol == "admin" || session?.user.rol == "teach" || session?.user.rol == "teacher") && (
                             <th className="py-2 px-4 text-center">Acciones</th>)}
                     </tr>
                 </thead>
@@ -117,14 +117,14 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                             <td className="py-2 px-4">{item.visceral_fat}%</td>
                             <td className="py-2 px-4">{item.body_age} años</td>
                             <td className="py-2 px-4 flex justify-center space-x-4">
-                                {(session?.user.rol == "admin" || session?.user.rol == "teach") && (
+                                {(session?.user.rol == "admin" || session?.user.rol == "teach" || session?.user.rol == "teacher") && (
                                     <button
                                         onClick={() => onEdit(item)}
                                         className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
                                     >
                                         Editar
                                     </button>)}
-                                {(session?.user.rol == "admin" || session?.user.rol == "teach") && (
+                                {(session?.user.rol == "admin" || session?.user.rol == "teach" || session?.user.rol == "teacher") && (
                                     <button
                                         onClick={() => onDelete(item._id)}
                                         className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"

@@ -9,6 +9,7 @@ export interface IUser {
     localidad?: string;
     telefono?: string;
     email: string;
+    pendingEmail?: string;
     pwd:string;
     rol: string;
     altura?: number | 0;
@@ -16,8 +17,6 @@ export interface IUser {
     lesiones?: string;
     habilitado?: boolean;
     bloqueado?: boolean;
-    dias_permitidos?: number;
-    ultimo_pago?: Date;
     ultima_plani?: Date;
     ultima_metrica?: Date;
     redes?: {
@@ -36,8 +35,8 @@ export interface IUser {
     localidad?: string | "";
     telefono?: string | "";
     email: string;
-    pwd: string;
-    rol: string;
+    pendingEmail?: string;
+    rol?: string;
     altura?: number | 0;
     objetivo?: string | "";
     lesiones?: string | "";

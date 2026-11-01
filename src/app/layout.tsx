@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import Providers from "./Providers";
 import Footer from "@/components/Footer";
-import { CartProvider } from "@/app/Tienda/context/CartContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,12 +31,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-r from-black via-green-700 to-black min-h-screen overflow-x-scroll`}
       >
-        {/* <CartProvider> */}
-          <Providers>
-            <Navbar />
-            {children}
-          </Providers>
-        {/* </CartProvider> */}
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
         <Footer />
       </body>
     </html>

@@ -16,7 +16,7 @@ export default function LoginForm() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(email, password);
+        // console.log(email, password);
         // Log both email and password
         // Replace this with your actual sign-in logic using `signIn`
         signIn('credentials',
