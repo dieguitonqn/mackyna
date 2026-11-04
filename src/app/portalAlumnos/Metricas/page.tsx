@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { getActiveSession } from "@/lib/getActiveSession";
 import connect from "@/lib/db";
 import Metric from "@/lib/models/metrics";
-import User from "@/lib/models/user";
+import User, { type IUser } from "@/lib/models/user";
 import Chart from "@/components/PortalAlumnos/Metricas/charts";
 import NewMetric from "@/components/PortalAlumnos/Metricas/newMetric";
 import MetricsTable from "@/components/PortalAlumnos/Metricas/metricsTable";
@@ -54,7 +54,7 @@ export default async function MetricsPage({
   try {
     await connect();
     const [user, rawMetrics] = await Promise.all([
-      User.findById(targetUserId).lean(),
+      User.findById(targetUserId).lean<IUser>(),
       Metric.find({ userID: targetUserId }).sort({ date: 1 }).lean<MetricRow[]>(),
     ]);
 

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -35,8 +36,6 @@ const nextConfig = {
   // },
   // productionBrowserSourceMaps: false,
   /* config options here */
-  // const nextConfig = {
-  // output:"standalone"
 };
 
 module.exports = nextConfig;

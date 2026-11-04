@@ -1,0 +1,42 @@
+services:
+  web:
+    image: ${GHCR_IMAGE:?Set GHCR_IMAGE in compose.env}
+    restart: unless-stopped
+    init: true
+    env_file:
+      - ./app.env
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+    ports:
+      - "127.0.0.1:${APP_HOST_PORT:-5001}:3000"
+    extra_hosts:
+      - "host.docker.internal:${MONGO_HOST_GATEWAY:-host-gateway}"
+    networks:
+      - strapi
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    stop_grace_period: 30s
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.status < 500 ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  strapi:
+    name: ${STRAPI_DOCKER_NETWORK:-mackyna-shared}
+    external: true
