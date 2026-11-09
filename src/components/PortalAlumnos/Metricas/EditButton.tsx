@@ -108,8 +108,9 @@ export const EditButton = ({ userID }: EditButtonProps) => {
 
   return (
     <div>
-      <button 
-        className="flex items-center px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 gap-2 mx-auto mt-2"
+      <button
+        type="button"
+        className="mx-auto mt-1 inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#b9dc75]/20 bg-[#b9dc75]/[0.1] px-3 py-2 text-sm font-medium text-[#d5ecb7] transition hover:bg-[#b9dc75]/[0.18] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
         onClick={() => setEditing(true)}
       >
         <CiEdit className="h-5 w-5"/>
@@ -117,45 +118,46 @@ export const EditButton = ({ userID }: EditButtonProps) => {
         
       </button>
       {editing && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+          <div className="my-auto w-full max-w-md rounded-2xl border border-white/10 bg-[#111713] p-5 shadow-2xl sm:p-6">
+            <p className="mb-5 text-xl font-semibold text-white">Editar datos personales</p>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="flex flex-col">
-              <label htmlFor="fecha_nacimiento" className="mb-1 font-medium text-gray-700">Fecha de Nacimiento: </label>
+              <label htmlFor="fecha_nacimiento" className="mb-1 text-sm font-medium text-slate-300">Fecha de nacimiento</label>
               <input
                 type="date"
                 id="fecha_nacimiento"
-                className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition duration-200"
+                className="rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                 value={toDateInputValue(user.fecha_nacimiento)}
                 onChange={handleInputChange}
               />
               </div>
               <div className="flex flex-col">
-              <label htmlFor="altura" className="mb-1 font-medium text-gray-700">Altura: </label>
+              <label htmlFor="altura" className="mb-1 text-sm font-medium text-slate-300">Altura</label>
               <input 
                 type="number" 
                 id="altura" 
-                className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition duration-200"
+                className="rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                 value={user.altura} 
                 onChange={handleInputChange}
               />
               </div>
               <div className="flex flex-col">
-              <label htmlFor="objetivo" className="mb-1 font-medium text-gray-700">Objetivo: </label>
+              <label htmlFor="objetivo" className="mb-1 text-sm font-medium text-slate-300">Objetivo</label>
               <input 
                 type="text" 
                 id="objetivo" 
-                className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition duration-200"
+                className="rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                 value={user.objetivo} 
                 onChange={handleInputChange}
               />
               </div>
               <div className="flex flex-col">
-              <label htmlFor="lesiones" className="mb-1 font-medium text-gray-700">Observaciones: </label>
+              <label htmlFor="lesiones" className="mb-1 text-sm font-medium text-slate-300">Observaciones</label>
               <input 
                 type="text" 
                 id="lesiones" 
-                className="border rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition duration-200"
+                className="rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                 value={user.lesiones} 
                 onChange={handleInputChange}
               />
@@ -164,7 +166,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
               <div className="flex justify-end gap-3 mt-6">
               <button 
                 type="button" 
-                className="flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 gap-2 transition duration-200 shadow-sm"
+                className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                 onClick={() => {
                   setEditing(false);
                   
@@ -176,7 +178,7 @@ export const EditButton = ({ userID }: EditButtonProps) => {
               </button>
               <button 
                 type="submit" 
-                className="flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 gap-2 transition duration-200 shadow-sm"
+                className="flex items-center gap-2 rounded-xl bg-[#b9dc75] px-4 py-2.5 text-sm font-semibold text-[#172016] transition hover:bg-[#c9e991] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
               >
                 <MdSave className="w-5 h-5" />
                 Guardar

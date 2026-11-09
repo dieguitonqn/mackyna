@@ -1,62 +1,89 @@
-
 import connect from "@/lib/db";
 import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
-import  argon2 from "argon2";
+import argon2 from "argon2";
 import { validateTurnstileToken } from "next-turnstile";
 import { v4 } from "uuid";
 
+const acceptedResponse = () =>
+    NextResponse.json(
+        { message: "Si los datos permiten crear la solicitud, quedará pendiente de aprobación." },
+        { status: 202 }
+    );
 
-
+const isDuplicateEmailError = (error: unknown): boolean =>
+    typeof error === "object" && error !== null && "code" in error && error.code === 11000;
 
 export const POST = async (req: Request) => {
+    let body: unknown;
+
     try {
-        const body = await req.json();
-        await connect();
-        const existingUser = await User.findOne(
+        body = await req.json();
+    } catch {
+        return NextResponse.json({ message: "Datos inválidos." }, { status: 400 });
+    }
 
-            { email: body.email },
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+        return NextResponse.json({ message: "Datos inválidos." }, { status: 400 });
+    }
 
+    const input = body as Record<string, unknown>;
+    const nombre = typeof input.nombre === "string" ? input.nombre.trim() : "";
+    const apellido = typeof input.apellido === "string" ? input.apellido.trim() : "";
+    const email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
+    const pwd = typeof input.pwd === "string" ? input.pwd : "";
+    const token = typeof input.token === "string" ? input.token.trim() : "";
 
-        );
+    if (
+        nombre.length === 0 || nombre.length > 100 ||
+        apellido.length === 0 || apellido.length > 100 ||
+        email.length === 0 || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+        pwd.length === 0 || pwd.length > 1024 ||
+        token.length === 0 || token.length > 4096
+    ) {
+        return NextResponse.json({ message: "Datos inválidos." }, { status: 400 });
+    }
 
-        if (existingUser) {
-            return new NextResponse(JSON.stringify({ message: "Usuario ya existe" }), { status: 409 }); // Conflicto
-        }
+    const secretKey = process.env.TURNSTILE_SECRET_KEY;
+    if (!secretKey) {
+        return NextResponse.json({ message: "No se pudo procesar la solicitud." }, { status: 503 });
+    }
+
+    try {
         const validationResponse = await validateTurnstileToken({
-            token:body.token,
-            secretKey: process.env.TURNSTILE_SECRET_KEY!,
-            // Optional: Add an idempotency key to prevent token reuse
+            token,
+            secretKey,
             idempotencyKey: v4(),
-            // sandbox: process.env.NODE_ENV === "development",
-          });
-          if (!validationResponse.success) {
-            return NextResponse.json({ message: "Invalid token" }, { status: 400 });
-          }
-        // Hashear la contraseña con Argon2
-        const hashedPassword = await argon2.hash(body.pwd);
-        // Crear un nuevo usuario
+        });
+
+        if (!validationResponse.success) {
+            return NextResponse.json({ message: "No pudimos validar la solicitud." }, { status: 400 });
+        }
+
+        await connect();
+
+        const hashedPassword = await argon2.hash(pwd);
         const newUser = new User({
-            nombre: body.nombre,
-            apellido: body.apellido,
-            email: typeof body.email === 'string' ? body.email.trim().toLowerCase() : body.email,
+            nombre,
+            apellido,
+            email,
             pwd: hashedPassword,
             rol: "user",
             habilitado: false,
             bloqueado: false,
         });
 
-        // Guardar el usuario en la base de datos
-        await newUser.save();
-
-        return new NextResponse(JSON.stringify({ message: "recibido ok" }), { status: 200 })
-    } catch (error: unknown) {
-
-        if(error instanceof Error){
-            return new NextResponse("error:" + error.message)
+        try {
+            await newUser.save();
+        } catch (error: unknown) {
+            if (isDuplicateEmailError(error)) {
+                return acceptedResponse();
+            }
+            throw error;
         }
-        return new NextResponse("Error: "+ error, {status:500})
 
+        return acceptedResponse();
+    } catch {
+        return NextResponse.json({ message: "No se pudo procesar la solicitud." }, { status: 500 });
     }
-}
-
+};

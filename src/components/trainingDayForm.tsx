@@ -12,7 +12,7 @@ interface Props {
 const TrainingDayForm: React.FC<Props> = ({ day, trainingDayPlanti }) => {
     console.log("Training Day data received in TrainingDayForm:", trainingDayPlanti);
     return (
-        <div className='flex flex-wrap justify-center'>
+        <div className='grid w-full grid-cols-1 items-start gap-4 sm:grid-cols-2 xl:grid-cols-4'>
             <ExerciseForm
                 day={day}
                 bloque='Bloque1'

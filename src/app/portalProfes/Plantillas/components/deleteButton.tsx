@@ -14,7 +14,8 @@ export const DeleteButton = ({id}:DeleteButtonProps) => {
     return (
         <button
             title="Eliminar plantilla"
-            className="text-red-400 hover:text-red-300 hover:shadow-[0_3px_2px_-1px_rgba(255,0,0,0.5)] transition-colors"
+            aria-label="Eliminar plantilla"
+            className="rounded-lg p-2 text-rose-300 transition hover:bg-rose-400/10 hover:text-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
             onClick={async () => {
                 const deleteOk = window.confirm('¿Estás seguro de que quieres eliminar esta plantilla?');
                 if (deleteOk) {

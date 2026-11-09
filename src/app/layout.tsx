@@ -17,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mackyna",
-  description: "Centro de entrenamiento personalizado",
+  title: "Mackyna | Entrenamiento personalizado en Neuquén",
+  description: "Entrenamiento personalizado, seguimiento de tu progreso y acompañamiento profesional en Mackyna, Neuquén.",
 };
 
 export default function RootLayout({
@@ -29,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-r from-black via-green-700 to-black min-h-screen overflow-x-scroll`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col overflow-x-hidden bg-[#0b0e0c]`}
       >
         <Providers>
           <Navbar />
-          {children}
+          <div className="flex w-full flex-1 flex-col">{children}</div>
         </Providers>
         <Footer />
       </body>

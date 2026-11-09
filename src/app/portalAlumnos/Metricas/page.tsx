@@ -60,9 +60,9 @@ export default async function MetricsPage({
 
     if (!user) {
       return (
-        <div className="flex h-screen items-center justify-center text-3xl text-white">
+        <main className="flex flex-1 items-center justify-center px-4 py-16 text-center text-lg text-slate-300">
           No se encontró el usuario.
-        </div>
+        </main>
       );
     }
 
@@ -74,24 +74,29 @@ export default async function MetricsPage({
     const userName = `${user.nombre} ${user.apellido ?? ""}`.trim();
 
     return (
-      <div className="h-full justify-center gap-10">
-        <h1 className="my-10 text-center text-4xl font-semibold text-slate-300">
-          Métricas de {userName}
-        </h1>
-
-        {canManageMetrics && (
-          <div className="my-5">
-            <NewMetric userID={targetUserId} userName={userName} />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#c8e994]">Seguimiento personal</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+              {canManageMetrics ? "Métricas" : "Mis métricas"}
+            </h1>
+            {canManageMetrics && <p className="mt-2 text-sm text-slate-400">Métricas de {userName}</p>}
           </div>
-        )}
+
+          {canManageMetrics && <NewMetric userID={targetUserId} userName={userName} />}
+        </header>
 
         {metrics.length === 0 ? (
-          <p className="my-10 text-center text-2xl text-white">
-            No se encontraron métricas para este usuario.
-          </p>
+          <section className="rounded-2xl border border-white/[0.08] bg-[#111713] px-5 py-14 text-center">
+            <h2 className="text-lg font-semibold text-white">Todavía no hay mediciones</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+              Cuando haya mediciones registradas, vas a poder consultar acá la evolución.
+            </p>
+          </section>
         ) : (
           <>
-            <div className="my-10 flex flex-wrap justify-center items-center gap-10">
+            <div className="mb-6 grid items-stretch gap-5 lg:grid-cols-[minmax(260px,0.85fr)_minmax(0,1.6fr)]">
               <MetricCard
                 userID={user._id.toString()}
                 birthDate={user.fecha_nacimiento}
@@ -99,21 +104,21 @@ export default async function MetricsPage({
                 objetivo={user.objetivo}
                 lesiones={user.lesiones}
               />
-              <Suspense fallback={<div className="text-4xl text-white">Cargando…</div>}>
+              <Suspense fallback={<div className="min-h-72 animate-pulse rounded-2xl border border-white/[0.08] bg-[#111713]" role="status" aria-label="Cargando gráfico" />}>
                 <Chart data={metrics} />
               </Suspense>
             </div>
             <MetricsTable data={metrics} />
           </>
         )}
-      </div>
+      </main>
     );
   } catch (error) {
     console.error("Error al cargar métricas:", error);
     return (
-      <div className="flex h-screen items-center justify-center text-3xl text-white">
+      <main className="flex flex-1 items-center justify-center px-4 py-16 text-center text-lg text-slate-300">
         No se pudieron cargar las métricas.
-      </div>
+      </main>
     );
   }
 }

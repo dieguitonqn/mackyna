@@ -236,64 +236,68 @@ const EditPlani = () => {
   const trainingDays = planilla.trainingDays || [];
 
   return (
-    <div className="flex flex-col items-center">
-      <form onSubmit={handleSubmit}>
+    <div className="mx-auto w-full max-w-7xl py-2">
+      <form onSubmit={handleSubmit} className="space-y-5">
           {queryPlaniID && (
-            <h1 className="text-3xl font-bold mb-4 text-slate-300 text-center">
+            <header className="mb-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b9dc75]">Rutinas</p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
               Editar planilla de {user?.nombre} {user?.apellido}
-            </h1>
+              </h1>
+            </header>
           )}
           {queryPlantillaID && (
-            <div className="bg-slate-500/30 p-6 rounded-lg shadow-lg mb-8">
-              <h1 className="text-3xl font-bold mb-6 text-slate-200 text-center">
-                Editar plantilla de <span className="text-emerald-400">{editedPlanti.nombreUser}</span>
+            <div className="rounded-2xl border border-white/[0.08] bg-[#111713] p-5 sm:p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b9dc75]">Plantillas</p>
+              <h1 className="mb-6 mt-2 text-3xl font-semibold tracking-tight text-white">
+                Editar plantilla de <span className="text-[#c8e994]">{editedPlanti.nombreUser}</span>
               </h1>
               <div className="space-y-4">
                 <div className="flex flex-col items-center">
-                  <p className="text-lg text-slate-300 font-semibold">
+                  <p className="text-sm font-medium text-slate-400">
                     Nombre de la plantilla:
                   </p>
-                  <p className="text-xl text-emerald-400">{editedPlanti.nombre}</p>
+                  <p className="text-lg text-white">{editedPlanti.nombre}</p>
                 </div>
                 <div className="flex flex-col items-center">
-                  <p className="text-lg text-slate-300 font-semibold">
+                  <p className="text-sm font-medium text-slate-400">
                     Descripción:
                   </p>
-                  <p className="text-xl text-emerald-400">{editedPlanti.descripcion}</p>
+                  <p className="text-lg text-white">{editedPlanti.descripcion}</p>
                 </div>
               </div>
             </div>
           )}
           {/* Aquí puedes agregar un formulario para editar la planilla */}
           {!queryPlantillaID && (
-            <div className="mb-4">
-              <label className="block text-gray-300 text-sm font-bold mb-2">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6">
+              <label className="mb-2 block text-sm font-medium text-slate-300">
                 Mes
               </label>
               <input
                 type="text"
                 value={planilla.month}
                 onChange={(e) => handlePlaniChange("month", e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+                className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-3 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               />
             </div>
           )}
           {!queryPlantillaID && (
-            <div className="mb-4">
-              <label className="block text-gray-300 text-sm font-bold mb-2">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6">
+              <label className="mb-2 block text-sm font-medium text-slate-300">
                 Año
               </label>
               <input
                 type="text"
                 value={planilla.year}
                 onChange={(e) => handlePlaniChange("year", e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+                className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-3 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               />
             </div>
           )}
           {!queryPlantillaID && (
-            <div className="mb-4">
-              <label className="block text-gray-300 text-sm font-bold mb-2">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6">
+              <label className="mb-2 block text-sm font-medium text-slate-300">
                 Fecha de Inicio
               </label>
 
@@ -305,13 +309,13 @@ const EditPlani = () => {
                     : ""
                 }
                 onChange={(e) => setStartDate(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+                className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-3 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               />
             </div>
           )}
           {!queryPlantillaID && (
-            <div className="mb-4">
-              <label className="block text-gray-300 text-sm font-bold mb-2">
+            <div className="rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6">
+              <label className="mb-2 block text-sm font-medium text-slate-300">
                 Fecha de Fin
               </label>
 
@@ -323,19 +327,19 @@ const EditPlani = () => {
                     : ""
                 }
                 onChange={(e) => setEndDate(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-slate-900/80"
+                className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-3 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               />
             </div>
           )}
           {trainingDays.map((trainingDay, dayIndex) => (
             <div
-              className="flex flex-col items-center  bg-slate-500/30 my-5 p-2"
+              className="my-5 flex flex-col items-center rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6"
               key={dayIndex}
             >
               <h2 className="text-2xl font-bold mb-2">{trainingDay.day}</h2>
               <div
                 key={dayIndex * 10}
-                className="my-6 grid grid-cols-4 gap-4 items-start"
+                className="my-6 grid w-full grid-cols-1 items-start gap-4 sm:grid-cols-2 xl:grid-cols-4"
               >
                 {trainingDay.Bloque1 !== undefined && (
                   <div>
@@ -376,7 +380,7 @@ const EditPlani = () => {
               </div>
               <button
                 onClick={(e) => handleDeleteDay(e, dayIndex)}
-                className="bg-red-500/50 px-2 py-1 m-2 rounded-md"
+                className="m-2 rounded-xl border border-rose-300/15 bg-rose-400/[0.08] px-4 py-2 text-sm font-medium text-rose-200 transition hover:bg-rose-400/[0.16]"
               >
                 Borrar Día
               </button>
@@ -385,17 +389,17 @@ const EditPlani = () => {
 
           <button
             onClick={(e) => handleAddDay(e, trainingDays.length)}
-            className="flex m-auto bg-blue-500/60 px-2 py-1 rounded-md my-4"
+            className="mx-auto my-4 flex min-h-11 items-center rounded-xl border border-[#b9dc75]/20 bg-[#b9dc75]/[0.1] px-4 py-2 text-sm font-medium text-[#d5ecb7] transition hover:bg-[#b9dc75]/[0.18]"
           >
             Agregar Día
           </button>
           {!queryPlantillaID && (
-            <button className="flex m-auto bg-green-600/60 px-2 py-1 rounded-md">
+            <button className="mx-auto flex min-h-11 items-center rounded-xl bg-[#b9dc75] px-5 py-2 font-semibold text-[#172016] transition hover:bg-[#c9e991]">
               Guardar
             </button>
           )}
           {queryPlantillaID && (
-            <button className="flex m-auto bg-green-600/60 px-2 py-1 rounded-md">
+            <button className="mx-auto flex min-h-11 items-center rounded-xl bg-[#b9dc75] px-5 py-2 font-semibold text-[#172016] transition hover:bg-[#c9e991]">
               Guardar Plantilla
             </button>
           )}

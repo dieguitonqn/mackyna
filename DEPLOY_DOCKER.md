@@ -13,13 +13,12 @@ Construir una etiqueta inmutable para pruebas:
 ```bash
 docker buildx build \
   --platform linux/amd64 \
-  --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY='CLAVE_PUBLICA_MAPS' \
   --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY='CLAVE_PUBLICA_TURNSTILE' \
   --tag ghcr.io/OWNER/mackyna:docker-test-2026-11-02 \
   --load .
 ```
 
-Las claves `NEXT_PUBLIC_*` son públicas y quedan incluidas en el JavaScript del navegador durante el build; restringir la clave de Maps por dominio. No pasar secretos de servidor como argumentos de build.
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY` es pública y queda incluida en el JavaScript del navegador durante el build. El mapa usa OpenStreetMap y no requiere una clave. No pasar secretos de servidor como argumentos de build.
 
 Publicar en GHCR:
 

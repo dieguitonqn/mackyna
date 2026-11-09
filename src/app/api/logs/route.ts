@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import logger from '@/lib/logger'; // Tu logger de Winston
 import { getActiveSession } from '@/lib/getActiveSession';
+import { recordAdminEvent } from '@/lib/adminEvents';
 
 const isStaff = (session: Awaited<ReturnType<typeof getActiveSession>>) =>
   ['admin', 'teacher', 'teach'].includes(session?.user?.rol ?? '');
@@ -62,6 +63,20 @@ export async function POST(request: NextRequest) {
         break;
       default:
         logger.info(`[CLIENT] ${message}`, clientInfo);
+    }
+
+    if (level === 'error' || level === 'warn') {
+      let route: string | null = null;
+      if (typeof url === 'string') {
+        try { route = new URL(url, 'http://localhost').pathname; } catch { route = null; }
+      }
+      await recordAdminEvent({
+        type: level === 'error' ? 'app_error' : 'app_warning',
+        actorId: session.user?.id?.toString() ?? null,
+        action: level,
+        message: message.replace(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/g, '[email]'),
+        route,
+      });
     }
 
     return NextResponse.json({ success: true });

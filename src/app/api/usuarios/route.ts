@@ -7,6 +7,7 @@ import { getActiveSession } from "@/lib/getActiveSession";
 import { NextRequest } from 'next/server';
 import logger from '@/lib/logger';
 import { parseDateOnlyToUTC } from '@/utils/dateOnly';
+import { recordAdminEvent } from '@/lib/adminEvents';
 
 const isStaff = (session: Session | null) =>
     ['admin', 'teacher', 'teach'].includes(session?.user?.rol ?? '');
@@ -274,6 +275,13 @@ export const PUT = async (req: NextRequest) => {
             return new NextResponse("Usuario no encontrado", { status: 404 });
         }
 
+        await recordAdminEvent({
+            type: 'admin_action',
+            actorId: session.user.id?.toString(),
+            targetId: String(updatedUser._id),
+            action: 'user_updated',
+        });
+
         logger.info(`[PUT] Usuario actualizado: ${updatedUser.email}; cambio de email pendiente: ${emailChangePending}`);
         return NextResponse.json({
             user: updatedUser,
@@ -335,6 +343,13 @@ export const DELETE = async (req: NextRequest) => {
             return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
         }
 
+        await recordAdminEvent({
+            type: 'admin_action',
+            actorId: session.user.id?.toString(),
+            targetId: String(deletedUser._id),
+            action: 'user_deleted',
+        });
+
         logger.info(`[DELETE] Usuario eliminado: ${deletedUser.email}`);
         return NextResponse.json({ message: "Usuario eliminado con éxito", id: deletedUser._id.toString() }, { status: 200 });
 
@@ -379,6 +394,13 @@ export async function PATCH(req: Request) {
         if (!updatedUser) {
             return new Response('Usuario no encontrado', { status: 404 });
         }
+
+        await recordAdminEvent({
+            type: 'admin_action',
+            actorId: session.user.id?.toString(),
+            targetId: String(updatedUser._id),
+            action: habilitado ? 'account_enabled' : 'account_disabled',
+        });
 
         return NextResponse.json({ id: updatedUser._id.toString(), habilitado: updatedUser.habilitado }, { status: 200 });
     } catch (error) {

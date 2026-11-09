@@ -52,10 +52,8 @@ export const SignUpForm = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // setError(null);
         setIsLoading(true);
         try {
-            // console.log(formData);
             const response = await fetch('/api/signup', {
                 method: 'POST',
                 headers: {
@@ -64,18 +62,28 @@ export const SignUpForm = () => {
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert(errorData.message || "Ha ocurrido un error al registrarte");
-            } else {
-                alert("Usuario creado correctamente");
-                router.push("/login");
+            let responseData: { message?: unknown } | null = null;
+            try {
+                responseData = await response.json();
+            } catch {
+                // A non-JSON response is handled with the generic message below.
             }
 
-            const data = await response.json();
-            console.log('Datos enviados correctamente:', data);
-        } catch (error) {
-            console.log('Error:', error);
+            const message = typeof responseData?.message === 'string'
+                ? responseData.message
+                : null;
+
+            if (!response.ok) {
+                alert(message || "No se pudo procesar el registro. Revisá los datos e intentá nuevamente.");
+                return;
+            }
+
+            alert(message || "Solicitud recibida. Quedará pendiente de aprobación.");
+            router.push("/login");
+        } catch {
+            alert("No se pudo conectar con el servidor. Intentá nuevamente.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -93,6 +101,8 @@ export const SignUpForm = () => {
                 <input
                     type="text"
                     id="nombre"
+                    required
+                    maxLength={100}
                     className="border-slate-500 border rounded-sm p-1"
                     onChange={(e) => setFormData((prev) => ({ ...prev, nombre: e.target.value }))}
                 />
@@ -101,6 +111,8 @@ export const SignUpForm = () => {
                 <input
                     type="text"
                     id="apellido"
+                    required
+                    maxLength={100}
                     className="border-slate-500 border rounded-sm p-1"
                     onChange={(e) => setFormData((prev) => ({ ...prev, apellido: e.target.value }))}
                 />
@@ -109,6 +121,8 @@ export const SignUpForm = () => {
                 <input
                     type="email"
                     id="email"
+                    required
+                    maxLength={254}
                     className="border-slate-500 border rounded-sm p-1"
                     onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value.toLocaleLowerCase() }))}
                 />
@@ -117,6 +131,8 @@ export const SignUpForm = () => {
                 <input
                     type="password"
                     id="pwd"
+                    required
+                    maxLength={1024}
                     className="border-slate-500 border rounded-sm p-1"
                     onChange={(e) => setFormData((prev) => ({ ...prev, pwd: e.target.value }))}
                 />

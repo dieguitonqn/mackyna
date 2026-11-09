@@ -52,29 +52,27 @@ const AutoCompleteInput: React.FC<AutoCompleteProps> = ({ users, onSelect }) => 
   };
 
   return (
-    <div className="relative w-full md:max-w-2xl mx-auto dark:bg-slate-800 rounded-xl shadow-lg p-1">
+    <div className="relative mx-auto w-full md:max-w-2xl">
       <input
       type="text"
       value={query}
       onChange={handleInputChange}
       placeholder="Buscar usuario..."
-      className={`w-full px-4 py-2 ${
-        !isValidSelection ? 'border-4 border-red-500 animate-pulse' : 'border border-gray-300'
-      } bg-slate-900/80 text-slate-300 rounded-lg focus:outline-none focus:ring-2 ${
-        !isValidSelection ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+      className={`w-full rounded-xl bg-[#0b0e0c] px-4 py-3 text-slate-100 outline-none transition focus:ring-2 ${
+        !isValidSelection ? 'border border-rose-400 focus:ring-rose-400/30' : 'border border-white/10 focus:border-[#b9dc75]/50 focus:ring-[#b9dc75]/20'
       }`}
       required
       />
       {showDropdown && (
-      <ul className="absolute top-full left-0 right-0 border-2 border-gray-300 bg-gray-800 text-gray-300 rounded-lg shadow-lg z-10 mt-1">
+      <ul className="absolute left-0 right-0 top-full z-20 mt-1 max-h-80 overflow-y-auto rounded-xl border border-white/10 bg-[#111713] text-slate-200 shadow-2xl">
         {filteredUsers.map((user) => (
         <li
         key={typeof user._id === "object" ? user._id.toString() : user._id}
           onClick={() => handleSelect(user)}
-          className="px-4 py-2 cursor-pointer hover:bg-gray-300 hover:text-gray-700 border-b text-sm"
+          className="cursor-pointer border-b border-white/[0.06] px-4 py-3 text-sm transition hover:bg-white/[0.06]"
         >
           <p className="font-semibold">{user.nombre + ", " + user.apellido }</p>
-          <p className="italic font-extralight text-sm">{" email: " + user.email}</p>
+          <p className="mt-1 text-xs text-slate-400">{"Email: " + user.email}</p>
         </li>
         ))}
       </ul>

@@ -95,27 +95,29 @@ const Usuarios: React.FC = () => {
 }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6 text-center">Lista de Usuarios</h1>
+    <div className="mx-auto max-w-[1450px] px-1 py-4 text-slate-100 sm:px-2 sm:py-6">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-white/[0.07] pb-5">
+        <div><p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a9cf6a]">Mackyna · Administración</p><h1 className="text-2xl font-semibold tracking-tight text-white">Usuarios</h1><p className="mt-1 text-sm text-slate-500">Buscar y administrar las cuentas de la plataforma.</p></div>
+      </div>
 
-      {loading && <p className="text-center">Cargando usuarios...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+      {loading && <p className="rounded-xl border border-white/[0.07] bg-[#151b20] px-5 py-10 text-center text-sm text-slate-400">Cargando usuarios...</p>}
+      {error && <p className="rounded-xl border border-rose-400/20 bg-rose-400/[0.08] p-4 text-sm text-rose-200">{error}</p>}
 
       {!loading && !error && (
         <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border border-gray-200 text-sm">
+          <table className="w-full border-collapse overflow-hidden rounded-2xl border border-white/[0.08] bg-[#151b20] text-sm">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-[#1c252b]">
                 {['Nombre', 'Apellido', 'Email', 'Rol', 'Acciones'].map((heading, idx) => (
                   <th
                     key={idx}
-                    className="border border-gray-300 px-2 py-2 text-left text-gray-600"
+                    className="border-b border-white/[0.07] px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-400"
                   >
                     {heading}
                     {idx < 4 && (
                       <input
                         type="text"
-                        className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="mt-2 block w-full rounded-lg border border-white/10 bg-[#10171c] px-2.5 py-2 text-xs font-normal normal-case tracking-normal text-slate-200 outline-none placeholder:text-slate-600 focus:border-[#a9cf6a]/50"
                         placeholder={`Filtrar por ${heading.toLowerCase()}`}
                         value={filters[heading.toLowerCase() as keyof User]}
                         onChange={(e) =>
@@ -134,23 +136,23 @@ const Usuarios: React.FC = () => {
               {filteredUsers.map((user, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-200 border-b last:border-b-0"
+                  className="border-b border-white/[0.05] text-slate-300 transition hover:bg-white/[0.035] last:border-b-0"
                 >
                   <td className="px-2 py-2">{user.nombre}</td>
                   <td className="px-2 py-2">{user.apellido}</td>
                   <td className="px-2 py-2">{user.email}</td>
                   <td className="px-2 py-2">{user.rol}</td>
-                  <td className="px-2 py-2 flex flex-col gap-1 items-center">
+                  <td className="flex flex-col items-center gap-1 px-2 py-2">
                     {(user.rol === 'user' || canManageStaffAccounts) && (
                       <button
-                        className="w-full px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
+                        className="w-full rounded-lg bg-[#a6c961] px-2 py-1.5 text-xs font-semibold text-[#172018] transition hover:bg-[#badb7d]"
                         onClick={() => handleEdit(user.email)}
                       >
                         Editar
                       </button>
                     )}
                     {(user.rol === 'user' || canManageStaffAccounts) && (
-                      <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
+                      <button className="w-full rounded-lg border border-rose-400/20 bg-rose-400/[0.08] px-2 py-1.5 text-xs font-medium text-rose-300 transition hover:bg-rose-400/[0.16]"
                       onClick={() => handleDelete(user._id)}>
                         Borrar
                       </button>

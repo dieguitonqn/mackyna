@@ -190,45 +190,50 @@ const Usuarios: React.FC = () => {
     }
   };
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6 text-center">Listado de Alumnos</h1>
-      {/* <div className="flex justify-center gap-8 mb-6 py-3 px-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg shadow-sm"> */}
-      <div className="flex justify-center gap-8 mb-1 py-3 px-4 bg-gray-800 rounded-md shadow-sm">
-        <div className="text-center">
-          <span className="text-gray-300 text-sm">Total alumnos</span>
-          <p className="text-lg font-semibold text-indigo-600">{users.length}</p>
+    <div className="mx-auto w-full max-w-7xl py-2">
+      <header className="mb-7">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b9dc75]">Gestión del equipo</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Alumnos</h1>
+        <p className="mt-2 text-sm text-slate-400">Buscá perfiles y accedé rápidamente a sus rutinas, métricas y datos.</p>
+      </header>
+
+      <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#111713] px-5 py-4">
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Total alumnos</span>
+          <p className="mt-2 text-2xl font-semibold text-white">{users.length}</p>
         </div>
-        <div className="text-center">
-          <span className="text-gray-300 text-sm">Alumnos activos</span>
-          <p className="text-lg font-semibold text-green-600">{users.filter(user => user.habilitado).length}</p>
+        <div className="rounded-2xl border border-white/[0.08] bg-[#111713] px-5 py-4">
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Alumnos activos</span>
+          <p className="mt-2 text-2xl font-semibold text-[#c8e994]">{users.filter(user => user.habilitado).length}</p>
         </div>
         {users.length !== filteredUsers.length && (
-          <div className="text-center">
-        <span className="text-gray-300 text-sm">Filtrados</span>
-        <p className="text-lg font-semibold text-blue-600">{filteredUsers.length}</p>
+          <div className="rounded-2xl border border-white/[0.08] bg-[#111713] px-5 py-4">
+            <span className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500">Resultados</span>
+            <p className="mt-2 text-2xl font-semibold text-white">{filteredUsers.length}</p>
           </div>
         )}
       </div>
 
-      {loading && <p className="text-center">Cargando usuarios...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+      {loading && <p className="rounded-2xl border border-white/[0.08] bg-[#111713] p-6 text-center text-sm text-slate-400">Cargando usuarios...</p>}
+      {error && <p className="rounded-2xl border border-rose-300/15 bg-rose-400/[0.07] p-4 text-center text-sm text-rose-200">{error}</p>}
 
       {!loading && !error && (
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border  bg-gray-800 border-gray-500 text-sm rounded-md">
+        <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111713] shadow-[0_18px_50px_-35px_rgba(0,0,0,0.9)]">
+          <div className="overflow-x-auto">
+          <table className="portal-profes-table min-w-[1050px] w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="text-gray-200">
+              <tr className="bg-[#172019] text-slate-200">
                 {['Nombre', 'Apellido', 'Email', 'Última Planilla', 'Última medición', 'Cumpleaños', 'Acciones'].map(
                   (heading, idx) => (
                     <th
                       key={idx}
-                      className="border border-gray-500 px-2 py-2 text-center"
+                      className="border-b border-white/[0.08] px-3 py-3 text-center font-medium"
                     >
                       {heading}
                       {idx < 3 && (
                         <input
                           type="text"
-                          className="mt-1 block w-full px-2 py-1 border border-gray-500 rounded text-black text-sm"
+                          className="mt-2 block w-full rounded-lg border border-white/10 bg-black/20 px-2.5 py-2 text-left text-xs font-normal text-white placeholder:text-slate-500 focus:border-[#b9dc75]/50 focus:outline-none focus:ring-2 focus:ring-[#b9dc75]/15"
                           placeholder={`Filtrar por ${heading.toLowerCase()}`}
                           value={
                             filters[heading.toLowerCase() as keyof FilteredUser] || ''
@@ -250,13 +255,13 @@ const Usuarios: React.FC = () => {
               {filteredUsers.map((user, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-400 hover:text-black text-gray-300 border-b border-gray-500 last:border-b-0"
+                  className="border-b border-white/[0.06] text-slate-300 transition last:border-0 hover:bg-white/[0.035]"
                 >
-                  <td className="px-2 py-2">{user.nombre}</td>
-                  <td className="px-2 py-2">{user.apellido || ''}</td>
-                  <td className="px-2 py-2">{user.email}</td>
+                  <td className="px-3 py-3 font-medium text-white">{user.nombre}</td>
+                  <td className="px-3 py-3">{user.apellido || ''}</td>
+                  <td className="px-3 py-3">{user.email}</td>
 
-                  <td className="px-2 py-2">
+                  <td className="whitespace-nowrap px-3 py-3">
                     {user.ultima_plani
                       ? formatDateOnlyEs(user.ultima_plani, {
                         day: '2-digit',
@@ -265,7 +270,7 @@ const Usuarios: React.FC = () => {
                       })
                       : '---'}
                   </td>
-                  <td className="px-2 py-2">
+                  <td className="whitespace-nowrap px-3 py-3">
                     {user.ultima_metrica
                       ? formatDateOnlyEs(user.ultima_metrica, {
                         day: '2-digit',
@@ -274,7 +279,7 @@ const Usuarios: React.FC = () => {
                       })
                       : '---'}
                   </td>
-                  <td className="px-2 py-2">
+                  <td className="whitespace-nowrap px-3 py-3">
                     {user.fecha_nacimiento
                       ? formatDateOnlyEs(user.fecha_nacimiento, {
                         day: 'numeric',
@@ -282,34 +287,38 @@ const Usuarios: React.FC = () => {
                       })
                       : '---'}
                   </td>
-                  <td className="px-2 py-2 flex flex-row justify-center gap-3 items-center">
+                  <td className="px-3 py-3">
+                    <div className="flex min-w-[190px] items-center justify-center gap-3">
                     <Tooltip text="Ver Planillas">
                       <Link
                         href={`../portalAlumnos/Planilla?id=${user._id}`}
-                        className="text-green-600 hover:text-green-800 transition-colors"
+                        aria-label={`Ver planillas de ${user.nombre} ${user.apellido || ''}`}
+                        className="rounded-lg p-2 text-[#c8e994] transition hover:bg-[#c8e994]/10 hover:text-[#e0f5c2]"
                          onClick={handleSetScrollY}
                       >
-                        <FaClipboardList className="h-5 w-5" />
+                        <FaClipboardList className="h-4 w-4" />
                       </Link>
                     </Tooltip>
 
                     <Tooltip text="Ver Métricas">
                       <Link
                         href={`../portalAlumnos/Metricas?id=${user._id}`}
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                        aria-label={`Ver métricas de ${user.nombre} ${user.apellido || ''}`}
+                        className="rounded-lg p-2 text-sky-300 transition hover:bg-sky-300/10 hover:text-sky-200"
                        onClick={handleSetScrollY}
                       >
-                        <FaChartBar className="h-5 w-5" />
+                        <FaChartBar className="h-4 w-4" />
                       </Link>
                     </Tooltip>
 
                     <Tooltip text="Ver Perfil">
                       <Link
                         href={`../portalAlumnos/Perfil?id=${user._id}`}
-                        className="text-cyan-600 hover:text-cyan-800 transition-colors"
+                        aria-label={`Ver perfil de ${user.nombre} ${user.apellido || ''}`}
+                        className="rounded-lg p-2 text-cyan-300 transition hover:bg-cyan-300/10 hover:text-cyan-200"
                         onClick={handleSetScrollY}
                       >
-                        <FaUserCircle className="h-5 w-5" />
+                        <FaUserCircle className="h-4 w-4" />
                       </Link>
                     </Tooltip>
 
@@ -324,9 +333,10 @@ const Usuarios: React.FC = () => {
                               handleResetPwd(user._id.toString());
                             }
                           } }
-                          className="text-yellow-600 hover:text-yellow-800 transition-colors"
+                          aria-label={`Resetear contraseña de ${user.nombre} ${user.apellido || ''}`}
+                          className="rounded-lg p-2 text-amber-300 transition hover:bg-amber-300/10 hover:text-amber-200"
                         >
-                          <FaKey className="h-5 w-5" />
+                          <FaKey className="h-4 w-4" />
                         </button>
                       </Tooltip>
                     )}
@@ -343,27 +353,31 @@ const Usuarios: React.FC = () => {
                                 handleDeleteUser(user._id.toString());
                               }
                             }}
-                            className="text-red-600 hover:text-red-800 transition-colors"
+                            aria-label={`Borrar usuario ${user.nombre} ${user.apellido || ''}`}
+                            className="rounded-lg p-2 text-rose-300 transition hover:bg-rose-300/10 hover:text-rose-200"
                           >
-                            <FaTrash className="h-5 w-5" />
+                            <FaTrash className="h-4 w-4" />
                           </button>
                         </Tooltip>
 
                         <Tooltip text={user.habilitado ? 'Deshabilitar Usuario' : 'Habilitar Usuario'}>
                           <button
                             onClick={() => handleToggleHabilitado(user._id.toString(), user.habilitado || false)}
-                            className={`${user.habilitado ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
+                            aria-label={`${user.habilitado ? 'Deshabilitar' : 'Habilitar'} usuario ${user.nombre} ${user.apellido || ''}`}
+                            className={`${user.habilitado ? 'text-[#c8e994] hover:bg-[#c8e994]/10' : 'text-rose-300 hover:bg-rose-300/10'} rounded-lg p-2 transition-colors`}
                           >
-                            {user.habilitado ? <FaToggleOn className="h-5 w-5" /> : <FaToggleOff className="h-5 w-5" />}
+                            {user.habilitado ? <FaToggleOn className="h-4 w-4" /> : <FaToggleOff className="h-4 w-4" />}
                           </button>
                         </Tooltip>
                       </>
                     )}
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
           {selectedEmail && (
             <EditUserForm email={selectedEmail} onClose={handleClose} />
           )}

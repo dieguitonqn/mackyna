@@ -86,36 +86,36 @@ function NewMetric(
         }
     };
     return (
-        <div>
-            <div className="flex justify-end mr-4">
+        <div className="flex justify-end">
                 <button
-                    className="bg-blue-600 text-slate-300 px-2 py-1 rounded-sm hover:text-white hover:font-semibold"
+                    type="button"
+                    className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#b9dc75] px-4 py-2.5 text-sm font-semibold text-[#172016] transition hover:bg-[#c9e991] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
                     onClick={handleClick}
                 >
                     Agregar medición
                 </button>
-            </div>
             {selectedNewMetric && (
 
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-scroll">
-                    <div className="bg-white p-6 rounded shadow-lg w-full mx-1 md:w-3/4 max-w-lg">
-                        <div
-                            className=' flex justify-end'>
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+                    <div className="my-auto max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-[#111713] p-5 shadow-2xl sm:p-6">
+                        <div className="mb-5 flex items-start justify-between gap-4">
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c8e994]">Nueva medición</p>
+                            <h2 className="mt-1 text-xl font-semibold text-white">{userName}</h2>
+                          </div>
                             <button
-                                className="text-white bg-red-500 rounded-md p-1 font-bold text-xl"
+                                type="button"
+                                aria-label="Cerrar"
+                                className="rounded-lg p-2 text-slate-400 transition hover:bg-white/[0.06] hover:text-white"
                                 onClick={closeModal}
                             >
-                                <IoCloseCircleSharp className='h-7 w-7' />
+                                <IoCloseCircleSharp className="h-7 w-7" />
                             </button>
                         </div>
 
-                        
-                                <div className='my-2'>
-                                    Medición de <strong>{userName}</strong>
-                                </div>
-                                <form onSubmit={handleSubmit} className='flex flex-col justify-center'>
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             Fecha de Medición:
                                         </label>
                                         <input
@@ -123,12 +123,12 @@ function NewMetric(
                                             name="date"
                                             value={formData.date}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             Peso:
                                         </label>
                                         <input
@@ -136,12 +136,12 @@ function NewMetric(
                                             name="weigth"
                                             value={formData.weigth}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             IMC:
                                         </label>
                                         <input
@@ -149,13 +149,13 @@ function NewMetric(
                                             name="IMC"
                                             value={formData.IMC}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
 
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             %Grasa Corporal:
                                         </label>
                                         <input
@@ -163,13 +163,13 @@ function NewMetric(
                                             name="body_fat"
                                             value={formData.body_fat}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
 
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             %Musculo Corporal:
                                         </label>
                                         <input
@@ -177,13 +177,13 @@ function NewMetric(
                                             name="body_musc"
                                             value={formData.body_musc}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
 
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             %Grasa Visceral:
                                         </label>
                                         <input
@@ -191,13 +191,13 @@ function NewMetric(
                                             name="visceral_fat"
                                             value={formData.visceral_fat}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
 
-                                    <div className="w-1/2 m-auto my-2">
-                                        <label className="block text-sm font-medium text-gray-700 capitalize">
+                                    <div>
+                                        <label className="mb-1 block text-sm font-medium text-slate-300">
                                             Edad Corporal:
                                         </label>
                                         <input
@@ -205,7 +205,7 @@ function NewMetric(
                                             name="body_age"
                                             value={formData.body_age}
                                             onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                             required
                                         />
                                     </div>
@@ -214,14 +214,14 @@ function NewMetric(
                                     <input type="hidden" name="" value={formData.userID} />
                                     <button
                                         type="submit"
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-1/2 m-auto"
+                                        className="col-span-full mt-2 min-h-11 rounded-xl bg-[#b9dc75] px-4 py-2.5 text-sm font-semibold text-[#172016] transition hover:bg-[#c9e991]"
                                     >
                                         Guardar
                                     </button>
                                 </form>
 
-                            </div>
-                        </div>
+                    </div>
+                </div>
                     
             )}
 

@@ -42,6 +42,34 @@ body {
   transform: scale(1.2);
 }
 
+.gym-gallery {
+  --swiper-navigation-color: #c8e994;
+  --swiper-pagination-color: #b9dc75;
+  --swiper-pagination-bullet-inactive-color: #ffffff;
+  --swiper-pagination-bullet-inactive-opacity: 0.45;
+}
+
+.gym-gallery .swiper-button-next,
+.gym-gallery .swiper-button-prev {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 9999px;
+  background: rgb(9 14 10 / 54%);
+  backdrop-filter: blur(8px);
+}
+
+.gym-gallery .swiper-button-next::after,
+.gym-gallery .swiper-button-prev::after {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gym-gallery .swiper-pagination-bullet {
+  width: 7px;
+  height: 7px;
+}
+
 @media print {
     @page {
         margin: 1cm;
@@ -110,5 +138,92 @@ body {
         margin: 0 !important;
         padding: 0 !important;
     }
+}
+
+.portal-profes-table thead tr {
+  background: #172019;
+  color: #e2eadc;
+}
+
+.portal-profes-table thead th {
+  border-color: rgb(255 255 255 / 8%);
+  padding: 0.8rem 0.75rem;
+  font-weight: 600;
+  vertical-align: top;
+}
+
+.portal-profes-table thead input {
+  display: block;
+  width: 100%;
+  margin-top: 0.55rem;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 0.65rem;
+  background: rgb(0 0 0 / 22%);
+  padding: 0.5rem 0.65rem;
+  color: #f8fafc;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.portal-profes-table thead input::placeholder {
+  color: #647067;
+}
+
+.portal-profes-table thead input:focus {
+  border-color: rgb(185 220 117 / 55%);
+  outline: 2px solid rgb(185 220 117 / 18%);
+  outline-offset: 1px;
+}
+
+.portal-profes-table tbody tr {
+  border-color: rgb(255 255 255 / 7%);
+  background: #111713;
+  color: #cbd5e1;
+  transition: background-color 150ms ease;
+}
+
+.portal-profes-table tbody tr:hover {
+  background: rgb(255 255 255 / 3.5%);
+  color: #f8fafc;
+}
+
+.portal-profes-table tbody td {
+  border-color: rgb(255 255 255 / 6%);
+  padding: 0.8rem 0.75rem;
+  vertical-align: middle;
+}
+
+.portal-profes-exercises-table {
+  table-layout: fixed;
+}
+
+.portal-profes-exercises-table thead th {
+  padding: 0.75rem;
+  vertical-align: top;
+}
+
+.portal-profes-filter-title {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+
+.portal-profes-exercises-table thead input,
+.portal-profes-filter-spacer {
+  box-sizing: border-box;
+  height: 2.4rem;
+  margin-top: 0.55rem;
+}
+
+.portal-profes-exercises-table thead input {
+  padding: 0 0.65rem;
+  text-overflow: ellipsis;
+}
+
+.portal-profes-filter-spacer {
+  display: block;
 }
 

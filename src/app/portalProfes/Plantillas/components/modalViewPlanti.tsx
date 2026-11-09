@@ -17,7 +17,7 @@ export const ModalViewPlanti = ({ plantilla }: { plantilla: IPlantillaSId }) => 
     <div>
       <button
         title="Ver Plantilla"
-        className="py-2 text-gray-400 hover:text-gray-300 hover:shadow-[0_2px_2px_-1px_rgba(255,255,255,0.5)] transition-all duration-400"
+        className="rounded-lg p-2 text-slate-400 transition hover:bg-[#b9dc75]/[0.08] hover:text-[#c6e58d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
         onClick={toggleModal}
       >
         <FaRegEye className="h-6 w-6" />
@@ -26,86 +26,68 @@ export const ModalViewPlanti = ({ plantilla }: { plantilla: IPlantillaSId }) => 
 
       {modal && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-start justify-center z-50 overflow-y-auto print:overflow-visible print:static print:bg-white print:bg-opacity-100"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-2 backdrop-blur-sm print:overflow-visible print:static print:bg-white print:bg-opacity-100 sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="planilla-title"
         >
           <div
-            className="bg-gray-900 rounded-lg shadow-xl w-full md:w-3/4 max-w-5xl print:shadow-none print:w-full print:max-w-none"
+            className="w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-[#101612] shadow-2xl print:w-full print:max-w-none print:rounded-none print:border-0 print:shadow-none"
             id="printable-content"
           >
-            <div className="sticky top-0 bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center gap-4 print:hidden">
-              <div className="flex gap-2">
-                <h2 className="text-xl font-bold text-gray-100">{plantilla.nombre}</h2>
+            <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/10 bg-[#111713]/95 p-4 backdrop-blur print:hidden">
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#b9dc75]">Vista previa</p>
+                <h2 id="planilla-title" className="mt-1 truncate text-lg font-semibold text-white">{plantilla.nombre}</h2>
               </div>
               <button
-                className="p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                className="rounded-xl p-2 text-slate-400 transition hover:bg-rose-400/10 hover:text-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
                 onClick={toggleModal}
                 aria-label="Cerrar planilla"
               >
-                <IoCloseCircleSharp className="h-9 w-9" />
+                <IoCloseCircleSharp className="h-7 w-7" />
               </button>
             </div>
 
-            <div className="p-6 print-content">
+            <div className="p-4 print-content sm:p-7 lg:p-9">
               <div className="max-w-4xl mx-auto">
                 {plantilla.trainingDays.map((day, dayIndex) => (
                   <div
                     key={dayIndex}
-                    className="mb-6 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden"
+                    className="training-day mb-5 overflow-hidden rounded-2xl border border-white/10 bg-[#121a15]"
                   >
-                    <h3 className="text-xl font-bold text-center py-3 bg-gray-700 border-b border-gray-600 text-gray-100">
+                    <h3 className="border-b border-white/10 bg-[#18231b] px-4 py-4 text-base font-semibold text-white sm:px-5">
                       {day.day}
                     </h3>
-                    <div className="p-4 space-y-4">
+                    <div className="space-y-4 p-3 sm:p-5">
                       {Object.entries(day).map(
                         ([bloque, ejercicios]) =>
                           bloque.startsWith("Bloque") &&
                           ejercicios.length > 0 && (
                             <div
                               key={bloque}
-                              className="bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-700"
+                              className="rounded-2xl border border-white/[0.08] bg-[#0e1410] p-4 sm:p-5"
                             >
-                              <h4 className="text-lg font-semibold text-gray-100 mb-3 flex items-center gap-2">
-                                <FaLayerGroup className="text-emerald-400" />
+                              <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#d7f0b2]">
+                                <FaLayerGroup className="text-[#b9dc75]" />
                                 {bloque}
                               </h4>
-                              <ul className="space-y-4">
+                              <ul className="space-y-3">
                                 {ejercicios.map(
                                   (exercise: Exercise, exerciseIndex: number) => (
                                     <li
                                       key={exerciseIndex}
-                                      className="pb-4 border-b border-gray-700 last:border-0"
+                                      className="rounded-xl border border-white/[0.07] bg-white/[0.025] p-4"
                                     >
-                                      <div className="grid gap-2 text-gray-100">
-                                        <p className="flex items-center gap-2 text-sm">
-                                          <FaDumbbell className="text-emerald-400" />
-                                          <span className="text-gray-400">
-                                            Ejercicio:
-                                          </span>
-                                          <span className="font-bold text-base text-gray-100">
-                                            {exercise.name}
-                                          </span>
+                                      <div className="grid gap-3 text-slate-200">
+                                        <p className="flex items-center gap-2 text-sm font-semibold text-white">
+                                          <FaDumbbell className="text-[#b9dc75]" />
+                                          {exercise.name}
                                         </p>
-                                        <p className="flex items-center gap-2 text-sm">
-                                          <FaListOl className="text-emerald-400" />
-                                          <span className="text-gray-400">
-                                            Repeticiones:
-                                          </span>
-                                          <span className="font-bold text-base text-gray-100">
-                                            {exercise.reps}
-                                          </span>
-                                        </p>
-                                        <p className="flex items-center gap-2 text-sm">
-                                          <FaLayerGroup className="text-emerald-400" />
-                                          <span className="text-gray-400">
-                                            Series:
-                                          </span>
-                                          <span className="font-bold text-base text-gray-100">
-                                            {exercise.sets}
-                                          </span>
-                                        </p>
+                                        <div className="grid grid-cols-2 gap-3 sm:max-w-sm">
+                                          <p className="rounded-xl bg-black/15 px-3 py-2.5 text-xs text-slate-500"><FaListOl className="mr-1 inline text-[#b9dc75]" /> Repeticiones <span className="mt-1 block text-sm font-semibold text-slate-100">{exercise.reps}</span></p>
+                                          <p className="rounded-xl bg-black/15 px-3 py-2.5 text-xs text-slate-500"><FaLayerGroup className="mr-1 inline text-[#b9dc75]" /> Series <span className="mt-1 block text-sm font-semibold text-slate-100">{exercise.sets}</span></p>
+                                        </div>
                                       </div>
                                     </li>
                                   )

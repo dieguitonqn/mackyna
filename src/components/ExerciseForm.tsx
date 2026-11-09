@@ -163,8 +163,8 @@ const ExerciseForm: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col justify-center text-center border-2 border-slate-700 p-2 m-1 shadow-lg rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700/80">
-      <h2 className="shadow py-2 px-4 my-4 border border-slate-600 text-2xl font-bold text-slate-100 bg-slate-800/80 rounded-lg">
+    <div className="flex h-full flex-col justify-center rounded-2xl border border-white/[0.08] bg-[#0d120f] p-3 text-center shadow-lg">
+      <h2 className="my-3 rounded-xl border border-white/[0.08] bg-[#111713] px-4 py-3 text-lg font-semibold text-white">
         {bloque.replace(/bloque(\d)/i, "Bloque $1")}
       </h2>
       {exercises.map((exercise, index) => {
@@ -176,7 +176,7 @@ const ExerciseForm: React.FC<Props> = ({
         return (
         <div
           key={`exercise-${index}`}
-          className="flex flex-col gap-2 border border-slate-600 shadow-md shadow-slate-900 p-2 mb-6 rounded-lg bg-slate-800/80 transition-colors duration-200 hover:border-blue-400 text-left"
+          className="mb-4 flex flex-col gap-2 rounded-xl border border-white/[0.08] bg-[#111713] p-3 text-left transition-colors duration-200 hover:border-[#b9dc75]/30"
         >
           <label htmlFor={`specificMusc-${index}`} className="block mb-1 text-slate-200 font-semibold">
             Músculo específico
@@ -185,7 +185,7 @@ const ExerciseForm: React.FC<Props> = ({
             id={`specificMusc-${index}`}
             value={specificMuscSelected}
             onChange={(e) => handleSpecificMuscChange(index, e.target.value)}
-            className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
+            className="mb-2 rounded-lg border border-white/10 bg-[#0b0e0c] p-2.5 text-slate-100 outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
           >
             <option value="">Todos los músculos</option>
             {muscEspecificos.map((musculo) => (
@@ -210,7 +210,7 @@ const ExerciseForm: React.FC<Props> = ({
             type="text"
             value={exercise.reps}
             onChange={(e) => handleInputChange(index, "reps", e.target.value)}
-            className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
+            className="mb-2 rounded-lg border border-white/10 bg-[#0b0e0c] p-2.5 text-slate-100 outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
           />
           <label htmlFor={`sets-${index}`} className="block mb-1 text-slate-300 font-semibold">
             Series
@@ -220,7 +220,7 @@ const ExerciseForm: React.FC<Props> = ({
             type="number"
             value={exercise.sets}
             onChange={(e) => handleInputChange(index, "sets", parseInt(e.target.value))}
-            className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
+            className="mb-2 rounded-lg border border-white/10 bg-[#0b0e0c] p-2.5 text-slate-100 outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
             min={1}
           />
           <label htmlFor={`videoLink-${index}`} className="block mb-1 text-slate-300 font-semibold">
@@ -232,13 +232,13 @@ const ExerciseForm: React.FC<Props> = ({
             placeholder="Enlace al video"
             value={exercise.videoLink || ""}
             onChange={(e) => handleInputChange(index, "videoLink", e.target.value)}
-            className="mb-2 shadow-sm p-2 border border-slate-600 bg-slate-900 text-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
+            className="mb-2 rounded-lg border border-white/10 bg-[#0b0e0c] p-2.5 text-slate-100 outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
           />
           <div className="flex justify-center mt-2">
             <button
               type="button"
               onClick={() => handleRemoveExercise(index)}
-              className="bg-red-500/80 hover:bg-red-600 text-white font-semibold rounded-md border border-slate-700 shadow w-1/2 py-1 transition-all duration-150"
+              className="min-h-10 w-full rounded-lg border border-rose-300/15 bg-rose-400/[0.08] py-2 text-sm font-medium text-rose-200 transition hover:bg-rose-400/[0.16] sm:w-1/2"
             >
               Borrar Ejercicio
             </button>
@@ -248,7 +248,7 @@ const ExerciseForm: React.FC<Props> = ({
       <button
         type="button"
         onClick={handleAddExercise}
-        className="bg-green-500/80 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md border border-slate-700 shadow transition-all duration-150 mt-2"
+        className="mt-2 min-h-11 rounded-xl bg-[#b9dc75] px-4 py-2 font-semibold text-[#172016] transition hover:bg-[#c9e991]"
       >
         + Agregar Ejercicio
       </button>

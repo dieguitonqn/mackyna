@@ -90,137 +90,143 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
 
 
     const { data: session } = useSession();
+    const canManageMetrics = ["admin", "teach", "teacher"].includes(session?.user?.rol ?? "");
     return (
-        <div className="overflow-x-auto md:flex justify-center  my-10">
-            <table className="w-10/12 bg-gray-800 text-white border border-gray-700 rounded-lg text-center">
-                <thead>
-                    <tr className="bg-gray-900 text-left">
-                        <th className="py-2 px-4">Fecha</th>
-                        <th className="py-2 px-4">Peso</th>
-                        <th className="py-2 px-4">IMC</th>
-                        <th className="py-2 px-4">% Grasa Corporal</th>
-                        <th className="py-2 px-4">% Masa Muscular</th>
-                        <th className="py-2 px-4">% Grasa Visceral</th>
-                        <th className="py-2 px-4">Edad Corporal</th>
-                        {(session?.user.rol == "admin" || session?.user.rol == "teach" || session?.user.rol == "teacher") && (
-                            <th className="py-2 px-4 text-center">Acciones</th>)}
+        <section className="my-6 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111713] shadow-[0_18px_50px_-35px_rgba(0,0,0,0.9)]">
+          <div className="border-b border-white/[0.07] px-5 py-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c8e994]">Historial</p>
+            <h2 className="mt-1 text-lg font-semibold text-white">Mediciones registradas</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-[900px] w-full text-left text-sm text-slate-300">
+                <thead className="bg-[#172019] text-xs uppercase tracking-wide text-slate-300">
+                    <tr>
+                        <th className="px-4 py-3">Fecha</th>
+                        <th className="px-4 py-3">Peso</th>
+                        <th className="px-4 py-3">IMC</th>
+                        <th className="px-4 py-3">% Grasa corporal</th>
+                        <th className="px-4 py-3">% Masa muscular</th>
+                        <th className="px-4 py-3">% Grasa visceral</th>
+                        <th className="px-4 py-3">Edad corporal</th>
+                        {canManageMetrics && (
+                            <th className="px-4 py-3 text-center">Acciones</th>)}
                     </tr>
                 </thead>
                 <tbody>
                     {data.slice().reverse().map((item) => (
-                        <tr key={item._id} className="even:bg-gray-700 hover:bg-gray-600">
-                            <td className="py-2 px-4">{formatDateOnlyEs(item.date, { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                            <td className="py-2 px-4">{item.weigth} kg</td>
-                            <td className="py-2 px-4">{item.IMC}</td>
-                            <td className="py-2 px-4">{item.body_fat}%</td>
-                            <td className="py-2 px-4">{item.body_musc}%</td>
-                            <td className="py-2 px-4">{item.visceral_fat}%</td>
-                            <td className="py-2 px-4">{item.body_age} años</td>
-                            <td className="py-2 px-4 flex justify-center space-x-4">
-                                {(session?.user.rol == "admin" || session?.user.rol == "teach" || session?.user.rol == "teacher") && (
+                        <tr key={item._id} className="border-t border-white/[0.06] transition hover:bg-white/[0.035]">
+                            <td className="whitespace-nowrap px-4 py-3">{formatDateOnlyEs(item.date, { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                            <td className="px-4 py-3">{item.weigth} kg</td>
+                            <td className="px-4 py-3">{item.IMC}</td>
+                            <td className="px-4 py-3">{item.body_fat}%</td>
+                            <td className="px-4 py-3">{item.body_musc}%</td>
+                            <td className="px-4 py-3">{item.visceral_fat}%</td>
+                            <td className="px-4 py-3">{item.body_age} años</td>
+                            {canManageMetrics && <td className="px-4 py-3">
+                              <div className="flex justify-center gap-2">
                                     <button
                                         onClick={() => onEdit(item)}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
+                                        className="rounded-lg border border-[#b9dc75]/20 bg-[#b9dc75]/[0.1] px-3 py-2 text-xs font-medium text-[#d5ecb7] transition hover:bg-[#b9dc75]/[0.18]"
                                     >
                                         Editar
-                                    </button>)}
-                                {(session?.user.rol == "admin" || session?.user.rol == "teach" || session?.user.rol == "teacher") && (
+                                    </button>
                                     <button
                                         onClick={() => onDelete(item._id)}
-                                        className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
+                                        className="rounded-lg border border-rose-300/15 bg-rose-400/[0.08] px-3 py-2 text-xs font-medium text-rose-200 transition hover:bg-rose-400/[0.16]"
                                     >
                                         Borrar
                                     </button>
-                                )}
-                            </td>
+                              </div>
+                            </td>}
                         </tr>
                     ))}
                 </tbody>
             </table>
+          </div>
 
             {edit && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex   items-center justify-center">
-                    <div className="bg-white p-4 rounded-lg ">
-                        <h2 className="text-xl font-bold">Editar métrica</h2>
-                        <form onSubmit={handleSubmit} className="flex-col flex text-right">
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+                    <div className="my-auto max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-white/10 bg-[#111713] p-5 shadow-2xl sm:p-6">
+                        <h2 className="mb-5 text-xl font-semibold text-white">Editar medición</h2>
+                        <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
                             <div>
-                                <label htmlFor="date">Fecha:</label>
+                                <label htmlFor="date" className="mb-1 block text-sm font-medium text-slate-300">Fecha</label>
                                 <input
                                     id="date"
                                     type="date"
                                     placeholder="fecha"
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={toDateInputValue(editedItem?.date)}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
                             <div>
-                                <label htmlFor="weigth">Peso:</label>
+                                <label htmlFor="weigth" className="mb-1 block text-sm font-medium text-slate-300">Peso</label>
                                 <input
                                     id="weigth"
                                     type="text"
                                     placeholder="Peso"
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={editedItem?.weigth}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
 
                             <div>
-                                <label htmlFor="peso">IMC:</label>
+                                <label htmlFor="IMC" className="mb-1 block text-sm font-medium text-slate-300">IMC</label>
                                 <input
                                     id="IMC"
                                     type="text"
                                     placeholder="IMC"
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={editedItem?.IMC}
                                     onChange={(e) => handleInputChange(e)} />
 
                             </div>
                             <div>
-                                <label htmlFor="body_fat">% Grasa Corporal:</label>
+                                <label htmlFor="body_fat" className="mb-1 block text-sm font-medium text-slate-300">% Grasa corporal</label>
                                 <input
                                     id="body_fat"
                                     type="text"
                                     placeholder="% Grasa Corporal"
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={editedItem?.body_fat}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
 
                             <div>
-                                <label htmlFor="body_musc">% Músculo corporal:</label>
+                                <label htmlFor="body_musc" className="mb-1 block text-sm font-medium text-slate-300">% Músculo corporal</label>
                                 <input
                                     id="body_musc"
                                     type="text"
                                     placeholder="% Músculo corporal "
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={editedItem?.body_musc}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
 
                             <div>
-                                <label htmlFor="visceral_fat">% Grasa Visceral:</label>
+                                <label htmlFor="visceral_fat" className="mb-1 block text-sm font-medium text-slate-300">% Grasa visceral</label>
                                 <input id="visceral_fat"
                                     type="text"
                                     placeholder="% Grasa Visceral"
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={editedItem?.visceral_fat}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
                             <div>
-                                <label htmlFor="body_age">Edad Corporal:</label>
+                                <label htmlFor="body_age" className="mb-1 block text-sm font-medium text-slate-300">Edad corporal</label>
                                 <input id="body_age"
                                     type="text"
                                     placeholder="Edad Corporal"
-                                    className="p-1 border border-slate-200 m-2 rounded-sm"
+                                    className="w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                                     value={editedItem?.body_age}
                                     onChange={(e) => handleInputChange(e)} />
                             </div>
 
-                            <div>
-                                <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded w-1/2 m-auto">
+                            <div className="col-span-full flex justify-end gap-3 pt-2">
+                                <button type="submit" className="rounded-xl bg-[#b9dc75] px-4 py-2.5 text-sm font-semibold text-[#172016] transition hover:bg-[#c9e991]">
                                     Guardar
                                 </button>
-                                <button onClick={() => setEdit(false)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded w-1/2 m-auto">
+                                <button type="button" onClick={() => setEdit(false)} className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/[0.06]">
                                     Cancelar
                                 </button>
                             </div>
@@ -229,7 +235,7 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
                     </div>
                 </div>
             )}
-        </div>
+        </section>
     );
 };
 

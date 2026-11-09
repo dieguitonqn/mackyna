@@ -5,7 +5,8 @@ export const EditButton = ({ id }: { id: string }) => {
         <Link
         href={`/portalProfes/editPlani?plantillaID=${id}`}
             title="Editar plantilla"
-            className=" text-blue-400 hover:text-blue-300 hover:shadow-[0_3px_2px_-1px_rgba(100,100,255,0.9)] transition-colors"
+            aria-label="Editar plantilla"
+            className="rounded-lg p-2 text-[#c8e994] transition hover:bg-[#b9dc75]/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
         >
             <FiEdit size={18} />
         </Link>

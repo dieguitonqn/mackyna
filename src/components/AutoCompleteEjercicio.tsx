@@ -74,25 +74,23 @@ const AutoCompleteInputEj: React.FC<AutoCompleteProps> = ({ ejercicios, onSelect
         value={query}
         onChange={handleInputChange}
         placeholder="Buscar ejercicio..."
-        className={`w-full px-4 py-2 ${
-          !isValidSelection ? 'border-4 border-red-500 animate-pulse' : 'border border-gray-300'
-        } rounded-lg focus:outline-none focus:ring-2 ${
-          !isValidSelection ? 'focus:ring-red-500' : 'focus:ring-blue-500'
-        } bg-slate-900/80 text-slate-300 shadow-sm transition-all duration-150`}
+        className={`w-full rounded-lg bg-[#0b0e0c] px-4 py-2.5 text-slate-100 outline-none transition focus:ring-2 ${
+          !isValidSelection ? 'border border-rose-400 focus:ring-rose-400/30' : 'border border-white/10 focus:border-[#b9dc75]/50 focus:ring-[#b9dc75]/20'
+        }`}
         
       />
       {showDropdown && (
-        <ul className="absolute top-full left-0 right-0 border border-gray-300 bg-white rounded-lg shadow-lg z-10 mt-1 overflow-y-scroll max-h-80">
+        <ul className="absolute left-0 right-0 top-full z-20 mt-1 max-h-80 overflow-y-auto rounded-xl border border-white/10 bg-[#111713] text-slate-200 shadow-2xl">
           {filtered.map((ejercicio) => (
             <li
               key={ejercicio._id} // Convierte el ObjectId si es un objeto
 
               onClick={() => handleSelect(ejercicio)}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100 border-b "
+              className="cursor-pointer border-b border-white/[0.06] px-4 py-3 transition hover:bg-white/[0.06]"
             >
               <p className="font-semibold">{ejercicio.nombre}</p>
 
-              <p className="italic font-extralight">{" Desc: " + ejercicio.description}</p>
+              <p className="mt-1 text-xs text-slate-400">{"Desc: " + ejercicio.description}</p>
             </li>
           ))}
         </ul>

@@ -114,31 +114,42 @@ const Ejercicios: React.FC = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-6">
-            <h1 className="text-2xl font-bold mb-6 text-center shadow-lg w-auto">Lista de Ejercicios</h1>
-
-            {loading && <p className="text-center">Cargando ejercicios...</p>}
-            {error && <p className="text-center text-red-500">{error}</p>}
-
-            <div className='flex justify-end'>
+        <div className="mx-auto w-full max-w-7xl py-2">
+            <header className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b9dc75]">Biblioteca</p>
+                    <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Ejercicios</h1>
+                    <p className="mt-2 text-sm text-slate-400">Buscá, actualizá y organizá los ejercicios disponibles para las rutinas.</p>
+                </div>
                 <button
-                    className='bg-green-500 px-1 py-2 rounded-md m-2 gap-1 flex flex-row items-center hover:font-semibold'
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#b9dc75] px-4 py-2.5 text-sm font-semibold text-[#172016] transition hover:bg-[#c9e991] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
                     onClick={() => setSelectedNewEjercicio(true)}
                 >
-                    <MdOutlineAddChart className='w-6 h-6' /> Agregar Ejercicio
+                    <MdOutlineAddChart className="h-5 w-5" aria-hidden="true" /> Agregar ejercicio
                 </button>
-            </div>
-            <table className="table-auto w-full border-collapse border border-gray-400 text-sm">
+            </header>
+
+            {loading && <p className="rounded-2xl border border-white/[0.08] bg-[#111713] p-6 text-center text-sm text-slate-400">Cargando ejercicios...</p>}
+            {error && <p className="rounded-2xl border border-rose-300/15 bg-rose-400/[0.07] p-4 text-center text-sm text-rose-200">{error}</p>}
+
+            <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111713] shadow-[0_18px_50px_-35px_rgba(0,0,0,0.9)]">
+            <div className="overflow-x-auto">
+            <table className="portal-profes-table portal-profes-exercises-table min-w-[1100px] w-full border-collapse text-left text-sm">
+                <colgroup>
+                    <col className="w-[15%]" />
+                    <col className="w-[16%]" />
+                    <col className="w-[18%]" />
+                    <col className="w-[22%]" />
+                    <col className="w-[17%]" />
+                    <col className="w-[12%]" />
+                </colgroup>
                 <thead>
-                    <tr className="bg-gray-800 text-slate-300">
-                        <th
-                            className="border border-gray-400 px-2 py-2 text-left"
-                        >
-                            Nombre
+                    <tr>
+                        <th>
+                            <span className="portal-profes-filter-title">Nombre</span>
                             <input
                                 type="text"
-                                className="mt-1 block w-full px-2 py-1 border border-gray-400 rounded text-sm"
-                                placeholder={`Filtrar por Nombre`}
+                                placeholder="Filtrar nombre"
                                 value={filters.nombre}
                                 onChange={(e) =>
                                     handleFilterChange(
@@ -151,14 +162,11 @@ const Ejercicios: React.FC = () => {
 
 
                         </th>
-                        <th
-                             className="border border-gray-400 px-2 py-2 text-left"
-                        >
-                            Grupo Muscular
+                        <th>
+                            <span className="portal-profes-filter-title">Grupo muscular</span>
                             <input
                                 type="text"
-                                className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                placeholder={`Filtrar por Grupo Muscular`}
+                                placeholder="Filtrar grupo"
                                 value={filters.grupoMusc}
                                 onChange={(e) =>
                                     handleFilterChange(
@@ -170,14 +178,11 @@ const Ejercicios: React.FC = () => {
                             />
 
                         </th>
-                        <th
-                            className="border border-gray-400 px-2 py-2 text-left "
-                        >
-                            Músculo Específico
+                        <th>
+                            <span className="portal-profes-filter-title">Músculo específico</span>
                             <input
                                 type="text"
-                                className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                placeholder={`Filtrar por Músculo Específico`}
+                                placeholder="Filtrar músculo"
                                 value={filters.specificMusc}
                                 onChange={(e) =>
                                     handleFilterChange(
@@ -189,14 +194,11 @@ const Ejercicios: React.FC = () => {
                             />
 
                         </th>
-                        <th
-                            className="border border-gray-400 px-2 py-2 text-left "
-                        >
-                            Descripción
+                        <th>
+                            <span className="portal-profes-filter-title">Descripción</span>
                             <input
                                 type="text"
-                                className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                placeholder={`Filtrar por Descripción`}
+                                placeholder="Filtrar descripción"
                                 value={filters.description}
                                 onChange={(e) =>
                                     handleFilterChange(
@@ -207,14 +209,11 @@ const Ejercicios: React.FC = () => {
                             />
 
                         </th>
-                        <th
-                            className="border border-gray-300 px-2 py-2 text-left "
-                        >
-                            Video
+                        <th>
+                            <span className="portal-profes-filter-title">Video</span>
                             <input
                                 type="text"
-                                className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                                placeholder={`Filtrar por Video`}
+                                placeholder="Filtrar video"
                                 value={filters.video}
                                 onChange={(e) =>
                                     handleFilterChange(
@@ -225,10 +224,9 @@ const Ejercicios: React.FC = () => {
                             />
 
                         </th>
-                        <th
-                            className="border border-gray-300 px-2 py-2 text-left "
-                        >
-                            Acciones
+                        <th>
+                            <span className="portal-profes-filter-title">Acciones</span>
+                            <span className="portal-profes-filter-spacer" aria-hidden="true" />
                         </th>
 
                     </tr>
@@ -237,15 +235,15 @@ const Ejercicios: React.FC = () => {
                     {filteredEjercicios.map((ejercicio, index) => (
                         <tr
                             key={index}
-                            className="hover:bg-gray-300 hover:text-gray-800 text-slate-300 border-gray-400 bg-gray-800 border "
+                            className="text-slate-300"
                         >
-                            <td className="px-2 py-2 border border-gray-400">{ejercicio.nombre}</td>
-                            <td className="px-2 py-2 border">{ejercicio.grupoMusc}</td>
-                            <td className="px-2 py-2 border border-gray-400">{ejercicio.specificMusc}</td>
-                            <td className="px-2 py-2 border border-gray-400">{ejercicio.description}</td>
-                            <td className="px-2 py-2 border border-gray-400">
+                            <td>{ejercicio.nombre}</td>
+                            <td>{ejercicio.grupoMusc}</td>
+                            <td>{ejercicio.specificMusc}</td>
+                            <td>{ejercicio.description}</td>
+                            <td>
                                 {ejercicio.video ? (
-                                    <a href={ejercicio.video} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                    <a href={ejercicio.video} target="_blank" rel="noopener noreferrer" className="font-medium text-[#c8e994] hover:text-[#e0f5c2] hover:underline">
                                         Ver Video
                                     </a>
                                 ) : (
@@ -253,22 +251,33 @@ const Ejercicios: React.FC = () => {
                                 )}
                             </td>
 
-                            <td className="px-2 py-2 flex flex-col gap-1 items-center">
+                            <td className="px-3 py-3">
+                                <div className="flex min-w-[120px] flex-col gap-2">
                                 <button
-                                    className="w-full px-2 py-1 bg-green-600 text-white rounded-sm text-sm"
+                                    className="w-full rounded-lg border border-[#b9dc75]/20 bg-[#b9dc75]/[0.1] px-3 py-2 text-xs font-medium text-[#d5ecb7] transition hover:bg-[#b9dc75]/[0.18]"
                                     onClick={() => handleEditEjercicio(ejercicio._id)}
                                 >
                                     Editar
                                 </button>
-                                <button className="w-full px-2 py-1 bg-red-600 text-white rounded-sm text-sm"
+                                <button className="w-full rounded-lg border border-rose-300/15 bg-rose-400/[0.08] px-3 py-2 text-xs font-medium text-rose-200 transition hover:bg-rose-400/[0.16]"
                                     onClick={() => handleDelete(ejercicio._id)}>
                                     Borrar
                                 </button>
+                                </div>
                             </td>
                         </tr>
                     ))}
+                    {!filteredEjercicios.length && !loading && !error && (
+                        <tr>
+                            <td colSpan={6} className="px-5 py-12 text-center text-sm text-slate-500">
+                                No encontramos ejercicios con esos filtros.
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
+            </div>
+            </div>
             {selectedEjercicio && (
                 <EditEjercicioForm _id={selectedEjercicio} onClose={handleEjercicioClose} />
             )}

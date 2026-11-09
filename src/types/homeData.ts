@@ -5,4 +5,5 @@ export interface HomeData {
   description: BlocksContent | null;
   logo_principal: string | null;
   carrousel: { url: string }[];
+  prices: { url: string; width?: number; height?: number } | null;
 }

@@ -13,6 +13,7 @@ import {
   HamburguesaUsers,
 } from "./hamburguesa";
 import { TbRulerMeasure } from "react-icons/tb";
+import { FiArrowUpRight } from "react-icons/fi";
 
 function Navbar() {
   const { data: session } = useSession();
@@ -26,23 +27,33 @@ function Navbar() {
 
   if (!session) {
     return (
-      <div>
-        <nav className="flex justify-between text-white bg-black border border-slate-500 px-6 items-center">
-          <Link href="/">
+      <div className="relative z-50">
+        <nav className="sticky top-0 flex h-[72px] items-center justify-between border-b border-white/[0.08] bg-[#0b0e0c]/95 px-4 text-white shadow-[0_10px_35px_-28px_rgba(0,0,0,.9)] backdrop-blur-xl sm:px-8 lg:px-12">
+          <Link href="/" className="shrink-0">
             <Image
               src="/mackyna_verde.png"
               alt="logo mackyna"
-              width={100}
-              height={50}
+              width={112}
+              height={56}
+              className="h-auto w-[90px] drop-shadow-[0_0_10px_rgba(185,220,117,.22)] sm:w-[108px]"
             />
           </Link>
-          <div>
+          <div className="flex items-center gap-2 sm:gap-4 lg:gap-7">
+            <Link href="/#beneficios" className="hidden text-xs text-white/60 transition hover:text-[#c6e58d] lg:block">El método</Link>
+            <Link href="/#espacio" className="hidden text-xs text-white/60 transition hover:text-[#c6e58d] lg:block">El espacio</Link>
+            <Link href="/#ubicacion" className="hidden text-xs text-white/60 transition hover:text-[#c6e58d] lg:block">Ubicación</Link>
+            <Link href="/#precios" className="hidden text-xs text-white/60 transition hover:text-[#c6e58d] lg:block">Planes</Link>
             <Link
-              className="flex items-center gap-1 bg-green-800 rounded py-2 px-4"
+              className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2.5 text-xs font-medium transition hover:border-[#b9dc75]/40 hover:bg-white/[0.08] sm:px-4"
               href="/login"
             >
-              Iniciar sesión
-              <GrLogin />
+              <GrLogin /><span>Ingresar</span>
+            </Link>
+            <Link
+              href="/signUp"
+              className="flex items-center gap-1.5 rounded-xl bg-[#b9dc75] px-3 py-2.5 text-xs font-semibold text-[#172016] transition hover:bg-[#c9e991] sm:px-4"
+            >
+              <span className="hidden sm:inline">Inscribirme</span><span className="sm:hidden">Sumarme</span><FiArrowUpRight size={15} />
             </Link>
           </div>
         </nav>
@@ -51,14 +62,15 @@ function Navbar() {
   }
 
   return (
-    <div>
-      <nav className="flex justify-between gap-2 text-white bg-black border border-slate-500 px-6 items-center">
+    <div className="relative z-50">
+      <nav className="flex min-h-[72px] items-center justify-between gap-2 border-b border-white/[0.08] bg-[#0b0e0c]/95 px-4 text-white backdrop-blur-xl sm:px-6 lg:px-10">
         <Link href="/">
           <Image
             src="/mackyna_verde.png"
             alt="logo mackyna"
             width={100}
             height={50}
+            className="drop-shadow-[0_0_10px_rgba(185,220,117,.22)]"
           />
         </Link>
         <Link
@@ -80,7 +92,7 @@ function Navbar() {
           {(isAdmin || isUser) && (
             <Link
               href="/portalAlumnos"
-              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.035] px-3 py-2 text-xs text-white/75 transition hover:border-[#b9dc75]/40 hover:bg-[#b9dc75]/[0.08] hover:text-[#c6e58d]"
             >
               <FaChalkboardTeacher />
               Portal Alumnos
@@ -89,7 +101,7 @@ function Navbar() {
           {(isAdmin || isUser) && (
             <Link
               href="/portalAlumnos/Metricas"
-              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.035] px-3 py-2 text-xs text-white/75 transition hover:border-[#b9dc75]/40 hover:bg-[#b9dc75]/[0.08] hover:text-[#c6e58d]"
             >
               <TbRulerMeasure />
               Mis Métricas
@@ -98,7 +110,7 @@ function Navbar() {
           {(isAdmin || isTeach) && (
             <Link
               href="/portalProfes"
-              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.035] px-3 py-2 text-xs text-white/75 transition hover:border-[#b9dc75]/40 hover:bg-[#b9dc75]/[0.08] hover:text-[#c6e58d]"
             >
               <FaChalkboardTeacher />
               Portal Profes
@@ -107,7 +119,7 @@ function Navbar() {
           {isAdmin && (
             <Link
               href="/dashboard"
-              className="hidden lg:flex text-sm items-center gap-1 px-2 py-2 rounded-sm shadow-sm shadow-green-500 hover:shadow-green-800 hover:shadow-lg"
+              className="hidden lg:flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.035] px-3 py-2 text-xs text-white/75 transition hover:border-[#b9dc75]/40 hover:bg-[#b9dc75]/[0.08] hover:text-[#c6e58d]"
             >
               <TfiDashboard />
               Admin Dashboard
@@ -121,12 +133,12 @@ function Navbar() {
             </div>
           )}
           {isTeach && (
-            <div className="block md:hidden">
+            <div className="block lg:hidden">
               <HamburguesaTeach />
             </div>
           )}
           {isUser && (
-            <div className="block md:hidden">
+            <div className="block lg:hidden">
               <HamburguesaUsers />
             </div>
           )}
@@ -135,7 +147,7 @@ function Navbar() {
 
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="hidden md:flex items-center gap-1 bg-red-500 px-4 py-2 rounded-md hover:font-semibold"
+            className="hidden md:flex items-center gap-1.5 rounded-lg border border-rose-300/20 bg-rose-400/[0.08] px-3 py-2 text-xs text-rose-200 transition hover:bg-rose-400/[0.16]"
           >
             Log out
             <IoIosLogOut className="h-7 w-7" />

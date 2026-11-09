@@ -205,9 +205,13 @@ const NewPlan: React.FC = () => {
   };
   // -------------------------------------------------
   return (
-    <div className="flex flex-col justify-center items-center w-full">
-      <h1 className="text-4xl my-5">Crear Nueva Planilla</h1>
-      <div className=" mb-3">
+    <div className="mx-auto flex w-full max-w-7xl flex-col py-2">
+      <header className="mb-7">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b9dc75]">Rutinas</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Crear nueva planilla</h1>
+        <p className="mt-2 text-sm text-slate-400">Elegí al alumno, definí el período y armá los días de entrenamiento.</p>
+      </header>
+      <div className="mb-5">
         {userInfo && selectedUser && (
           <MetricCard
             userID={selectedUser._id.toString()}
@@ -223,14 +227,16 @@ const NewPlan: React.FC = () => {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()} className="w-full">
-        <div className="flex flex-wrap justify-center items-center gap-2 mb-5 max-w-3xl m-auto">
+      <form onSubmit={handleSubmit} onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()} className="w-full space-y-6">
+        <section className="rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6">
+        <h2 className="mb-4 text-lg font-semibold text-white">Datos de la planilla</h2>
+        <div className="mb-5 max-w-3xl">
           {users && (
             <AutoCompleteInput users={users} onSelect={handleSelectUser} />
           )}
         </div>
-        <div className="flex justify-center items-center gap-5">
-          <div className="flex flex-col text-slate-300">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2 text-sm text-slate-300">
             <label htmlFor="startDate">Fecha de comienzo</label>
 
             <input
@@ -239,11 +245,11 @@ const NewPlan: React.FC = () => {
               placeholder="Fecha de finalización"
               value={startDatePlani ? startDatePlani.slice(0, 10) : ""}
               onChange={(e) => setStartDatePlani(e.target.value)}
-              className="border p-2 rounded-md bg-slate-900/80"
+              className="rounded-xl border border-white/10 bg-[#0b0e0c] p-3 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               required
             />
           </div>
-          <div className="flex flex-col text-slate-300">
+          <div className="flex flex-col gap-2 text-sm text-slate-300">
             <label htmlFor="endDate">Fecha de Finalización</label>
 
             <input
@@ -252,24 +258,25 @@ const NewPlan: React.FC = () => {
               placeholder="Fecha de finalización"
               value={endDatePlani ? endDatePlani.slice(0, 10) : ""}
               onChange={(e) => setEndDatePlani(e.target.value)}
-              className="border p-2 rounded-md bg-slate-900/80"
+              className="rounded-xl border border-white/10 bg-[#0b0e0c] p-3 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               required
             />
           </div>
           
         </div>
-        <div className="flex justify-center items-center gap-5 my-10 text-slate-300">
-          <label htmlFor="dias">Días de entrenamiento</label>
+        <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-slate-300">
+          <label htmlFor="dias" className="font-medium">Días de entrenamiento</label>
           <input
             id="dias"
             type="number"
             value={diasPlani}
             onChange={(e) => setDiasPlani(parseInt(e.target.value))}
-            className="border p-2 rounded-md  bg-slate-900/80"
+            className="w-24 rounded-xl border border-white/10 bg-[#0b0e0c] p-3 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
             min={1}
             max={6}
           />
         </div>
+        </section>
         <div>
           <AutoCompletePlantillas plantillas={plantillas} onSelect={handlePlantillaSelect} />
         </div>
@@ -278,8 +285,8 @@ const NewPlan: React.FC = () => {
             {Array(diasPlani)
               .fill(null)
               .map((_, index) => (
-                <div key={index} className="w-full">
-                  <h2 className="text-xl mb-2 flex justify-center">
+                <div key={index} className="w-full rounded-2xl border border-white/[0.08] bg-[#111713] p-4 sm:p-6">
+                  <h2 className="mb-4 flex justify-center text-xl font-semibold text-white">
                     {`Día ${index + 1}`}
                   </h2>
 
@@ -296,19 +303,17 @@ const NewPlan: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-5">
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
           <button
             type="submit"
-            className="bg-emerald-500/50 py-2 px-4 rounded-md shadow-md shadow-gray-300 hover:bg-emerald-500 hover:text-white transition-colors"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#b9dc75] px-5 py-2.5 font-semibold text-[#172016] transition hover:bg-[#c9e991] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
           >
             <BiSave className="inline-block mr-2" /> Guardar
           </button>
-        </div>
-        <div className="flex justify-center mt-5">
           <button
             type="button"
             onClick={handleModalPlantilla}
-            className="bg-gray-800/50 text-gray-300 py-2 px-4 rounded-md shadow-md shadow-gray-300 hover:bg-gray-700 hover:text-white hover:font-semibold transition-colors ml-5"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-5 py-2.5 font-medium text-slate-200 transition hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9dc75]"
           >
 
             <GrTemplate className="inline-block mr-2" /> Guardar Como Plantilla
@@ -316,9 +321,9 @@ const NewPlan: React.FC = () => {
         </div>
       </form>
       {modalPlantilla && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="bg-slate-900 p-6 rounded-lg shadow-xl max-w-md w-full border border-slate-500">
-            <h2 className="text-2xl font-semibold mb-4 text-slate-300">Guardar Plantilla</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111713] p-6 shadow-2xl">
+            <h2 className="mb-4 text-2xl font-semibold text-white">Guardar plantilla</h2>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -337,7 +342,7 @@ const NewPlan: React.FC = () => {
                   id="name"
                   name="name"
                   placeholder="Ej: Rutina Full Body"
-                  className="border rounded-md p-2 bg-slate-800 text-slate-200 border-slate-700 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition duration-200"
+                  className="rounded-xl border border-white/10 bg-[#0b0e0c] p-3 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                   required
                 />
               </div>
@@ -350,20 +355,20 @@ const NewPlan: React.FC = () => {
                   name="descripcion"
                   rows={4}
                   placeholder="Describe el objetivo y características de esta plantilla..."
-                  className="border rounded-md p-2 bg-slate-800 text-slate-200 border-slate-700 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition duration-200 resize-none"
+                  className="resize-none rounded-xl border border-white/10 bg-[#0b0e0c] p-3 text-white outline-none transition focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
                 />
               </div>
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   type="button"
                   onClick={handleModalPlantilla}
-                  className="px-4 py-2 bg-red-500/50 text-white rounded-md hover:bg-red-600 transition duration-200 shadow-sm"
+                  className="rounded-xl border border-white/10 px-4 py-2 text-slate-300 transition hover:bg-white/[0.06]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-500/50 text-white rounded-md hover:bg-emerald-600 transition duration-200 shadow-sm"
+                  className="rounded-xl bg-[#b9dc75] px-4 py-2 font-semibold text-[#172016] transition hover:bg-[#c9e991]"
                 >
                   Guardar Plantilla
                 </button>

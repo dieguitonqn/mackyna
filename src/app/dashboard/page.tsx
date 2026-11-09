@@ -1,11 +1,9 @@
-import React from 'react'
+import { redirect } from "next/navigation";
+import { getActiveSession } from "@/lib/getActiveSession";
+import DashboardOverview from "./DashboardOverview";
 
-function DashboardPage() {
-  return (
-    <div className=''>
-      Dashboard Page
-    </div>
-  )
+export default async function DashboardPage() {
+  const session = await getActiveSession();
+  if (session?.user?.rol !== "admin") redirect("/portalProfes");
+  return <DashboardOverview />;
 }
-
-export default DashboardPage

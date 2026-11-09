@@ -50,15 +50,15 @@ const NewEjercicioForm: React.FC <NewEjercicioFormProps>= ({onClose}) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-md shadow-md w-96">
-        <h2 className="text-xl font-bold mb-4">Nuevo Ejercicio</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+      <div className="my-auto max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/10 bg-[#111713] p-5 shadow-2xl sm:p-6">
+        <h2 className="mb-5 text-xl font-semibold text-white">Nuevo ejercicio</h2>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && <p className="mb-4 rounded-xl border border-rose-300/15 bg-rose-400/[0.08] p-3 text-sm text-rose-200">{error}</p>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="nombre" className="block text-gray-700">
+            <label htmlFor="nombre" className="block text-sm font-medium text-slate-300">
               Nombre
             </label>
             <input
@@ -67,13 +67,13 @@ const NewEjercicioForm: React.FC <NewEjercicioFormProps>= ({onClose}) => {
               name="nombre"
               value={ejercicioData.nombre}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-2 block w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               required
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="grupoMusc" className="block text-gray-700">
+            <label htmlFor="grupoMusc" className="block text-sm font-medium text-slate-300">
               Grupo Muscular
             </label>
             <input
@@ -82,13 +82,13 @@ const NewEjercicioForm: React.FC <NewEjercicioFormProps>= ({onClose}) => {
               name="grupoMusc"
               value={ejercicioData.grupoMusc}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-2 block w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               required
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="specificMusc" className="block text-gray-700">
+            <label htmlFor="specificMusc" className="block text-sm font-medium text-slate-300">
               Músculo Específico
             </label>
             <input
@@ -97,18 +97,18 @@ const NewEjercicioForm: React.FC <NewEjercicioFormProps>= ({onClose}) => {
               name="specificMusc"
               value={ejercicioData.specificMusc}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-2 block w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="description" className="block text-gray-700">
+            <label htmlFor="description" className="block text-sm font-medium text-slate-300">
               Descripción
             </label>
             <textarea
               id="description"
               name="description"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-1 px-2 bg-white"
+              className="mt-2 block w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               value={ejercicioData.description}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 const { name, value } = e.target;
@@ -119,7 +119,7 @@ const NewEjercicioForm: React.FC <NewEjercicioFormProps>= ({onClose}) => {
 
           </div>
           <div className="mb-4">
-            <label htmlFor="video" className="block text-gray-700">
+            <label htmlFor="video" className="block text-sm font-medium text-slate-300">
               Video
             </label>
             <input
@@ -128,22 +128,22 @@ const NewEjercicioForm: React.FC <NewEjercicioFormProps>= ({onClose}) => {
               name="video"
               value={ejercicioData.video}
               onChange={handleInputChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-2 block w-full rounded-xl border border-white/10 bg-[#0b0e0c] px-3 py-2.5 text-white outline-none focus:border-[#b9dc75]/50 focus:ring-2 focus:ring-[#b9dc75]/20"
               
             />
           </div>
-          <div className="flex justify-between">
+          <div className="mt-6 flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+              className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/[0.06]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className={`px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50' : 'hover:bg-blue-700'
+              className={`rounded-xl bg-[#b9dc75] px-4 py-2.5 text-sm font-semibold text-[#172016] transition ${loading ? 'opacity-50' : 'hover:bg-[#c9e991]'
                 }`}
             >
               {loading ? 'Guardando...' : 'Guardar'}
